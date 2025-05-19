@@ -4,11 +4,10 @@
  * Login route
  */
 return function () {
-    vd(request());
     require_once request()['root'] . '/../../mapper/user.php';
-
+    
     $error = null;
-
+    
 
     // Process login form
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -44,12 +43,12 @@ return function () {
         }
     }
 
+
     return [
         'status' => 200,
         'body' => render([
             'title' => 'Login - copro.academy',
             'error' => $error,
-            'redirect' => $_GET['redirect'] ?? '/'
         ], 'layout')
     ];
 };
