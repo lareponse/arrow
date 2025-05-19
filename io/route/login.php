@@ -4,17 +4,11 @@
  * Login route
  */
 return function () {
-    require_once __DIR__ . '/../../add/user_mapper.php';
-    require_once __DIR__ . '/../../add/auth.php';
+    vd(request());
+    require_once request()['root'] . '/../../mapper/user.php';
 
     $error = null;
 
-    // Check if already logged in
-    if (is_authenticated()) {
-        // Redirect to home
-        header('Location: /');
-        exit;
-    }
 
     // Process login form
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -52,7 +46,7 @@ return function () {
 
     return [
         'status' => 200,
-        'body' => render('auth/login', [
+        'body' => render([
             'title' => 'Login - copro.academy',
             'error' => $error,
             'redirect' => $_GET['redirect'] ?? '/'

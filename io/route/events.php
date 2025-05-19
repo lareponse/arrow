@@ -15,7 +15,7 @@ return function () {
 
     return [
         'status' => 200,
-        'body' => render('events/index', [
+        'body' => render([
             'title' => 'Events - copro.academy',
             'upcoming_events' => $upcoming_events,
             'past_events' => $past_events
