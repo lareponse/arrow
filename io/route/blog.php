@@ -1,11 +1,8 @@
 <?php
 
-/**
- * Blog index route - Display list of articles
- */
 return function () {
     // Load article mapper functions
-    require_once __DIR__ . '/../../add/article_mapper.php';
+    require_once request()['root']. '/mapper/article.php';
 
     // Get page number from query string
     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
@@ -13,10 +10,9 @@ return function () {
     $offset = ($page - 1) * $limit;
 
     // Get articles
-    $articles = articles_get_all($limit, $offset);
-
-    // Get total count for pagination
-    $total = db_state("SELECT COUNT(*) FROM articles WHERE status = 'published'")->fetchColumn();
+    $articles = articles_get_published($limit, $offset);
+    $total = articles_count_published();
+    
     $total_pages = ceil($total / $limit);
 
     return [

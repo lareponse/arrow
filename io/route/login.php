@@ -4,7 +4,7 @@
  * Login route
  */
 return function () {
-    require_once request()['root'] . '/../../mapper/user.php';
+    require_once request()['route_root'] . '/../../mapper/user.php';
     
     $error = null;
     

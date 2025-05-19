@@ -11,19 +11,29 @@
  * @param int $offset Starting position
  * @return array Articles data
  */
-function articles_get_all($limit = 10, $offset = 0)
+function articles_get_published($limit = 10, $offset = 0)
 {
+    // prevent injection by casting to int
+    $limit  = (int)$limit;
+    $offset = (int)$offset;
+
     return db_state(
-        "SELECT a.*, u.username as author
-         FROM articles a
-         JOIN users u ON a.user_id = u.id
-         WHERE a.status = 'published'
-         ORDER BY a.created_at DESC
-         LIMIT ? OFFSET ?",
-        [$limit, $offset]
+        "SELECT a.*, u.username AS author
+           FROM articles a
+           JOIN users u ON a.user_id = u.id
+          WHERE a.status = 'published'
+       ORDER BY a.created_at DESC
+          LIMIT {$limit}
+         OFFSET {$offset}"
     )->fetchAll();
 }
 
+function articles_count_published()
+{
+    return db_state(
+        "SELECT COUNT(*) FROM articles WHERE status = 'published'"
+    )->fetchColumn();
+}
 /**
  * Get published article by slug
  * 
