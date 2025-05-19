@@ -15,23 +15,11 @@ The system follows a multi-tiered architecture with distinct separation between 
 
 ### 2.2 Directory Structure
 ```
-YAGNI/
+BADGE/
 ├── app/
-│   ├── controllers/
+│   ├── routes/
 │   │   ├── back.php          # Single backend controller for all entities
 │   │   └── front.php         # Frontend controller
-│   ├── domains/              # Business logic
-│   │   ├── blog.php          # Blog-specific business logic 
-│   │   └── event.php         # Event-specific business logic
-│   ├── mappers/              # Data access layer
-│   │   ├── blog_mapper.php   # Blog data persistence
-│   │   └── event_mapper.php  # Event data persistence
-│   ├── services/             # Shared services
-│   │   ├── oauth.php         # OAuth authentication service
-│   │   ├── router.php        # Router implementation
-│   │   └── yagni.php         # CMS core functionality
-│   │   ├── oauth.php         # OAuth authentication service
-│   │   └── yagni.php         # CMS core functionality
 │   └── views/
 │       ├── back/             # Backend templates
 │       │   ├── blog/
@@ -39,7 +27,6 @@ YAGNI/
 │       └── front/            # Frontend templates
 │           ├── blog/
 │           └── events/
-│
 ├── config/
 │   ├── app.php              # Application settings (paths, features, etc.)
 │   ├── database.php         # Database connection parameters
