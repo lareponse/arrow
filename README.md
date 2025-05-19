@@ -13,58 +13,9 @@ The system follows a multi-tiered architecture with distinct separation between 
 - Backend utilizes a Data Mapper pattern adapted to the procedural paradigm
 - Frontend components are SSR, with interactive non obstrusive improvements in vanilla JS
 
-### 2.2 Directory Structure
-```
-BADGE/
-├── app/
-│   ├── routes/
-│   │   ├── back.php          # Single backend controller for all entities
-│   │   └── front.php         # Frontend controller
-│   └── views/
-│       ├── back/             # Backend templates
-│       │   ├── blog/
-│       │   └── events/
-│       └── front/            # Frontend templates
-│           ├── blog/
-│           └── events/
-├── config/
-│   ├── app.php              # Application settings (paths, features, etc.)
-│   ├── database.php         # Database connection parameters
-│   ├── environment.php      # Environment-specific settings (dev/prod/test)
-│   ├── mappers.php          # Data mapper configuration
-│   ├── oauth.php            # OAuth configuration settings
-│   ├── routes.php           # Route definitions
-│   └── security.php         # Security settings (CSRF, sessions, etc.)
-└── public/                   # Public web root
-    ├── assets/               # Frontend UI assets
-    │   ├── css/              # Stylesheets
-    │   │   ├── base_1.css    # Core styles, smallest viewport, variables
-    │   │   ├── base_2.css    # Content pivot point 1
-    │   │   ├── base_3.css    # Content pivot point 2
-    │   │   ├── base_4.css    # Content pivot point 3
-    │   │   └── components/   # Component-specific styles
-    │   │       ├── blog.css  # Blog component styles with responsive adjustments
-    │   │       └── event.css # Event component styles with responsive adjustments
-    │   ├── fonts/            # Web fonts
-    │   ├── js/               # JavaScript files
-    │   │   └── kortex.js     # Main application script
-    │   └── uimage/           # UI images only
-    ├── dash/                 # Backend web root
-    │   ├── assets/           # Backend-specific assets
-    │   │   ├── css/          # Backend stylesheets
-    │   │   │   └── base.css  # Main backend styles
-    │   │   ├── js/           # Backend scripts
-    │   │   │   └── kortex.js # Main backend application script
-    │   │   └── images/       # Backend UI images
-    │   └── index.php         # Backend entry point
-    ├── media/                # Content media at root level
-    │   ├── documents/        # Downloadable documents
-    │   ├── images/           # Content images
-    │   └── videos/           # Video content
-    ├── index.php             # Frontend entry point
-    └── oauth-callback.php    # OAuth redirect endpoint
+### 2.2. Tech stack
+- Using BADGE framework
 
-```
 ## 3. Component Breakdown
 
 ### 3.1 Frontend Layer
