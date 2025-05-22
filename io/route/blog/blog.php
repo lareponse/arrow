@@ -11,8 +11,8 @@ return function () {
 
     // Get articles
     $articles = articles_get_published($limit, $offset);
+
     $total = articles_count_published();
-    
     $total_pages = ceil($total / $limit);
 
     return [

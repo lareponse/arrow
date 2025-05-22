@@ -5,66 +5,33 @@
  */
 
 /**
- * Get user by username
- * 
- * @param string $username Username
  * @return array|false User data or false if not found
  */
-function user_get_by_username($username)
+function user_get_by(string $field, $value): array|false
 {
-    return db_state(
-        "SELECT * FROM users WHERE username = ? AND status = 'active'",
-        [$username]
+    return dbq(
+        "SELECT * FROM users WHERE ? = ? AND status = 'active'",
+        [$field, $value]
     )->fetch();
 }
-
-/**
- * Get user by ID
- * 
- * @param int $id User ID
- * @return array|false User data or false if not found
- */
-function user_get_by_id($id)
-{
-    return db_state(
-        "SELECT * FROM users WHERE id = ? AND status = 'active'",
-        [$id]
-    )->fetch();
-}
-
-/**
- * Get user by email
- * 
- * @param string $email Email address
- * @return array|false User data or false if not found
- */
-function user_get_by_email($email)
-{
-    return db_state(
-        "SELECT * FROM users WHERE email = ? AND status = 'active'",
-        [$email]
-    )->fetch();
-}
-
 /**
  * Create a new user
  * 
- * @param array $data User data
  * @return int|false New user ID or false on failure
  */
-function user_create($data)
+function user_create(array $data)
 {
     // Hash password
     $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
-    $stmt = db_create('users', [
+    $insert_data = [
         'username' => $data['username'],
         'password' => $data['password'],
         'email' => $data['email'],
         'full_name' => $data['full_name'],
         'role' => $data['role'] ?? 'user',
         'status' => $data['status'] ?? 'active',
-    ]);
+    ];
+    $stmt = dbq(...qb_create('users', $insert_data));
 
     return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }
@@ -76,7 +43,7 @@ function user_create($data)
  * @param array $data Updated user data
  * @return bool Success status
  */
-function user_update($id, $data)
+function user_update($id, $data): bool
 {
     $updateData = [];
 
@@ -94,8 +61,7 @@ function user_update($id, $data)
     if (empty($updateData)) {
         return false;
     }
-
-    $stmt = db_update('users', $updateData, 'id = ?', [$id]);
+    $stmt = dbq(...qb_update('users', $updateData, 'id = ?', [$id]));
     return $stmt->rowCount() > 0;
 }
 
@@ -106,7 +72,7 @@ function user_update($id, $data)
  * @param string $password Password
  * @return array|false User data or false if invalid credentials
  */
-function user_verify($username, $password)
+function user_verify(string $username, string $password)
 {
     $user = user_get_by_username($username);
 
@@ -124,19 +90,20 @@ function user_verify($username, $password)
 /**
  * Create an authentication token for the user
  * 
- * @param int $user_id User ID
  * @return string Generated token
  */
-function user_create_token($user_id)
+function user_create_token(int $user_id): string
 {
     $token = bin2hex(random_bytes(32));
     $expires = date('Y-m-d H:i:s', time() + 86400 * 30); // 30 days
 
-    db_create('user_tokens', [
+    $insert_data = [
         'user_id' => $user_id,
         'token' => $token,
         'expires_at' => $expires
-    ]);
+    ];
+    $stmt = dbq(...qb_create('user_tokens', $insert_data));
+
 
     return $token;
 }
@@ -144,12 +111,11 @@ function user_create_token($user_id)
 /**
  * Verify a user token
  * 
- * @param string $token Authentication token
  * @return int|false User ID or false if invalid
  */
-function user_verify_token($token)
+function user_verify_token(string $token)
 {
-    $token_data = db_state(
+    $token_data = dbq(
         "SELECT user_id FROM user_tokens 
          WHERE token = ? AND expires_at > NOW()",
         [$token]

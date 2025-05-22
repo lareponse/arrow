@@ -13,7 +13,7 @@
  */
 function events_get_upcoming($limit = 10, $offset = 0)
 {
-    return db_state(
+    return dbq(
         "SELECT e.*, u.username as organizer
          FROM events e
          JOIN users u ON e.user_id = u.id
@@ -33,7 +33,7 @@ function events_get_upcoming($limit = 10, $offset = 0)
  */
 function events_get_past($limit = 10, $offset = 0)
 {
-    return db_state(
+    return dbq(
         "SELECT e.*, u.username as organizer
          FROM events e
          JOIN users u ON e.user_id = u.id
@@ -52,7 +52,7 @@ function events_get_past($limit = 10, $offset = 0)
  */
 function event_get_by_slug($slug)
 {
-    return db_state(
+    return dbq(
         "SELECT e.*, u.username as organizer, u.full_name as organizer_name
          FROM events e
          JOIN users u ON e.user_id = u.id
@@ -69,7 +69,7 @@ function event_get_by_slug($slug)
  */
 function event_create($data)
 {
-    $stmt = db_create('events', [
+    $insert_data =  [
         'title' => $data['title'],
         'slug' => $data['slug'],
         'description' => $data['description'],
@@ -79,7 +79,8 @@ function event_create($data)
         'image_url' => $data['image_url'] ?? null,
         'status' => $data['status'] ?? 'draft',
         'user_id' => $data['user_id'],
-    ]);
+    ]
+    $stmt = dbq(...qb_create('events',$insert_data));
 
     return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }
@@ -116,7 +117,7 @@ function event_update($id, $data)
         return false;
     }
 
-    $stmt = db_update('events', $updateData, 'id = ?', [$id]);
+    $stmt = dbq(...qb_update('events', $updateData, 'id = ?', [$id]));
     return $stmt->rowCount() > 0;
 }
 
@@ -128,6 +129,6 @@ function event_update($id, $data)
  */
 function event_delete($id)
 {
-    $stmt = db_state("DELETE FROM events WHERE id = ?", [$id]);
+    $stmt = dbq("DELETE FROM events WHERE id = ?", [$id]);
     return $stmt->rowCount() > 0;
 }

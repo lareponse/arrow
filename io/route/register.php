@@ -31,7 +31,7 @@ return function () {
             $errors['username'] = 'Username must be between 3 and 20 characters';
         } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
             $errors['username'] = 'Username can only contain letters, numbers, and underscores';
-        } elseif (user_get_by_username($username)) {
+        } elseif (user_get_by('username', $username)) {
             $errors['username'] = 'Username already taken';
         }
 
@@ -40,7 +40,7 @@ return function () {
             $errors['email'] = 'Email is required';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Invalid email format';
-        } elseif (user_get_by_email($email)) {
+        } elseif (user_get_by('email', $email)) {
             $errors['email'] = 'Email already registered';
         }
 

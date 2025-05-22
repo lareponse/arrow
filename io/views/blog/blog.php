@@ -16,7 +16,7 @@
 
                 <?php if (!empty($article['image_url'])): ?>
                     <figure>
-                        <a href="/articles/<?php echo urlencode($article['slug']); ?>">
+                        <a href="/blog/article/<?php echo urlencode($article['slug']); ?>">
                             <img
                                 src="<?php echo htmlspecialchars($article['image_url'], ENT_QUOTES, 'UTF-8'); ?>"
                                 alt="<?php echo htmlspecialchars($article['title'], ENT_QUOTES, 'UTF-8'); ?>">
@@ -29,7 +29,7 @@
 
                 <header>
                     <h2>
-                        <a href="/articles/<?php echo urlencode($article['slug']); ?>">
+                        <a href="/blog/article/<?php echo urlencode($article['slug']); ?>">
                             <?php echo htmlspecialchars($article['title'], ENT_QUOTES, 'UTF-8'); ?>
                         </a>
                     </h2>
@@ -50,7 +50,7 @@
                 </div>
 
                 <footer>
-                    <a href="/articles/<?php echo urlencode($article['slug']); ?>" class="read-more">
+                    <a href="/blog/article/<?php echo urlencode($article['slug']); ?>" class="read-more">
                         Read more
                         <span class="visually-hidden">
                             about <?php echo htmlspecialchars($article['title'], ENT_QUOTES, 'UTF-8'); ?>

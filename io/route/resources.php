@@ -15,7 +15,7 @@ return function() {
     $resources = resources_get_all($limit, $offset);
     
     // Get total count for pagination
-    $total = db_state("SELECT COUNT(*) FROM resources WHERE status = 'published'")->fetchColumn();
+    $total = dbq("SELECT COUNT(*) FROM resources WHERE status = 'published'")->fetchColumn();
     $total_pages = ceil($total / $limit);
     
     return [
