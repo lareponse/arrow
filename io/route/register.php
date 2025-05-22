@@ -98,6 +98,6 @@ return function () {
         'body' => render('auth/register', [
             'title' => 'Register - copro.academy',
             'errors' => $errors
-        ], 'layout')
+        ])
     ];
 };

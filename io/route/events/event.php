@@ -19,6 +19,6 @@ return function ($slug) {
         'body' => render('events/event', [
             'title' => $event['title'] . ' - copro.academy',
             'event' => $event
-        ], 'layout')
+        ])
     ];
 };
