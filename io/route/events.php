@@ -19,6 +19,6 @@ return function () {
             'title' => 'Events - copro.academy',
             'upcoming_events' => $upcoming_events,
             'past_events' => $past_events
-        ], 'layout')
+        ])
     ];
 };

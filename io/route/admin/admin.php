@@ -64,6 +64,6 @@ return function () {
             'recent_articles' => $recent_articles,
             'recent_events' => $recent_events,
             'recent_resources' => $recent_resources
-        ], __FILE__, 'admin_layout')
+        ], __FILE__)
     ];
 };

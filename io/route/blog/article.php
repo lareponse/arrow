@@ -20,6 +20,6 @@ return function ($slug) {
         'body' => render([
             'title' => $article['title'] . ' - copro.academy',
             'article' => $article
-        ], 'layout')
+        ])
     ];
 };

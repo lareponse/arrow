@@ -49,6 +49,6 @@ return function () {
         'body' => render([
             'title' => 'Login - copro.academy',
             'error' => $error,
-        ], 'layout')
+        ])
     ];
 };

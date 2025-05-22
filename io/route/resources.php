@@ -29,6 +29,6 @@ return function() {
                 'has_prev' => $page > 1,
                 'has_next' => $page < $total_pages
             ]
-        ], 'layout')
+        ])
     ];
 };

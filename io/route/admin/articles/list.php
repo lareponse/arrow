@@ -53,6 +53,6 @@ return function () {
                 'has_prev' => $page > 1,
                 'has_next' => $page < $total_pages
             ]
-        ], __FILE__, 'admin_layout')
+        ], __FILE__)
     ];
 };
