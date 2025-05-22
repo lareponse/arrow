@@ -1,89 +1,58 @@
-<section class="register-section">
+<section class="login-section">
     <div class="container">
         <div class="auth-box">
             <div class="auth-header">
-                <h1>Create an Account</h1>
-                <p>Join copro.academy to access our resources and content.</p>
+                <h1>Login to copro.academy</h1>
+                <p>Welcome back! Please login to your account.</p>
             </div>
 
-            <?php if (isset($errors['general'])): ?>
+            <?php if (isset($error)): ?>
                 <div class="alert alert-error">
-                    <?= htmlspecialchars($errors['general']) ?>
+                    <?= htmlspecialchars($error) ?>
                 </div>
             <?php endif; ?>
 
-            <form action="/register" method="post" class="auth-form">
+            <form action="/login<?= !empty($redirect) ? '?redirect=' . htmlspecialchars($redirect) : '' ?>" method="post" class="auth-form">
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" id="username" name="username" class="form-control <?= isset($errors['username']) ? 'is-invalid' : '' ?>" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required>
-                    <?php if (isset($errors['username'])): ?>
-                        <div class="form-error"><?= htmlspecialchars($errors['username']) ?></div>
-                    <?php endif; ?>
-                </div>
-
-                <div class="form-group">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
-                    <?php if (isset($errors['email'])): ?>
-                        <div class="form-error"><?= htmlspecialchars($errors['email']) ?></div>
-                    <?php endif; ?>
-                </div>
-
-                <div class="form-group">
-                    <label for="full_name" class="form-label">Full Name</label>
-                    <input type="text" id="full_name" name="full_name" class="form-control <?= isset($errors['full_name']) ? 'is-invalid' : '' ?>" value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>" required>
-                    <?php if (isset($errors['full_name'])): ?>
-                        <div class="form-error"><?= htmlspecialchars($errors['full_name']) ?></div>
-                    <?php endif; ?>
+                    <input type="text" id="username" name="username" class="form-control" required autofocus>
                 </div>
 
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" name="password" class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>" required>
-                    <?php if (isset($errors['password'])): ?>
-                        <div class="form-error"><?= htmlspecialchars($errors['password']) ?></div>
-                    <?php endif; ?>
-                    <div class="form-hint">Password must be at least 8 characters long.</div>
+                    <input type="password" id="password" name="password" class="form-control" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="password_confirm" class="form-label">Confirm Password</label>
-                    <input type="password" id="password_confirm" name="password_confirm" class="form-control <?= isset($errors['password_confirm']) ? 'is-invalid' : '' ?>" required>
-                    <?php if (isset($errors['password_confirm'])): ?>
-                        <div class="form-error"><?= htmlspecialchars($errors['password_confirm']) ?></div>
-                    <?php endif; ?>
-                </div>
-
-                <div class="form-group">
-                    <div class="form-check">
-                        <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
-                        <label for="terms" class="form-check-label">I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a></label>
-                    </div>
+                <div class="form-check">
+                    <input type="checkbox" id="remember" name="remember" class="form-check-input">
+                    <label for="remember" class="form-check-label">Remember me</label>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
                 </div>
             </form>
 
             <div class="auth-footer">
-                <p>Already have an account? <a href="/login">Login here</a></p>
+                <p>Don't have an account? <a href="/register">Register here</a></p>
+                <p><a href="/reset-password">Forgot your password?</a></p>
             </div>
         </div>
     </div>
 </section>
 
 <style>
-    .register-section {
+    .login-section {
         padding: 4rem 0;
         background-color: #f5f5f5;
         min-height: calc(100vh - 200px);
         display: flex;
         align-items: center;
+        justify-content: center;
     }
 
     .auth-box {
-        max-width: 500px;
+        max-width: 450px;
         margin: 0 auto;
         background-color: white;
         border-radius: 5px;
@@ -146,25 +115,10 @@
         box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
     }
 
-    .form-control.is-invalid {
-        border-color: #e74c3c;
-    }
-
-    .form-error {
-        color: #e74c3c;
-        font-size: 0.85rem;
-        margin-top: 0.5rem;
-    }
-
-    .form-hint {
-        color: #666;
-        font-size: 0.85rem;
-        margin-top: 0.5rem;
-    }
-
     .form-check {
         display: flex;
         align-items: center;
+        margin-bottom: 1.5rem;
     }
 
     .form-check-input {
@@ -173,20 +127,11 @@
 
     .form-check-label {
         font-size: 0.9rem;
-        color: #333;
-    }
-
-    .form-check-label a {
-        color: #3498db;
-        text-decoration: none;
-    }
-
-    .form-check-label a:hover {
-        text-decoration: underline;
+        color: #666;
     }
 
     .form-actions {
-        margin-top: 2rem;
+        margin-bottom: 1rem;
     }
 
     .btn {
@@ -236,12 +181,12 @@
         text-decoration: underline;
     }
 
-    @media (max-width: 550px) {
+    @media (max-width: 500px) {
         .auth-box {
             padding: 1.5rem;
         }
 
-        .register-section {
+        .login-section {
             padding: 2rem 0;
         }
     }
