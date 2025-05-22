@@ -4,6 +4,7 @@
  * Admin article create/edit route
  */
 return function ($id = null) {
+
     require_once request()['root'] . '/mapper/article.php';
 
     $errors = [];
@@ -12,12 +13,11 @@ return function ($id = null) {
 
     // Get current user
     $current_user = auth_user_active();
+
     if (!$current_user) {
         trigger_error('401 Unauthorized', E_USER_ERROR);
     }
-
-    $user = user_get_by('username', $current_user);
-
+    $user = auth_user_fetch($current_user);
     // If editing, fetch existing article
     if ($is_edit) {
         $article = dbq(
@@ -129,6 +129,6 @@ return function ($id = null) {
             'categories' => $categories,
             'errors' => $errors,
             'is_edit' => $is_edit
-        ], __FILE__, 'admin_layout')
+        ], __FILE__)
     ];
 };
