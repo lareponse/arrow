@@ -11,7 +11,7 @@
  * @param int $offset Starting position
  * @return array Events data
  */
-function events_get_upcoming($limit = 10, $offset = 0)
+function events_get_upcoming(int $limit = 10, int $offset = 0)
 {
     return dbq(
         "SELECT e.*, u.username as organizer
@@ -19,8 +19,7 @@ function events_get_upcoming($limit = 10, $offset = 0)
          JOIN users u ON e.user_id = u.id
          WHERE e.status = 'published' AND e.end_datetime >= NOW()
          ORDER BY e.start_datetime ASC
-         LIMIT ? OFFSET ?",
-        [$limit, $offset]
+         LIMIT $limit OFFSET $offset"
     )->fetchAll();
 }
 
@@ -31,7 +30,7 @@ function events_get_upcoming($limit = 10, $offset = 0)
  * @param int $offset Starting position
  * @return array Events data
  */
-function events_get_past($limit = 10, $offset = 0)
+function events_get_past(int $limit = 10, int $offset = 0)
 {
     return dbq(
         "SELECT e.*, u.username as organizer
@@ -39,8 +38,7 @@ function events_get_past($limit = 10, $offset = 0)
          JOIN users u ON e.user_id = u.id
          WHERE e.status = 'published' AND e.end_datetime < NOW()
          ORDER BY e.start_datetime DESC
-         LIMIT ? OFFSET ?",
-        [$limit, $offset]
+        LIMIT $limit OFFSET $offset"
     )->fetchAll();
 }
 
@@ -80,7 +78,7 @@ function event_create($data)
         'status' => $data['status'] ?? 'draft',
         'user_id' => $data['user_id'],
     ];
-    $stmt = dbq(...qb_create('events',$insert_data));
+    $stmt = dbq(...qb_create('events', $insert_data));
 
     return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }

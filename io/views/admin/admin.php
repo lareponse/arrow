@@ -74,7 +74,7 @@
                                 <small><?= date('M j, Y', strtotime($article['created_at'])) ?></small>
                             </div>
                             <div class="activity-actions">
-                                <a href="/admin/articles/edit/<?= $article['id'] ?>">Edit</a>
+                                <a href="/admin/articles/alter/<?= $article['id'] ?>">Edit</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -101,7 +101,7 @@
                                 <small><?= date('M j, Y g:i A', strtotime($event['start_datetime'])) ?></small>
                             </div>
                             <div class="activity-actions">
-                                <a href="/admin/events/edit/<?= $event['id'] ?>">Edit</a>
+                                <a href="/admin/events/alter/<?= $event['id'] ?>">Edit</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -129,7 +129,7 @@
                                 <small><?= date('M j, Y', strtotime($resource['created_at'])) ?></small>
                             </div>
                             <div class="activity-actions">
-                                <a href="/admin/resources/edit/<?= $resource['id'] ?>">Edit</a>
+                                <a href="/admin/resources/alter/<?= $resource['id'] ?>">Edit</a>
                             </div>
                         </div>
                     <?php endforeach; ?>

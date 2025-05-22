@@ -1,69 +1,104 @@
 <div class="content-header">
     <div class="header-left">
-        <h1>Articles</h1>
-        <p>Manage blog posts and content</p>
+        <h1>Events</h1>
+        <p>Manage upcoming and past events</p>
     </div>
     <div class="header-actions">
-        <a href="/admin/articles/create" class="btn btn-primary">Create Article</a>
+        <a href="/admin/events/alter" class="btn btn-primary">Create Event</a>
     </div>
 </div>
 
 <div class="content-filters">
     <div class="filter-tabs">
-        <a href="/admin/articles" class="filter-tab <?= $data['current_status'] === 'all' ? 'active' : '' ?>">
-            All Articles
+        <a href="/admin/events" class="filter-tab <?= $data['current_status'] === 'all' ? 'active' : '' ?>">
+            All Events
         </a>
-        <a href="/admin/articles?status=published" class="filter-tab <?= $data['current_status'] === 'published' ? 'active' : '' ?>">
+        <a href="/admin/events?status=published" class="filter-tab <?= $data['current_status'] === 'published' ? 'active' : '' ?>">
             Published
         </a>
-        <a href="/admin/articles?status=draft" class="filter-tab <?= $data['current_status'] === 'draft' ? 'active' : '' ?>">
+        <a href="/admin/events?status=draft" class="filter-tab <?= $data['current_status'] === 'draft' ? 'active' : '' ?>">
             Drafts
         </a>
     </div>
 </div>
 
 <div class="content-body">
-    <?php if (!empty($data['articles'])): ?>
-        <div class="articles-table">
+    <?php if (!empty($data['events'])): ?>
+        <div class="events-table">
             <table>
                 <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Author</th>
+                        <th>Event</th>
+                        <th>Date & Time</th>
+                        <th>Organizer</th>
                         <th>Status</th>
-                        <th>Created</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($data['articles'] as $article): ?>
-                        <tr>
+                    <?php foreach ($data['events'] as $event): ?>
+                        <?php
+                        $start_date = new DateTime($event['start_datetime']);
+                        $end_date = new DateTime($event['end_datetime']);
+                        $now = new DateTime();
+                        $is_past = $end_date < $now;
+                        $is_upcoming = $start_date > $now;
+                        ?>
+                        <tr class="<?= $is_past ? 'event-past' : ($is_upcoming ? 'event-upcoming' : 'event-current') ?>">
                             <td>
-                                <div class="article-title">
-                                    <strong><?= htmlspecialchars($article['title']) ?></strong>
-                                    <?php if ($article['excerpt']): ?>
-                                        <div class="article-excerpt">
-                                            <?= htmlspecialchars(substr($article['excerpt'], 0, 100)) ?><?= strlen($article['excerpt']) > 100 ? '...' : '' ?>
+                                <div class="event-info">
+                                    <strong class="event-title"><?= htmlspecialchars($event['title']) ?></strong>
+                                    <?php if ($event['location']): ?>
+                                        <div class="event-location">
+                                            📍 <?= htmlspecialchars($event['location']) ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if ($event['description']): ?>
+                                        <div class="event-description">
+                                            <?= htmlspecialchars(substr(strip_tags($event['description']), 0, 100)) ?><?= strlen(strip_tags($event['description'])) > 100 ? '...' : '' ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
                             </td>
-                            <td><?= htmlspecialchars($article['author_name']) ?></td>
                             <td>
-                                <span class="status status-<?= $article['status'] ?>">
-                                    <?= ucfirst($article['status']) ?>
+                                <div class="event-datetime">
+                                    <div class="datetime-start">
+                                        <strong><?= $start_date->format('M j, Y') ?></strong>
+                                        <span class="time"><?= $start_date->format('g:i A') ?></span>
+                                    </div>
+                                    <?php if ($start_date->format('Y-m-d') !== $end_date->format('Y-m-d')): ?>
+                                        <div class="datetime-end">
+                                            to <?= $end_date->format('M j, Y g:i A') ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="datetime-end">
+                                            to <?= $end_date->format('g:i A') ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="event-timing">
+                                        <?php if ($is_past): ?>
+                                            <span class="timing-badge timing-past">Past</span>
+                                        <?php elseif ($is_upcoming): ?>
+                                            <span class="timing-badge timing-upcoming">Upcoming</span>
+                                        <?php else: ?>
+                                            <span class="timing-badge timing-current">Live</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><?= htmlspecialchars($event['organizer_name']) ?></td>
+                            <td>
+                                <span class="status status-<?= $event['status'] ?>">
+                                    <?= ucfirst($event['status']) ?>
                                 </span>
                             </td>
                             <td>
-                                <time datetime="<?= $article['created_at'] ?>">
-                                    <?= date('M j, Y', strtotime($article['created_at'])) ?>
-                                </time>
-                            </td>
-                            <td>
                                 <div class="action-buttons">
-                                    <a href="/blog/article/<?= urlencode($article['slug']) ?>" target="_blank" class="btn btn-sm">View</a>
-                                    <a href="/admin/articles/alter/<?= $article['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
-                                    <button onclick="deleteArticle(<?= $article['id'] ?>, '<?= htmlspecialchars($article['title'], ENT_QUOTES) ?>')"
+                                    <?php if ($event['status'] === 'published'): ?>
+                                        <a href="/events/event/<?= urlencode($event['slug']) ?>" target="_blank" class="btn btn-sm">View</a>
+                                    <?php endif; ?>
+                                    <a href="/admin/events/alter/<?= $event['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
+                                    <button onclick="deleteEvent(<?= $event['id'] ?>, '<?= htmlspecialchars($event['title'], ENT_QUOTES) ?>')"
                                         class="btn btn-sm btn-danger">Delete</button>
                                 </div>
                             </td>
@@ -92,18 +127,18 @@
         <?php endif; ?>
     <?php else: ?>
         <div class="empty-state">
-            <div class="empty-icon">📝</div>
-            <h3>No articles found</h3>
-            <p>Get started by creating your first article.</p>
-            <a href="/admin/articles/create" class="btn btn-primary">Create Article</a>
+            <div class="empty-icon">📅</div>
+            <h3>No events found</h3>
+            <p>Get started by creating your first event.</p>
+            <a href="/admin/events/alter" class="btn btn-primary">Create Event</a>
         </div>
     <?php endif; ?>
 </div>
 
 <script>
-    function deleteArticle(id, title) {
+    function deleteEvent(id, title) {
         if (confirm(`Are you sure you want to delete "${title}"? This action cannot be undone.`)) {
-            fetch(`/admin/articles/delete/${id}`, {
+            fetch(`/admin/events/delete/${id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -114,11 +149,11 @@
                     if (data.success) {
                         location.reload();
                     } else {
-                        alert('Failed to delete article: ' + (data.error || 'Unknown error'));
+                        alert('Failed to delete event: ' + (data.error || 'Unknown error'));
                     }
                 })
                 .catch(error => {
-                    alert('Failed to delete article: ' + error.message);
+                    alert('Failed to delete event: ' + error.message);
                 });
         }
     }
@@ -177,19 +212,19 @@
         padding: 2rem;
     }
 
-    .articles-table {
+    .events-table {
         background: white;
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    .articles-table table {
+    .events-table table {
         width: 100%;
         border-collapse: collapse;
     }
 
-    .articles-table th {
+    .events-table th {
         background: #f8f9fa;
         padding: 1rem;
         text-align: left;
@@ -198,25 +233,100 @@
         border-bottom: 1px solid #e0e0e0;
     }
 
-    .articles-table td {
+    .events-table td {
         padding: 1rem;
         border-bottom: 1px solid #f0f0f0;
         vertical-align: top;
     }
 
-    .articles-table tr:last-child td {
+    .events-table tr:last-child td {
         border-bottom: none;
     }
 
-    .article-title strong {
+    .event-past {
+        opacity: 0.7;
+    }
+
+    .event-current {
+        background-color: #f0f8ff;
+    }
+
+    .event-info .event-title {
         display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .event-location {
+        font-size: 0.9rem;
+        color: #666;
         margin-bottom: 0.25rem;
     }
 
-    .article-excerpt {
+    .event-description {
         font-size: 0.9rem;
         color: #666;
         line-height: 1.4;
+    }
+
+    .event-datetime {
+        min-width: 140px;
+    }
+
+    .datetime-start {
+        margin-bottom: 0.25rem;
+    }
+
+    .datetime-start strong {
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .time {
+        color: #666;
+        font-size: 0.85rem;
+    }
+
+    .datetime-end {
+        color: #666;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .timing-badge {
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+
+    .timing-past {
+        background: #f8f9fa;
+        color: #6c757d;
+    }
+
+    .timing-upcoming {
+        background: #e7f3ff;
+        color: #0066cc;
+    }
+
+    .timing-current {
+        background: #fff3cd;
+        color: #856404;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.7;
+        }
     }
 
     .status {
@@ -348,7 +458,7 @@
             padding: 1rem;
         }
 
-        .articles-table {
+        .events-table {
             overflow-x: auto;
         }
 
@@ -360,6 +470,10 @@
         .filter-tabs {
             overflow-x: auto;
             white-space: nowrap;
+        }
+
+        .event-datetime {
+            min-width: 120px;
         }
     }
 </style>
