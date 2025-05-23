@@ -87,7 +87,7 @@
         <div class="activity-section">
             <div class="section-header">
                 <h2>Recent Events</h2>
-                <a href="/admin/events/create" class="btn btn-primary">New Event</a>
+                <a href="/admin/events/alter" class="btn btn-primary">New Event</a>
             </div>
             <div class="activity-list">
                 <?php if (!empty($data['recent_events'])): ?>
@@ -106,7 +106,7 @@
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p class="empty-state">No events yet. <a href="/admin/events/create">Create your first event</a></p>
+                    <p class="empty-state">No events yet. <a href="/admin/events/alter">Create your first event</a></p>
                 <?php endif; ?>
             </div>
         </div>
@@ -114,7 +114,7 @@
         <div class="activity-section">
             <div class="section-header">
                 <h2>Recent Resources</h2>
-                <a href="/admin/resources/create" class="btn btn-primary">New Resource</a>
+                <a href="/admin/resources/alter" class="btn btn-primary">New Resource</a>
             </div>
             <div class="activity-list">
                 <?php if (!empty($data['recent_resources'])): ?>
@@ -134,7 +134,7 @@
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p class="empty-state">No resources yet. <a href="/admin/resources/create">Upload your first resource</a></p>
+                    <p class="empty-state">No resources yet. <a href="/admin/resources/alter">Upload your first resource</a></p>
                 <?php endif; ?>
             </div>
         </div>

@@ -4,7 +4,7 @@
         <p>Manage blog posts and content</p>
     </div>
     <div class="header-actions">
-        <a href="/admin/articles/create" class="btn btn-primary">Create Article</a>
+        <a href="/admin/articles/alter" class="btn btn-primary">Create Article</a>
     </div>
 </div>
 
@@ -95,7 +95,7 @@
             <div class="empty-icon">📝</div>
             <h3>No articles found</h3>
             <p>Get started by creating your first article.</p>
-            <a href="/admin/articles/create" class="btn btn-primary">Create Article</a>
+            <a href="/admin/articles/alter" class="btn btn-primary">Create Article</a>
         </div>
     <?php endif; ?>
 </div>
@@ -125,58 +125,7 @@
 </script>
 
 <style>
-    .content-header {
-        padding: 2rem;
-        background: white;
-        border-bottom: 1px solid #e0e0e0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .header-left h1 {
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-        color: #333;
-    }
-
-    .header-left p {
-        color: #666;
-        margin: 0;
-    }
-
-    .content-filters {
-        background: white;
-        border-bottom: 1px solid #e0e0e0;
-        padding: 0 2rem;
-    }
-
-    .filter-tabs {
-        display: flex;
-        gap: 0;
-    }
-
-    .filter-tab {
-        padding: 1rem 1.5rem;
-        text-decoration: none;
-        color: #666;
-        border-bottom: 3px solid transparent;
-        transition: all 0.2s;
-    }
-
-    .filter-tab:hover {
-        color: #3498db;
-    }
-
-    .filter-tab.active {
-        color: #3498db;
-        border-bottom-color: #3498db;
-    }
-
-    .content-body {
-        padding: 2rem;
-    }
-
+ 
     .articles-table {
         background: white;
         border-radius: 8px;

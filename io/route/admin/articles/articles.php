@@ -32,15 +32,14 @@ return function () {
          LIMIT {$limit} OFFSET {$offset}",
         $params
     )->fetchAll();
-
     // Get total count
     $total = dbq(
         "SELECT COUNT(*) FROM articles a {$where_clause}",
         $params
     )->fetchColumn();
 
-    $total_pages = ceil($total / $limit);
 
+    $total_pages = (int) ceil($total / $limit);
     return [
         'status' => 200,
         'body' => render([
