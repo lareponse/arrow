@@ -1,41 +1,35 @@
 <?php
 
-/**
- * Admin articles list route
- */
 return function () {
-    require_once request()['root'] . '/mapper/article.php';
+    require_once request()['root'] . '/mapper/resource.php';
 
     $page = max(1, (int)($_GET['page'] ?? 1));
     $status = $_GET['status'] ?? 'all';
     $limit = 20;
     $offset = ($page - 1) * $limit;
 
-    // Build WHERE clause
     $where_conditions = [];
     $params = [];
 
     if ($status !== 'all') {
-        $where_conditions[] = "a.status = ?";
+        $where_conditions[] = "r.status = ?";
         $params[] = $status;
     }
 
     $where_clause = $where_conditions ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
 
-    // Get articles
-    $articles = dbq(
-        "SELECT a.*, u.full_name as author_name, u.username
-         FROM articles a
-         JOIN users u ON a.user_id = u.id
+    $resources = dbq(
+        "SELECT r.*, u.full_name as uploader_name, u.username
+         FROM resources r
+         JOIN users u ON r.user_id = u.id
          {$where_clause}
-         ORDER BY a.created_at DESC
+         ORDER BY r.created_at DESC
          LIMIT {$limit} OFFSET {$offset}",
         $params
     )->fetchAll();
 
-    // Get total count
     $total = dbq(
-        "SELECT COUNT(*) FROM articles a {$where_clause}",
+        "SELECT COUNT(*) FROM resources r {$where_clause}",
         $params
     )->fetchColumn();
 
@@ -44,8 +38,8 @@ return function () {
     return [
         'status' => 200,
         'body' => render([
-            'title' => 'Manage Articles - Admin',
-            'articles' => $articles,
+            'title' => 'Manage Resources - Admin',
+            'resources' => $resources,
             'current_status' => $status,
             'pagination' => [
                 'current' => $page,
