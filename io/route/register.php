@@ -4,13 +4,10 @@
  * Register route
  */
 return function () {
-    require_once __DIR__ . '/../../add/user_mapper.php';
-    require_once __DIR__ . '/../../add/auth.php';
-
     $errors = [];
 
     // Check if already logged in
-    if (is_authenticated()) {
+    if (!auth_user_active()) {
         // Redirect to home
         header('Location: /');
         exit;
@@ -95,9 +92,9 @@ return function () {
 
     return [
         'status' => 200,
-        'body' => render('auth/register', [
+        'body' => render([
             'title' => 'Register - copro.academy',
             'errors' => $errors
-        ])
+        ], __FILE__)
     ];
 };
