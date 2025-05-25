@@ -10,7 +10,7 @@ return function () {
         require_once request()['root'] . '/mapper/resource.php';
 
         // Search articles
-        $articles = dbq(
+        $articles = pdo(
             "SELECT 'article' as type, id, title, slug, excerpt as description, created_at
              FROM articles 
              WHERE status = 'published' AND (title LIKE ? OR content LIKE ?)
@@ -19,7 +19,7 @@ return function () {
         )->fetchAll();
 
         // Search events
-        $events = dbq(
+        $events = pdo(
             "SELECT 'event' as type, id, title, slug, description, start_datetime as created_at
              FROM events 
              WHERE status = 'published' AND (title LIKE ? OR description LIKE ?)
@@ -28,7 +28,7 @@ return function () {
         )->fetchAll();
 
         // Search resources
-        $resources = dbq(
+        $resources = pdo(
             "SELECT 'resource' as type, id, title, slug, description, created_at
              FROM resources 
              WHERE status = 'published' AND (title LIKE ? OR description LIKE ?)

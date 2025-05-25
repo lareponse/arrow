@@ -24,7 +24,7 @@ return function () {
 
     $where_clause = $where_conditions ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
 
-    $users = dbq(
+    $users = pdo(
         "SELECT id, username, email, full_name, role, status, created_at
          FROM users
          {$where_clause}
@@ -33,7 +33,7 @@ return function () {
         $params
     )->fetchAll();
 
-    $total = dbq(
+    $total = pdo(
         "SELECT COUNT(*) FROM users {$where_clause}",
         $params
     )->fetchColumn();

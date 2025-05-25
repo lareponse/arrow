@@ -6,11 +6,11 @@
 return function () {
     
     // Check if user is authenticated
-    // if (!vd(auth_user_active())) {
-    //     // Redirect to login page
-    //     header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
-    //     exit;
-    // }
+    if (!(auth_user_active())) {
+        // Redirect to login page
+        header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+        exit;
+    }
 
     // Check if user has admin role
     // if (!has_role(['admin', 'editor'])) {

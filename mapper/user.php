@@ -9,7 +9,7 @@
  */
 function user_get_by(string $field, $value): array|false
 {
-    return dbq("SELECT * FROM users WHERE ? = ? AND status = 'active'", [$field, $value])->fetch();
+    return pdo("SELECT * FROM users WHERE ? = ? AND status = 'active'", [$field, $value])->fetch();
 }
 /**
  * Create a new user
@@ -28,9 +28,9 @@ function user_create(array $data)
         'role' => $data['role'] ?? 'user',
         'status' => $data['status'] ?? 'active',
     ];
-    $stmt = dbq(...qb_create('users', $insert_data));
+    $stmt = pdo(...qb_create('users', $insert_data));
 
-    return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
+    return $stmt->rowCount() > 0 ? pdo()->lastInsertId() : false;
 }
 
 /**
@@ -59,7 +59,7 @@ function user_update($id, $data): bool
         return false;
     }
     exit('501 Not Implemented: user_update() not implemented');
-    // $stmt = dbq(...qb_update('users', $updateData, 'id = ?', [$id]));
+    // $stmt = pdo(...qb_update('users', $updateData, 'id = ?', [$id]));
     // return $stmt->rowCount() > 0;
 }
 
@@ -100,7 +100,7 @@ function user_create_token(int $user_id): string
         'token' => $token,
         'expires_at' => $expires
     ];
-    $stmt = dbq(...qb_create('user_tokens', $insert_data));
+    $stmt = pdo(...qb_create('user_tokens', $insert_data));
 
 
     return $token;
@@ -113,7 +113,7 @@ function user_create_token(int $user_id): string
  */
 function user_verify_token(string $token)
 {
-    $token_data = dbq(
+    $token_data = pdo(
         "SELECT user_id FROM user_tokens 
          WHERE token = ? AND expires_at > NOW()",
         [$token]

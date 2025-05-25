@@ -14,7 +14,7 @@ return function ($id = null) {
     $user = auth_user_fetch($current_user);
 
     if ($is_edit) {
-        $event = dbq("SELECT * FROM events WHERE id = ?", [$id])->fetch();
+        $event = pdo("SELECT * FROM events WHERE id = ?", [$id])->fetch();
         if (!$event) {
             trigger_error('404 Not Found: Event not found', E_USER_ERROR);
         }
@@ -39,7 +39,7 @@ return function ($id = null) {
         } elseif (!preg_match('/^[a-z0-9-]+$/', $slug)) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
-            $existing = dbq(
+            $existing = pdo(
                 "SELECT id FROM events WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();

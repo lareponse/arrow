@@ -14,7 +14,7 @@ return function ($id = null) {
     $user = auth_user_fetch($current_user);
 
     if ($is_edit) {
-        $resource = dbq("SELECT * FROM resources WHERE id = ?", [$id])->fetch();
+        $resource = pdo("SELECT * FROM resources WHERE id = ?", [$id])->fetch();
         if (!$resource) {
             trigger_error('404 Not Found: Resource not found', E_USER_ERROR);
         }
@@ -35,7 +35,7 @@ return function ($id = null) {
         } elseif (!preg_match('/^[a-z0-9-]+$/', $slug)) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
-            $existing = dbq(
+            $existing = pdo(
                 "SELECT id FROM resources WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();
