@@ -72,7 +72,7 @@ function article_get_by_slug($slug)
  */
 function article_create($data)
 {
-    return db_transaction(function () use ($data) {
+    return pdo(function () use ($data) {
 
         $insert_data = [
             'title' => $data['title'],
@@ -111,7 +111,7 @@ function article_create($data)
  */
 function article_update($id, $data)
 {
-    return db_transaction(function () use ($id, $data) {
+    return pdo(function () use ($id, $data) {
         $updateData = [];
 
         foreach (['title', 'slug', 'content', 'excerpt', 'image_url', 'status'] as $field) {
@@ -151,7 +151,7 @@ function article_update($id, $data)
  */
 function article_delete(int $id)
 {
-    return db_transaction(function () use ($id) {
+    return pdo(function () use ($id) {
         // Categories will be deleted via ON DELETE CASCADE
         $stmt = pdo("DELETE FROM articles WHERE id = ?", [$id]);
         return $stmt->rowCount() > 0;
