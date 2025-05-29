@@ -16,19 +16,19 @@ return function ($slug) {
     }
 
     // Check if user is authenticated for protected resources
-    if (isset($resource['is_protected']) && $resource['is_protected'] && !auth_user_active()) {
+    if (isset($resource['is_protected']) && $resource['is_protected'] && !whoami()) {
         // Redirect to login page
         header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
         exit;
     }
     $data_insert = [
         'resource_id' => $resource['id'],
-        'user_id' => auth_user_active() ? current_user()['id'] : null,
+        'user_id' => whoami() ? current_user()['id'] : null,
         'ip_address' => $_SERVER['REMOTE_ADDR'],
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
         'download_time' => date('Y-m-d H:i:s')
     ];
-    pdo(...qb_create('resource_downloads', $data_insert));
+    dbq(...qb_create('resource_downloads', $data_insert));
 
     // Get file path
     $file_path = __DIR__ . '/../../../public/' . $resource['file_path'];

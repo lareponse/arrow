@@ -24,13 +24,13 @@ function articles_get_published(int $limit = 10, int $offset = 0): array
             ORDER BY a.created_at DESC
             LIMIT {$limit} OFFSET {$offset}"; // typed parameters prevent SQL injection
 
-    return pdo($sql)->fetchAll();
+    return dbq($sql)->fetchAll();
 }
 
 function articles_count_published()
 {
     $q = "SELECT COUNT(*) FROM articles WHERE status = 'published'";
-    return (int)pdo($q)->fetchColumn();
+    return (int)dbq($q)->fetchColumn();
 }
 /**
  * Get published article by slug
@@ -40,7 +40,7 @@ function articles_count_published()
  */
 function article_get_by_slug($slug)
 {
-    $article = pdo(
+    $article = dbq(
         "SELECT a.*, u.username as author, u.full_name as author_name
          FROM articles a
          JOIN users u ON a.user_id = u.id
@@ -53,7 +53,7 @@ function article_get_by_slug($slug)
     }
 
     // Get article categories
-    $article['categories'] = pdo(
+    $article['categories'] = dbq(
         "SELECT c.id, c.name, c.slug
          FROM categories c
          JOIN article_category ac ON c.id = ac.category_id
@@ -72,7 +72,7 @@ function article_get_by_slug($slug)
  */
 function article_create($data)
 {
-    return pdo(function () use ($data) {
+    return dbt(function () use ($data) {
 
         $insert_data = [
             'title' => $data['title'],
@@ -83,18 +83,18 @@ function article_create($data)
             'status' => $data['status'] ?? 'draft',
             'user_id' => $data['user_id'],
         ];
-        $stmt = pdo(...qb_create('articles', $insert_data));
+        $stmt = dbq(...qb_create('articles', $insert_data));
 
         if ($stmt->rowCount() === 0) {
             return false;
         }
 
-        $article_id = pdo()->lastInsertId();
+        $article_id = db()->lastInsertId();
 
         // Add categories if provided
         if (!empty($data['categories'])) {
             foreach ($data['categories'] as $category_id) {
-                $stmt = pdo(...qb_create('article_category', ['article_id' => $article_id, 'category_id' => $category_id]));
+                $stmt = dbq(...qb_create('article_category', ['article_id' => $article_id, 'category_id' => $category_id]));
             }
         }
 
@@ -111,7 +111,7 @@ function article_create($data)
  */
 function article_update($id, $data)
 {
-    return pdo(function () use ($id, $data) {
+    return dbt(function () use ($id, $data) {
         $updateData = [];
 
         foreach (['title', 'slug', 'content', 'excerpt', 'image_url', 'status'] as $field) {
@@ -123,7 +123,7 @@ function article_update($id, $data)
         if (empty($updateData)) {
             return false;
         }
-        $stmt = pdo(...qb_update('articles', $updateData, 'id = ?', [$id]));
+        $stmt = dbq(...qb_update('articles', $updateData, 'id = ?', [$id]));
 
         if ($stmt->rowCount() === 0) {
             return false;
@@ -132,11 +132,11 @@ function article_update($id, $data)
         // Update categories if provided
         if (isset($data['categories'])) {
             // Remove existing categories
-            pdo("DELETE FROM article_category WHERE article_id = ?", [$id]);
+            dbq("DELETE FROM article_category WHERE article_id = ?", [$id]);
 
             // Add new categories
             foreach ($data['categories'] as $category_id)
-                $stmt = pdo(...qb_create('article_category', ['article_id' => $id, 'category_id' => $category_id]));
+                $stmt = dbq(...qb_create('article_category', ['article_id' => $id, 'category_id' => $category_id]));
         }
 
         return true;
@@ -151,9 +151,9 @@ function article_update($id, $data)
  */
 function article_delete(int $id)
 {
-    return pdo(function () use ($id) {
+    return dbt(function () use ($id) {
         // Categories will be deleted via ON DELETE CASCADE
-        $stmt = pdo("DELETE FROM articles WHERE id = ?", [$id]);
+        $stmt = dbq("DELETE FROM articles WHERE id = ?", [$id]);
         return $stmt->rowCount() > 0;
     });
 }

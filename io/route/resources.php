@@ -4,7 +4,7 @@
  */
 return function() {
     // Load resource mapper functions
-    require_once __DIR__ . '/../../add/resource_mapper.php';
+    require_once request()['root']. '/mapper/resource.php';
     
     // Get page number from query string
     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
@@ -15,12 +15,12 @@ return function() {
     $resources = resources_get_all($limit, $offset);
     
     // Get total count for pagination
-    $total = pdo("SELECT COUNT(*) FROM resources WHERE status = 'published'")->fetchColumn();
+    $total = dbq("SELECT COUNT(*) FROM resources WHERE status = 'published'")->fetchColumn();
     $total_pages = ceil($total / $limit);
     
     return [
         'status' => 200,
-        'body' => render('resources/index', [
+        'body' => render([
             'title' => 'Resources - copro.academy',
             'resources' => $resources,
             'pagination' => [

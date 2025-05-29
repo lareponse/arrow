@@ -23,7 +23,7 @@ return function () {
     $where_clause = $where_conditions ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
 
     // Get articles
-    $articles = pdo(
+    $articles = dbq(
         "SELECT a.*, u.full_name as author_name, u.username
          FROM articles a
          JOIN users u ON a.user_id = u.id
@@ -33,7 +33,7 @@ return function () {
         $params
     )->fetchAll();
     // Get total count
-    $total = pdo(
+    $total = dbq(
         "SELECT COUNT(*) FROM articles a {$where_clause}",
         $params
     )->fetchColumn();

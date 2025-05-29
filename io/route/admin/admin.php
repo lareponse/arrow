@@ -12,27 +12,27 @@ return function () {
     // Get dashboard statistics
     $stats = [
         'articles' => [
-            'total' => pdo("SELECT COUNT(*) FROM articles")->fetchColumn(),
-            'published' => pdo("SELECT COUNT(*) FROM articles WHERE status = 'published'")->fetchColumn(),
-            'draft' => pdo("SELECT COUNT(*) FROM articles WHERE status = 'draft'")->fetchColumn()
+            'total' => dbq("SELECT COUNT(*) FROM articles")->fetchColumn(),
+            'published' => dbq("SELECT COUNT(*) FROM articles WHERE status = 'published'")->fetchColumn(),
+            'draft' => dbq("SELECT COUNT(*) FROM articles WHERE status = 'draft'")->fetchColumn()
         ],
         'events' => [
-            'total' => pdo("SELECT COUNT(*) FROM events")->fetchColumn(),
-            'upcoming' => pdo("SELECT COUNT(*) FROM events WHERE status = 'published' AND start_datetime > NOW()")->fetchColumn(),
-            'past' => pdo("SELECT COUNT(*) FROM events WHERE status = 'published' AND end_datetime < NOW()")->fetchColumn()
+            'total' => dbq("SELECT COUNT(*) FROM events")->fetchColumn(),
+            'upcoming' => dbq("SELECT COUNT(*) FROM events WHERE status = 'published' AND start_datetime > NOW()")->fetchColumn(),
+            'past' => dbq("SELECT COUNT(*) FROM events WHERE status = 'published' AND end_datetime < NOW()")->fetchColumn()
         ],
         'resources' => [
-            'total' => pdo("SELECT COUNT(*) FROM resources")->fetchColumn(),
-            'published' => pdo("SELECT COUNT(*) FROM resources WHERE status = 'published'")->fetchColumn()
+            'total' => dbq("SELECT COUNT(*) FROM resources")->fetchColumn(),
+            'published' => dbq("SELECT COUNT(*) FROM resources WHERE status = 'published'")->fetchColumn()
         ],
         'users' => [
-            'total' => pdo("SELECT COUNT(*) FROM users WHERE status = 'active'")->fetchColumn(),
-            'admins' => pdo("SELECT COUNT(*) FROM users WHERE role IN ('admin', 'editor') AND status = 'active'")->fetchColumn()
+            'total' => dbq("SELECT COUNT(*) FROM users WHERE status = 'active'")->fetchColumn(),
+            'admins' => dbq("SELECT COUNT(*) FROM users WHERE role IN ('admin', 'editor') AND status = 'active'")->fetchColumn()
         ]
     ];
 
     // Recent activity
-    $recent_articles = pdo(
+    $recent_articles = dbq(
         "SELECT a.id, a.title, a.status, a.created_at, u.full_name as author
          FROM articles a
          JOIN users u ON a.user_id = u.id
@@ -40,7 +40,7 @@ return function () {
          LIMIT 5"
     )->fetchAll();
 
-    $recent_events = pdo(
+    $recent_events = dbq(
         "SELECT e.id, e.title, e.start_datetime, e.status, u.full_name as organizer
          FROM events e
          JOIN users u ON e.user_id = u.id
@@ -48,7 +48,7 @@ return function () {
          LIMIT 5"
     )->fetchAll();
 
-    $recent_resources = pdo(
+    $recent_resources = dbq(
         "SELECT r.id, r.title, r.file_type, r.status, r.created_at, u.full_name as uploader
          FROM resources r
          JOIN users u ON r.user_id = u.id

@@ -6,7 +6,7 @@
 return function () {
     
     // Check if user is authenticated
-    if (!(auth_user_active())) {
+    if (!(whoami())) {
         // Redirect to login page
         header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
         exit;

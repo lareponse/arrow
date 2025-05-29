@@ -12,15 +12,15 @@ return function ($id = null) {
     $is_edit = $id !== null;
 
     // Get current user
-    $current_user = auth_user_active();
+    $current_user = whoami();
 
     if (!$current_user) {
         trigger_error('401 Unauthorized', E_USER_ERROR);
     }
-    $user = auth_user_fetch($current_user);
+
     // If editing, fetch existing article
     if ($is_edit) {
-        $article = pdo(
+        $article = dbq(
             "SELECT * FROM articles WHERE id = ?",
             [$id]
         )->fetch();
@@ -30,14 +30,14 @@ return function ($id = null) {
         }
 
         // Get categories
-        $article['categories'] = pdo(
+        $article['categories'] = dbq(
             "SELECT category_id FROM article_category WHERE article_id = ?",
             [$id]
         )->fetchAll(PDO::FETCH_COLUMN);
     }
 
     // Get all categories
-    $categories = pdo("SELECT * FROM categories ORDER BY name")->fetchAll();
+    $categories = dbq("SELECT * FROM categories ORDER BY name")->fetchAll();
 
     // Handle form submission
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -60,7 +60,7 @@ return function ($id = null) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
             // Check slug uniqueness
-            $existing = pdo(
+            $existing = dbq(
                 "SELECT id FROM articles WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();
@@ -98,7 +98,7 @@ return function ($id = null) {
                     $errors['general'] = 'Failed to update article';
                 }
             } else {
-                $data['user_id'] = $user['id'];
+                $data['username'] = whoami();
                 $article_id = article_create($data);
                 if ($article_id) {
                     header('Location: /admin/articles?success=created');

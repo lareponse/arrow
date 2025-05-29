@@ -6,12 +6,12 @@
 
 function categories_get_all(): array
 {
-    return pdo("SELECT * FROM categories ORDER BY name")->fetchAll();
+    return dbq("SELECT * FROM categories ORDER BY name")->fetchAll();
 }
 
 function category_get_by(string $field, $value)
 {
-    return pdo("SELECT * FROM categories WHERE {$field} = ?", [$value])->fetch();
+    return dbq("SELECT * FROM categories WHERE {$field} = ?", [$value])->fetch();
 }
 
 function category_create(array $data)
@@ -21,8 +21,8 @@ function category_create(array $data)
         'slug' => $data['slug'],
         'description' => $data['description'] ?? null,
     ];
-    $stmt = pdo(...qb_create('categories', $insert_data));
-    return $stmt->rowCount() > 0 ? pdo()->lastInsertId() : false;
+    $stmt = dbq(...qb_create('categories', $insert_data));
+    return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }
 
 function category_update(int $id, array $data): bool
@@ -36,12 +36,12 @@ function category_update(int $id, array $data): bool
 
     if (empty($update_data)) return false;
 
-    $stmt = pdo(...qb_update('categories', $update_data, 'id = ?', [$id]));
+    $stmt = dbq(...qb_update('categories', $update_data, 'id = ?', [$id]));
     return $stmt->rowCount() > 0;
 }
 
 function category_delete(int $id): bool
 {
-    $stmt = pdo("DELETE FROM categories WHERE id = ?", [$id]);
+    $stmt = dbq("DELETE FROM categories WHERE id = ?", [$id]);
     return $stmt->rowCount() > 0;
 }

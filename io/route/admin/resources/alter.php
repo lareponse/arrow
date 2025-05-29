@@ -7,14 +7,13 @@ return function ($id = null) {
     $resource = null;
     $is_edit = $id !== null;
 
-    $current_user = auth_user_active();
+    $current_user = whoami();
     if (!$current_user) {
         trigger_error('401 Unauthorized', E_USER_ERROR);
     }
-    $user = auth_user_fetch($current_user);
 
     if ($is_edit) {
-        $resource = pdo("SELECT * FROM resources WHERE id = ?", [$id])->fetch();
+        $resource = dbq("SELECT * FROM resources WHERE id = ?", [$id])->fetch();
         if (!$resource) {
             trigger_error('404 Not Found: Resource not found', E_USER_ERROR);
         }
@@ -35,7 +34,7 @@ return function ($id = null) {
         } elseif (!preg_match('/^[a-z0-9-]+$/', $slug)) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
-            $existing = pdo(
+            $existing = dbq(
                 "SELECT id FROM resources WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();
@@ -90,7 +89,7 @@ return function ($id = null) {
                 }
                 $errors['general'] = 'Failed to update resource';
             } else {
-                $data['user_id'] = $user['id'];
+                $data['username'] = whoami();
                 $resource_id = resource_create($data);
                 if ($resource_id) {
                     header('Location: /admin/resources?success=created');

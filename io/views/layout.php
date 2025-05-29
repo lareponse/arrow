@@ -25,7 +25,7 @@
                     <li><a href="/events">Events</a></li>
                     <li><a href="/resources">Resources</a></li>
                     <li><a href="/contact">Contact</a></li>
-                    <?php if (auth_user_active()): ?>
+                    <?php if (whoami()): ?>
                             <li><a href="/admin">Admin</a></li>
                         <li><a href="/logout">Logout</a></li>
                     <?php else: ?>

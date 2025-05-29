@@ -39,7 +39,7 @@ return function ($id = null) {
         } elseif (!preg_match('/^[a-z0-9-]+$/', $slug)) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
-            $existing = pdo(
+            $existing = dbq(
                 "SELECT id FROM categories WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();

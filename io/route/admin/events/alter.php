@@ -7,14 +7,13 @@ return function ($id = null) {
     $event = null;
     $is_edit = $id !== null;
 
-    $current_user = auth_user_active();
+    $current_user = whoami();
     if (!$current_user) {
         trigger_error('401 Unauthorized', E_USER_ERROR);
     }
-    $user = auth_user_fetch($current_user);
 
     if ($is_edit) {
-        $event = pdo("SELECT * FROM events WHERE id = ?", [$id])->fetch();
+        $event = dbq("SELECT * FROM events WHERE id = ?", [$id])->fetch();
         if (!$event) {
             trigger_error('404 Not Found: Event not found', E_USER_ERROR);
         }
@@ -39,7 +38,7 @@ return function ($id = null) {
         } elseif (!preg_match('/^[a-z0-9-]+$/', $slug)) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
-            $existing = pdo(
+            $existing = dbq(
                 "SELECT id FROM events WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();
@@ -82,7 +81,7 @@ return function ($id = null) {
                 }
                 $errors['general'] = 'Failed to update event';
             } else {
-                $data['user_id'] = $user['id'];
+                $data['username'] = whoami();
                 $event_id = event_create($data);
                 if ($event_id) {
                     header('Location: /admin/events?success=created');

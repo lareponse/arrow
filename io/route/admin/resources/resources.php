@@ -18,7 +18,7 @@ return function () {
 
     $where_clause = $where_conditions ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
 
-    $resources = pdo(
+    $resources = dbq(
         "SELECT r.*, u.full_name as uploader_name, u.username
          FROM resources r
          JOIN users u ON r.user_id = u.id
@@ -28,7 +28,7 @@ return function () {
         $params
     )->fetchAll();
 
-    $total = pdo(
+    $total = dbq(
         "SELECT COUNT(*) FROM resources r {$where_clause}",
         $params
     )->fetchColumn();

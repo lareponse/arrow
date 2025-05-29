@@ -7,7 +7,7 @@ return function () {
     $errors = [];
 
     // Check if already logged in
-    if (!auth_user_active()) {
+    if (!whoami()) {
         // Redirect to home
         header('Location: /');
         exit;
