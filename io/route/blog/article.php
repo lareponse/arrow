@@ -12,7 +12,7 @@ return function ($slug) {
     $article = article_get_by('slug', $slug);
 
     if (!$article) {
-        trigger_error('404 Not Found: Article not found', E_USER_ERROR);
+        throw new DomainException('Article not found', 404);
     }
 
     return [

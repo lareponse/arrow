@@ -15,7 +15,7 @@ return function ($id = null) {
     $current_user = whoami();
 
     if (!$current_user) {
-        trigger_error('401 Unauthorized', E_USER_ERROR);
+        throw new DomainException('Unauthorized', 401);
     }
 
     // If editing, fetch existing article
@@ -26,7 +26,7 @@ return function ($id = null) {
         )->fetch();
 
         if (!$article) {
-            trigger_error('404 Not Found: Article not found', E_USER_ERROR);
+            throw new DomainException('Article not found', 404);
         }
 
         // Get categories

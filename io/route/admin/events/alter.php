@@ -9,13 +9,13 @@ return function ($id = null) {
 
     $current_user = whoami();
     if (!$current_user) {
-        trigger_error('401 Unauthorized', E_USER_ERROR);
+        throw new DomainException('Unauthorized', 401);
     }
 
     if ($is_edit) {
         $event = dbq("SELECT * FROM events WHERE id = ?", [$id])->fetch();
         if (!$event) {
-            trigger_error('404 Not Found: Event not found', E_USER_ERROR);
+            throw new DomainException('Event not found', 404);
         }
     }
 

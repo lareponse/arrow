@@ -12,7 +12,7 @@ return function ($slug) {
     $resource = resource_get_by_slug($slug);
 
     if (!$resource) {
-        trigger_error('404 Not Found: Resource not found', E_USER_ERROR);
+        throw new DomainException('Resource not found', 404);
     }
 
     // Check if user is authenticated for protected resources
@@ -23,7 +23,7 @@ return function ($slug) {
     }
     $data_insert = [
         'resource_id' => $resource['id'],
-        'user_id' => whoami() ? current_user()['id'] : null,
+        'user_id' => whoami(),
         'ip_address' => $_SERVER['REMOTE_ADDR'],
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
         'download_time' => date('Y-m-d H:i:s')
@@ -34,7 +34,7 @@ return function ($slug) {
     $file_path = __DIR__ . '/../../../public/' . $resource['file_path'];
 
     if (!file_exists($file_path)) {
-        trigger_error('404 Not Found: Resource file not found', E_USER_ERROR);
+        throw new DomainException('Resource file not found', 404);
     }
 
     // Set appropriate headers

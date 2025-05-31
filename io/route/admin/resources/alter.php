@@ -9,13 +9,13 @@ return function ($id = null) {
 
     $current_user = whoami();
     if (!$current_user) {
-        trigger_error('401 Unauthorized', E_USER_ERROR);
+        throw new DomainException('Unauthorized', 401);
     }
 
     if ($is_edit) {
         $resource = dbq("SELECT * FROM resources WHERE id = ?", [$id])->fetch();
         if (!$resource) {
-            trigger_error('404 Not Found: Resource not found', E_USER_ERROR);
+            throw new DomainException('Resource not found', 404);
         }
     }
 
