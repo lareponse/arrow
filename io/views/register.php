@@ -13,6 +13,8 @@
             <?php endif; ?>
 
             <form action="/register" method="post" class="auth-form">
+                <?= csrf_field() ?>
+
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" id="username" name="username" class="form-control <?= isset($errors['username']) ? 'is-invalid' : '' ?>" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required>

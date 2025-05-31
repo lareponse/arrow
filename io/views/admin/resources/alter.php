@@ -16,6 +16,8 @@
     <?php endif; ?>
 
     <form method="POST" enctype="multipart/form-data" class="resource-form">
+        <?= csrf_field() ?>
+
         <div class="form-grid">
             <div class="form-main">
                 <div class="form-group">

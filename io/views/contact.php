@@ -14,6 +14,8 @@
                     <?php endif; ?>
 
                     <form action="/contact" method="post" class="contact-form">
+                        <?= csrf_field() ?>
+
                         <div class="form-group">
                             <label for="name" class="form-label">Name *</label>
                             <input
