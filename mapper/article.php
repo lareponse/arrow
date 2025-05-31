@@ -13,18 +13,18 @@
  */
 function articles_get_published(int $limit = 10, int $offset = 0): array
 {
-    // limit and offset should be positive integers
-    if ($limit < 1 || $offset < 0) {
-        return [];
-    }
+    // Validate inputs
+    if ($limit < 1 || $limit > 100) $limit = 10;
+    if ($offset < 0) $offset = 0;
+
     $sql = "SELECT a.*, u.username as author, u.full_name as author_name
             FROM articles a
             LEFT JOIN users u ON a.user_id = u.id
             WHERE a.status = 'published'
             ORDER BY a.created_at DESC
-            LIMIT {$limit} OFFSET {$offset}"; // typed parameters prevent SQL injection
+            LIMIT ? OFFSET ?";
 
-    return dbq($sql)->fetchAll();
+    return dbq($sql, [$limit, $offset])->fetchAll();
 }
 
 function articles_count_published()
@@ -94,7 +94,7 @@ function article_create($data)
         // Add categories if provided
         if (!empty($data['categories'])) {
             foreach ($data['categories'] as $category_id) {
-                $stmt = dbq(...qb_create('article_category', ['article_id' => $article_id, 'category_id' => $category_id]));
+                $stmt = dbq(...qb_create('article_category', null, ['article_id' => $article_id, 'category_id' => $category_id]));
             }
         }
 
@@ -136,7 +136,7 @@ function article_update($id, $data)
 
             // Add new categories
             foreach ($data['categories'] as $category_id)
-                $stmt = dbq(...qb_create('article_category', ['article_id' => $id, 'category_id' => $category_id]));
+                $stmt = dbq(...qb_create('article_category', null, ['article_id' => $id, 'category_id' => $category_id]));
         }
 
         return true;
