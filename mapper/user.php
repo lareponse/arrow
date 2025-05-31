@@ -1,4 +1,5 @@
 <?php
+require_once 'add/bad/qb.php';
 
 /**
  * User data mapper functions

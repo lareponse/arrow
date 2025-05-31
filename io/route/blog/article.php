@@ -5,7 +5,7 @@
  */
 return function ($slug) {
     // Load article mapper functions
-    require_once request()['root'] . '/mapper/article.php';
+    require_once 'app/mapper/article.php';
 
     var_dump($slug);
     // Get article by slug

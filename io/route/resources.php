@@ -4,7 +4,7 @@
  */
 return function() {
     // Load resource mapper functions
-    require_once request()['root']. '/mapper/resource.php';
+    require_once 'app/mapper/resource.php';
     
     // Get page number from query string
     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;

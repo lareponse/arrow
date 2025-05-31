@@ -1,7 +1,7 @@
 <?php
 
 return function ($id = null) {
-    require_once request()['root'] . '/mapper/event.php';
+    require_once 'app/mapper/event.php';
 
     $errors = [];
     $event = null;

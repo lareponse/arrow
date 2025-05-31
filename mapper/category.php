@@ -1,4 +1,5 @@
 <?php
+require_once 'add/bad/qb.php';
 
 /**
  * Category data mapper functions

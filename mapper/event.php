@@ -1,4 +1,5 @@
 <?php
+require_once 'add/bad/qb.php';
 
 /**
  * Event data mapper functions

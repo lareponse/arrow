@@ -2,7 +2,7 @@
 
 return function () {
 
-    $redirect = $_GET['return'] ?? '/';
+    $redirect = $_GET['redirect'] ?? '/';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         csrf($_POST['csrf_token'] ?? '')    ?: throw new DomainException('Invalid CSRF', 403);

@@ -12,7 +12,7 @@ return function () {
 
 // io/route/admin/categories/alter.php
 return function ($id = null) {
-    require_once request()['root'] . '/mapper/category.php';
+    require_once 'app/mapper/category.php';
 
     $errors = [];
     $category = null;

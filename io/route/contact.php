@@ -1,6 +1,9 @@
 <?php
+require_once 'add/bad/qb.php';
 
 return function () {
+    
+    
     $errors = [];
     $success = false;
 

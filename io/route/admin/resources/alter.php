@@ -1,7 +1,7 @@
 <?php
 
 return function ($id = null) {
-    require_once request()['root'] . '/mapper/resource.php';
+    require_once 'app/mapper/resource.php';
 
     $errors = [];
     $resource = null;
@@ -46,7 +46,7 @@ return function ($id = null) {
         // Handle file upload for new resources
         $file_data = null;
         if (!$is_edit && isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = request()['root'] . '/public/uploads/resources/';
+            $upload_dir = 'public/uploads/resources/';
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, 0755, true);
             }

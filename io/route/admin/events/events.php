@@ -4,7 +4,7 @@
  * Admin events listing route
  */
 return function () {
-    require_once request()['root'] . '/mapper/event.php';
+    require_once 'app/mapper/event.php';
 
     $page = max(1, (int)($_GET['page'] ?? 1));
     $status = $_GET['status'] ?? 'all';

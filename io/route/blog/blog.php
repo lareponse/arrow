@@ -2,7 +2,7 @@
 
 return function () {
     // Load article mapper functions
-    require_once request()['root']. '/mapper/article.php';
+    require_once 'app/mapper/article.php';
 
     // Get page number from query string
     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;

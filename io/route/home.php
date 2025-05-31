@@ -1,7 +1,7 @@
 <?php
 return function () {
-    require_once request()['root'] . '/mapper/article.php';
-    require_once request()['root'] . '/mapper/event.php';
+    require_once 'app/mapper/article.php';
+    require_once 'app/mapper/event.php';
 
     // Get recent articles
     $recent_articles = articles_get_published(3);

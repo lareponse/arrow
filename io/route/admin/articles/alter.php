@@ -5,7 +5,7 @@
  */
 return function ($id = null) {
 
-    require_once request()['root'] . '/mapper/article.php';
+    require_once 'app/mapper/article.php';
 
     $errors = [];
     $article = null;
