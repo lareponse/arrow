@@ -11,7 +11,7 @@ return function ($slug) {
     $event = event_get_by_slug($slug);
 
     if (!$event) {
-        trigger_error('404 Not Found: Event not found', E_USER_ERROR);
+        throw new DomainException('Event not found', 404);
     }
 
     return [
