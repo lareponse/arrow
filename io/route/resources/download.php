@@ -28,7 +28,7 @@ return function ($slug) {
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
         'download_time' => date('Y-m-d H:i:s')
     ];
-    dbq(...qb_create('resource_downloads', $data_insert));
+    dbq(...qb_create('resource_downloads', null, $data_insert));
 
     // Get file path
     $file_path = __DIR__ . '/../../../public/' . $resource['file_path'];

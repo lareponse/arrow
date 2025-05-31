@@ -29,7 +29,7 @@ function user_create(array $data)
         'role' => $data['role'] ?? 'user',
         'status' => $data['status'] ?? 'active',
     ];
-    $stmt = dbq(...qb_create('users', $insert_data));
+    $stmt = dbq(...qb_create('users', null, $insert_data));
 
     return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }
@@ -101,7 +101,7 @@ function user_create_token(int $user_id): string
         'token' => $token,
         'expires_at' => $expires
     ];
-    $stmt = dbq(...qb_create('user_tokens', $insert_data));
+    $stmt = dbq(...qb_create('user_tokens', null, $insert_data));
 
 
     return $token;

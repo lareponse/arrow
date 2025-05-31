@@ -58,7 +58,7 @@ function resource_create($data)
         'status' => $data['status'] ?? 'draft',
         'user_id' => $data['user_id'],
     ];
-    $stmt = dbq(...qb_create('resources', $insert_data));
+    $stmt = dbq(...qb_create('resources', null, $insert_data));
 
     return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }

@@ -25,7 +25,7 @@ return function () {
                 'message' => $message,
                 'created_at' => date('Y-m-d H:i:s')
             ];
-            $stmt = dbq(...qb_create('contact_messages', $insert_data));
+            $stmt = dbq(...qb_create('contact_messages', null, $insert_data));
             $success = $stmt->rowCount() > 0;
 
             if ($success) {

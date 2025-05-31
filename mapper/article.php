@@ -83,7 +83,7 @@ function article_create($data)
             'status' => $data['status'] ?? 'draft',
             'user_id' => $data['user_id'],
         ];
-        $stmt = dbq(...qb_create('articles', $insert_data));
+        $stmt = dbq(...qb_create('articles', null, $insert_data));
 
         if ($stmt->rowCount() === 0) {
             return false;

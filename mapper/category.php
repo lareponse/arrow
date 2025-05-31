@@ -22,7 +22,7 @@ function category_create(array $data)
         'slug' => $data['slug'],
         'description' => $data['description'] ?? null,
     ];
-    $stmt = dbq(...qb_create('categories', $insert_data));
+    $stmt = dbq(...qb_create('categories', null, $insert_data));
     return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }
 
