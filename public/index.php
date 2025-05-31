@@ -8,6 +8,6 @@ require 'add/bad/db.php';
 require 'add/bad/ui.php';
 require 'add/bad/guard_auth.php';
 
-$route = route(__DIR__ . '/../io/route');
-$response = handle($route);
-respond($response);
+io(__DIR__ . '/../io/route');
+respond(resolve()());
+
