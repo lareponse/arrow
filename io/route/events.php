@@ -5,7 +5,7 @@
  */
 return function () {
     // Load event mapper functions
-    require_once __DIR__ . '/../../add/event_mapper.php';
+    require_once 'app/mapper/event.php';
 
     // Get upcoming events
     $upcoming_events = events_get_upcoming(5);

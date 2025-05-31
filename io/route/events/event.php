@@ -5,7 +5,7 @@
  */
 return function ($slug) {
     // Load event mapper functions
-    require_once __DIR__ . '/../../../add/event_mapper.php';
+    require_once 'app/mapper/event.php';
 
     // Get event by slug
     $event = event_get_by_slug($slug);
