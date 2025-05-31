@@ -73,15 +73,29 @@ function user_update($id, $data): bool
  */
 function user_verify(string $username, string $password)
 {
-    return ['username' => $username, 'password' => $password, 'id' => 1];
-    $user = user_get_by('username', $username);
+    // Get user by username
+    $user = dbq(
+        "SELECT * FROM users WHERE username = ? AND status = 'active'",
+        [$username]
+    )->fetch();
+
     if (!$user) {
         return false;
     }
 
-    // if (!password_verify($password, $user['password'])) {
-    //     return false;
-    // }
+    // Verify password
+    if (!password_verify($password, $user['password'])) {
+        return false;
+    }
+
+    // Update last login
+    dbq(
+        "UPDATE users SET last_login = NOW() WHERE id = ?",
+        [$user['id']]
+    );
+
+    // Don't return password hash
+    unset($user['password']);
 
     return $user;
 }
