@@ -1,6 +1,6 @@
 <?php
 
-return function () {
+return function ($quest, $request) {
     require_once 'app/mapper/user.php';
 
     $page = max(1, (int)($_GET['page'] ?? 1));

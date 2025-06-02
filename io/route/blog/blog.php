@@ -1,6 +1,6 @@
 <?php
 
-return function () {
+return function ($quest, $request) {
     // Load article mapper functions
     require_once 'app/mapper/article.php';
 

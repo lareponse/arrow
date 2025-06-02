@@ -1,5 +1,5 @@
 <?php
-return function () {
+return function ($quest, $request) {
     require_once 'app/mapper/article.php';
     require_once 'app/mapper/event.php';
 
@@ -11,11 +11,10 @@ return function () {
     $upcoming_events = events_get_upcoming(3);
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => 'Welcome to copro.academy',
             'recent_articles' => $recent_articles,
             'upcoming_events' => $upcoming_events
-        ])
+        ]
     ];
 };

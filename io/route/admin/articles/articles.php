@@ -3,7 +3,7 @@
 /**
  * Admin articles list route
  */
-return function () {
+return function ($quest, $request) {
 
     require_once 'app/mapper/article.php';
 

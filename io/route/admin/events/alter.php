@@ -1,6 +1,6 @@
 <?php
 
-return function ($id = null) {
+return function ($quest, $request, $id) {
     require_once 'app/mapper/event.php';
 
     $errors = [];
@@ -11,7 +11,6 @@ return function ($id = null) {
     if (!$current_user) {
         throw new DomainException('Unauthorized', 401);
     }
-
     if ($is_edit) {
         $event = dbq("SELECT * FROM events WHERE id = ?", [$id])->fetch();
         if (!$event) {
@@ -104,12 +103,11 @@ return function ($id = null) {
     }
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => ($is_edit ? 'Edit Event' : 'Create Event') . ' - Admin',
             'event' => $event,
             'errors' => $errors,
             'is_edit' => $is_edit
-        ], __FILE__)
+        ]
     ];
 };

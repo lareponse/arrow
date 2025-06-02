@@ -1,12 +1,3 @@
-<?php
-
-/**
- * Partial: articles list
- * Expects:
- *   $articles: array of associative arrays with keys:
- *     'id', 'title', 'slug', 'excerpt', 'image_url', 'created_at', 'author_name'
- */
-?>
 <section aria-labelledby="articles-list-heading">
     <h1 id="articles-list-heading">Articles</h1>
 

@@ -3,7 +3,7 @@
 /**
  * Logout route
  */
-return function () {
+return function ($quest, $request) {
     // Clear auth cookie
     setcookie('auth_token', '', [
         'expires' => time() - 3600,

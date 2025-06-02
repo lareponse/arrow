@@ -3,7 +3,7 @@
 /**
  * Register route
  */
-return function () {
+return function ($quest, $request) {
     $errors = [];
 
     // Check if already logged in

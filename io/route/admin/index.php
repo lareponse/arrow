@@ -3,7 +3,7 @@
 /**
  * Admin dashboard route
  */
-return function () {
+return function ($quest, $request) {
     require_once 'app/mapper/article.php';
     require_once 'app/mapper/event.php';
     require_once 'app/mapper/resource.php';
@@ -57,13 +57,12 @@ return function () {
     )->fetchAll();
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => 'Admin Dashboard - copro.academy',
             'stats' => $stats,
             'recent_articles' => $recent_articles,
             'recent_events' => $recent_events,
             'recent_resources' => $recent_resources
-        ], __FILE__)
+        ]
     ];
 };

@@ -1,7 +1,7 @@
 <?php
-require_once 'add/bad/qb.php';
+require_once 'add/dad/qb.php';
 
-return function () {
+return function ($quest, $request) {
     
     
     $errors = [];
@@ -36,11 +36,10 @@ return function () {
     }
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => 'Contact Us - copro.academy',
             'errors' => $errors,
             'success' => $success
-        ])
+        ]
     ];
 };

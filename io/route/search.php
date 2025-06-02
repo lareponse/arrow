@@ -1,6 +1,6 @@
 <?php
 
-return function () {
+return function ($quest, $request) {
     $query = trim($_GET['q'] ?? '');
     $results = [];
 

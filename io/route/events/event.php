@@ -15,10 +15,9 @@ return function ($slug) {
     }
 
     return [
-        'status' => 200,
-        'body' => render('events/event', [
+        'payload' => [
             'title' => $event['title'] . ' - copro.academy',
             'event' => $event
-        ])
+        ],
     ];
 };
