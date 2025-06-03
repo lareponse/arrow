@@ -3,7 +3,7 @@
 /**
  * Register route
  */
-return function ($quest, $request) {
+return function ($quest) {
     $errors = [];
 
     // Check if already logged in
@@ -91,10 +91,9 @@ return function ($quest, $request) {
     }
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => 'Register - copro.academy',
             'errors' => $errors
-        ], __FILE__)
+        ]
     ];
 };

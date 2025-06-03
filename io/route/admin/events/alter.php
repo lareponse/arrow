@@ -1,6 +1,6 @@
 <?php
 
-return function ($quest, $request, $id) {
+return function ($quest, $id) {
     require_once 'app/mapper/event.php';
 
     $errors = [];

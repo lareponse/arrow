@@ -1,6 +1,6 @@
 <?php
 
-return function ($quest, $request) {
+return function ($quest) {
     // Load article mapper functions
     require_once 'app/mapper/article.php';
 
@@ -16,8 +16,7 @@ return function ($quest, $request) {
     $total_pages = ceil($total / $limit);
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => 'Blog - copro.academy',
             'articles' => $articles,
             'pagination' => [
@@ -26,6 +25,6 @@ return function ($quest, $request) {
                 'has_prev' => $page > 1,
                 'has_next' => $page < $total_pages
             ]
-        ], __FILE__)
+        ]
     ];
 };

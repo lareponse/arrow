@@ -1,6 +1,6 @@
 <?php
 
-return function ($quest, $request) {
+return function ($quest) {
     $query = trim($_GET['q'] ?? '');
     $results = [];
 
@@ -40,11 +40,10 @@ return function ($quest, $request) {
     }
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => $query ? "Search Results for '{$query}'" : 'Search - copro.academy',
             'query' => $query,
             'results' => $results
-        ])
+        ]
     ];
 };

@@ -1,6 +1,6 @@
 <?php
 
-return function ($quest, $request) {
+return function ($quest) {
 
     $redirect = $_GET['redirect'] ?? '/';
 

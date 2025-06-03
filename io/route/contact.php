@@ -1,7 +1,7 @@
 <?php
 require_once 'add/dad/qb.php';
 
-return function ($quest, $request) {
+return function ($quest) {
     
     
     $errors = [];

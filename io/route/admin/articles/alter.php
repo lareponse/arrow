@@ -122,13 +122,12 @@ return function ($id = null) {
     }
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => ($is_edit ? 'Edit Article' : 'Create Article') . ' - Admin',
             'article' => $article,
             'categories' => $categories,
             'errors' => $errors,
             'is_edit' => $is_edit
-        ], __FILE__)
+        ]
     ];
 };

@@ -3,7 +3,7 @@
 /**
  * Admin dashboard route
  */
-return function ($quest, $request) {
+return function ($quest) {
     require_once 'app/mapper/article.php';
     require_once 'app/mapper/event.php';
     require_once 'app/mapper/resource.php';

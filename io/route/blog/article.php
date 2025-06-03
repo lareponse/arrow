@@ -16,10 +16,9 @@ return function ($slug) {
     }
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => $article['title'] . ' - copro.academy',
             'article' => $article
-        ])
+        ]
     ];
 };

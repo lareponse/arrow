@@ -108,12 +108,11 @@ return function ($id = null) {
     }
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => ($is_edit ? 'Edit Resource' : 'Create Resource') . ' - Admin',
             'resource' => $resource,
             'errors' => $errors,
             'is_edit' => $is_edit
-        ], __FILE__)
+        ]
     ];
 };

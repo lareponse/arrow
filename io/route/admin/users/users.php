@@ -1,6 +1,6 @@
 <?php
 
-return function ($quest, $request) {
+return function ($quest) {
     require_once 'app/mapper/user.php';
 
     $page = max(1, (int)($_GET['page'] ?? 1));
@@ -41,8 +41,7 @@ return function ($quest, $request) {
     $total_pages = ceil($total / $limit);
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => 'Manage Users - Admin',
             'users' => $users,
             'current_status' => $status,
@@ -53,6 +52,6 @@ return function ($quest, $request) {
                 'has_prev' => $page > 1,
                 'has_next' => $page < $total_pages
             ]
-        ], __FILE__)
+        ]
     ];
 };

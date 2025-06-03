@@ -42,8 +42,7 @@ return function ($response, ...$args) {
     $total_pages = ceil($total / $limit);
 
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => 'Manage Events - Admin',
             'events' => $events,
             'current_status' => $status,
@@ -53,6 +52,6 @@ return function ($response, ...$args) {
                 'has_prev' => $page > 1,
                 'has_next' => $page < $total_pages
             ]
-        ], __FILE__)
+        ]
     ];
 };

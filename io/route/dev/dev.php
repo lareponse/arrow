@@ -1,6 +1,6 @@
 <?php
 
-return function ($quest, $request) {
+return function ($quest) {
 
 
 $iterations = 700_000_000;

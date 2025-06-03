@@ -3,7 +3,7 @@
 /**
  * Admin articles list route
  */
-return function ($quest, $request) {
+return function ($quest) {
 
     require_once 'app/mapper/article.php';
 
@@ -41,8 +41,7 @@ return function ($quest, $request) {
 
     $total_pages = (int) ceil($total / $limit);
     return [
-        'status' => 200,
-        'body' => render([
+        'payload' => [
             'title' => 'Manage Articles - Admin',
             'articles' => $articles,
             'current_status' => $status,
@@ -52,6 +51,6 @@ return function ($quest, $request) {
                 'has_prev' => $page > 1,
                 'has_next' => $page < $total_pages
             ]
-        ], __FILE__)
+        ]
     ];
 };
