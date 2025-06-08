@@ -1,9 +1,7 @@
 <?php
+require_once 'add/bad/db.php';
 require_once 'add/dad/qb.php';
 
-/**
- * Event data mapper functions
- */
 
 /**
  * Get upcoming published events

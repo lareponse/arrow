@@ -1,9 +1,7 @@
 <?php
+require_once 'add/bad/db.php';
 require_once 'add/dad/qb.php';
 
-/**
- * Category data mapper functions
- */
 
 function categories_get_all(): array
 {

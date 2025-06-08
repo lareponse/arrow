@@ -1,17 +1,8 @@
 <?php
+require_once 'add/bad/db.php';
 require_once 'add/dad/qb.php';
 
-/**
- * Resource data mapper functions
- */
 
-/**
- * Get all published resources
- * 
- * @param int $limit Maximum number of resources to return
- * @param int $offset Starting position
- * @return array Resources data
- */
 function resources_get_all(int $limit = 10, int $offset = 0)
 {
     return dbq(

@@ -1,16 +1,9 @@
 <?php
+require_once 'add/bad/db.php';
+require_once 'add/dad/qb.php';
 
-/**
- * Article data mapper functions
- */
 
-/**
- * Get all published articles
- * 
- * @param int $limit Maximum number of articles to return
- * @param int $offset Starting position
- * @return array Articles data
- */
+
 function articles_get_published(int $limit = 10, int $offset = 0): array
 {
     // Validate inputs

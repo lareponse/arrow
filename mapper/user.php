@@ -1,13 +1,8 @@
 <?php
+require_once 'add/bad/db.php';
 require_once 'add/dad/qb.php';
 
-/**
- * User data mapper functions
- */
 
-/**
- * @return array|false User data or false if not found
- */
 function user_get_by(string $field, $value): array|false
 {
     return dbq("SELECT * FROM users WHERE ? = ? AND status = 'active'", [$field, $value])->fetch();
