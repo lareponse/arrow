@@ -16,7 +16,7 @@
 
 <body>
     <main>
-        <?= implode(',', slot('main')); ?>
+        <?= implode(',', tray('main')); ?>
     </main>
 </body>
 

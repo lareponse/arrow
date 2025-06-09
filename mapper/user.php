@@ -1,6 +1,6 @@
 <?php
-require_once 'add/bad/db.php';
-require_once 'add/dad/qb.php';
+require_once 'add/bad/dad/db.php';
+require_once 'add/bad/dad/qb.php';
 
 
 function user_get_by(string $field, $value): array|false

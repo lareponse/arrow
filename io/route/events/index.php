@@ -3,7 +3,7 @@
 /**
  * Events index route - Display list of events
  */
-return function ($quest, $request) {
+return function ($quest) {
     // Load event mapper functions
     require_once 'app/mapper/event.php';
 

@@ -1,11 +1,10 @@
 <?php
-return function ($quest) {
+return static function (...$args): array {
     require_once 'app/mapper/article.php';
     require_once 'app/mapper/event.php';
 
     // Get recent articles
     $recent_articles = articles_get_published(3);
-    // vd('multiwhoami', 2, whoami(), auth_http(), auth_token('auth_token'));
 
     // Get upcoming events  
     $upcoming_events = events_get_upcoming(3);

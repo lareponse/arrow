@@ -1,6 +1,6 @@
 <?php
-require_once 'add/bad/db.php';
-require_once 'add/dad/qb.php';
+require_once 'add/bad/dad/db.php';
+require_once 'add/bad/dad/qb.php';
 
 
 function resources_get_all(int $limit = 10, int $offset = 0)

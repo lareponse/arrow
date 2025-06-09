@@ -8,7 +8,7 @@
     <meta name="description" content="<?= htmlspecialchars($data['description'] ?? 'Professional development and educational resources') ?>">
 
     <!-- Additional head content from slots -->
-    <?= implode("\n    ", slot('head')) ?>
+    <?= implode("\n    ", tray('head')) ?>
 
 
 </head>
@@ -44,7 +44,7 @@
 
     <main>
         <div class="container">
-            <?= implode('', slot('main')) ?>
+            <?= implode('', tray('main')) ?>
         </div>
     </main>
 
@@ -55,7 +55,7 @@
     </footer>
 
     <!-- Scripts from slots -->
-    <?= implode("\n    ", slot('scripts')) ?>
+    <?= implode("\n    ", tray('scripts')) ?>
 </body>
 
 </html>
