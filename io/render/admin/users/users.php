@@ -1,7 +1,7 @@
 <div class="content-header">
     <div class="header-left">
         <h1>Users</h1>
-        <p>Manage user accounts and permissions</p>
+        <p>Manage user accounts and pergoals</p>
     </div>
     <div class="header-actions">
         <a href="/admin/users/alter" class="btn btn-primary">Add User</a>

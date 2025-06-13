@@ -12,7 +12,7 @@ return function ($quest, $id) {
         throw new DomainException('Unauthorized', 401);
     }
     if ($is_edit) {
-        $event = dbq("SELECT * FROM events WHERE id = ?", [$id])->fetch();
+        $event = dbq(db(), "SELECT * FROM events WHERE id = ?", [$id])->fetch();
         if (!$event) {
             throw new DomainException('Event not found', 404);
         }
@@ -37,7 +37,7 @@ return function ($quest, $id) {
         } elseif (!preg_match('/^[a-z0-9-]+$/', $slug)) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
-            $existing = dbq(
+            $existing = dbq(db(), 
                 "SELECT id FROM events WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();

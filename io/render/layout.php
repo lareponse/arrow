@@ -6,11 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($data['title'] ?? 'copro.academy') ?></title>
     <meta name="description" content="<?= htmlspecialchars($data['description'] ?? 'Professional development and educational resources') ?>">
-
-    <!-- Additional head content from slots -->
-    <?= implode("\n    ", tray('head')) ?>
-
-
 </head>
 
 <body>
@@ -26,7 +21,7 @@
                     <li><a href="/resources">Resources</a></li>
                     <li><a href="/contact">Contact</a></li>
                     <?php if (whoami()): ?>
-                            <li><a href="/admin">Admin</a></li>
+                        <li><a href="/admin">Admin</a></li>
                         <li><a href="/logout">Logout</a></li>
                     <?php else: ?>
                         <li><a href="/login">Login</a></li>
@@ -42,20 +37,22 @@
         </div>
     </header>
 
-    <main>
-        <div class="container">
-            <?= implode('', tray('main')) ?>
-        </div>
-    </main>
+    <main class="container"></main>
 
     <footer>
         <div class="container">
             <p>&copy; <?= date('Y') ?> copro.academy</p>
         </div>
     </footer>
-
-    <!-- Scripts from slots -->
-    <?= implode("\n    ", tray('scripts')) ?>
 </body>
 
 </html>
+
+<?php
+return function ($layout, $partial) {
+    return preg_replace(
+        '/<main\b([^>]*)>\s*<\/main>/i',       // match <main ...></main> (allowing whitespace inside)
+        '<main$1>' . $partial . '</main>',    // re-emit the same attributes ($1) + your partial
+        $layout
+    );
+};

@@ -23,7 +23,7 @@ return function ($response, ...$args) {
     $where_clause = $where_conditions ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
 
     // Get events with organizer information
-    $events = dbq(
+    $events = dbq(db(), 
         "SELECT e.*, u.full_name as organizer_name, u.username
          FROM events e
          JOIN users u ON e.user_id = u.id
@@ -34,7 +34,7 @@ return function ($response, ...$args) {
     )->fetchAll();
 
     // Get total count for pagination
-    $total = dbq(
+    $total = dbq(db(), 
         "SELECT COUNT(*) FROM events e {$where_clause}",
         $params
     )->fetchColumn();

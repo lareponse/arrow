@@ -20,7 +20,7 @@ return function ($id = null) {
 
     // If editing, fetch existing article
     if ($is_edit) {
-        $article = dbq(
+        $article = dbq(db(), 
             "SELECT * FROM articles WHERE id = ?",
             [$id]
         )->fetch();
@@ -30,16 +30,16 @@ return function ($id = null) {
         }
 
         // Get categories
-        $article['categories'] = dbq(
+        $article['categories'] = dbq(db(), 
             "SELECT category_id FROM article_category WHERE article_id = ?",
             [$id]
         )->fetchAll(PDO::FETCH_COLUMN);
     }
 
     // Get all categories
-    $categories = dbq("SELECT * FROM categories ORDER BY name")->fetchAll();
+    $categories = dbq(db(), "SELECT * FROM categories ORDER BY name")->fetchAll();
 
-    // Handle form submission
+    // Handle form subgoal
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title = trim($_POST['title'] ?? '');
         $slug = trim($_POST['slug'] ?? '');
@@ -60,7 +60,7 @@ return function ($id = null) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
             // Check slug uniqueness
-            $existing = dbq(
+            $existing = dbq(db(), 
                 "SELECT id FROM articles WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();

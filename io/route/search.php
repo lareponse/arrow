@@ -10,7 +10,7 @@ return function ($quest) {
         require_once 'app/mapper/resource.php';
 
         // Search articles
-        $articles = dbq(
+        $articles = dbq(db(), 
             "SELECT 'article' as type, id, title, slug, excerpt as description, created_at
              FROM articles 
              WHERE status = 'published' AND (title LIKE ? OR content LIKE ?)
@@ -19,7 +19,7 @@ return function ($quest) {
         )->fetchAll();
 
         // Search events
-        $events = dbq(
+        $events = dbq(db(), 
             "SELECT 'event' as type, id, title, slug, description, start_datetime as created_at
              FROM events 
              WHERE status = 'published' AND (title LIKE ? OR description LIKE ?)
@@ -28,7 +28,7 @@ return function ($quest) {
         )->fetchAll();
 
         // Search resources
-        $resources = dbq(
+        $resources = dbq(db(), 
             "SELECT 'resource' as type, id, title, slug, description, created_at
              FROM resources 
              WHERE status = 'published' AND (title LIKE ? OR description LIKE ?)

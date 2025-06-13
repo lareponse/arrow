@@ -15,9 +15,15 @@
 </head>
 
 <body>
-    <main>
-        <?= implode(',', tray('main')); ?>
-    </main>
+    <main></main>
 </body>
 
 </html>
+<?php
+return function ($layout, $partial) {
+    return preg_replace(
+        '/<main\b([^>]*)>\s*<\/main>/i',       // match <main ...></main> (allowing whitespace inside)
+        '<main$1>' . $partial . '</main>',    // re-emit the same attributes ($1) + your partial
+        $layout
+    );
+};

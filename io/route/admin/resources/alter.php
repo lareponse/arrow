@@ -13,7 +13,7 @@ return function ($id = null) {
     }
 
     if ($is_edit) {
-        $resource = dbq("SELECT * FROM resources WHERE id = ?", [$id])->fetch();
+        $resource = dbq(db(), "SELECT * FROM resources WHERE id = ?", [$id])->fetch();
         if (!$resource) {
             throw new DomainException('Resource not found', 404);
         }
@@ -34,7 +34,7 @@ return function ($id = null) {
         } elseif (!preg_match('/^[a-z0-9-]+$/', $slug)) {
             $errors['slug'] = 'Slug must contain only lowercase letters, numbers, and hyphens';
         } else {
-            $existing = dbq(
+            $existing = dbq(db(), 
                 "SELECT id FROM resources WHERE slug = ? AND id != ?",
                 [$slug, $id ?? 0]
             )->fetch();

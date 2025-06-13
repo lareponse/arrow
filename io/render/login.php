@@ -5,7 +5,7 @@
 <?php endif; ?>
 
 <form action="/login<?= !empty($redirect) ? '?redirect=' . htmlspecialchars($redirect) : '' ?>" method="post" class="auth-form">
-    <?= csrf_field() ?>
+    <?= csrf_form() ?>
     <div class="form-group">
         <label for="username" class="form-label">Username</label>
         <input type="text" id="username" name="username" class="form-control" required autofocus>

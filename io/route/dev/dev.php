@@ -23,7 +23,5 @@ $shortTime = microtime(true) - $start;
 echo "list(): $listTime s\n";
 echo "[] = : $shortTime s\n";
 
-
-
     die('dev.php');
 };

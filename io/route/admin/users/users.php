@@ -24,7 +24,7 @@ return function ($quest) {
 
     $where_clause = $where_conditions ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
 
-    $users = dbq(
+    $users = dbq(db(), 
         "SELECT id, username, email, full_name, role, status, created_at
          FROM users
          {$where_clause}
@@ -33,7 +33,7 @@ return function ($quest) {
         $params
     )->fetchAll();
 
-    $total = dbq(
+    $total = dbq(db(), 
         "SELECT COUNT(*) FROM users {$where_clause}",
         $params
     )->fetchColumn();

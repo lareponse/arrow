@@ -16,7 +16,7 @@
     <?php endif; ?>
 
     <form method="POST" class="event-form">
-        <?= csrf_field() ?>
+        <?= csrf_form() ?>
 
         <div class="form-grid">
             <div class="form-main">

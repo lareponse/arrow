@@ -2,30 +2,23 @@
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../..');
 
+require 'add/bad/dev.php';
 require 'add/bad/error.php';
-require 'add/bad/http.php';
 require 'add/bad/io.php';
-require 'add/bad/dad/html.php';
-
 require 'add/bad/dad/auth.php';
 
-http_guard();
+define('BASE', realpath(__DIR__ . '/../io'));
+define('PATH', io_guard(http_guard(4096, 9)));
 
-$origin = realpath(__DIR__ . '/../io');
-$in_path = $origin . '/route';
-$out_path = $origin . '/render';
-$quest = io($in_path, $out_path);
-tray('main', $quest[IO_SEND | IO_LOAD]);
-$layout = io_probe($out_path, io_draft(io_clean($_SERVER['REQUEST_URI']), 'layout'));
-http_respond(200, $layout[IO_LOAD], ['Content-Type' => 'text/html; charset=UTF-8']);
+$continue   = in(BASE . '/route', PATH, 'index');
 
+// no http() call made in the route, we continue with custom handling
+$mirror     = BASE . '/render/' . $continue[IO_PATH];
+$mirror     = ob_capture($mirror, $continue[IO_ARGS] ?: []);
 
-if (is_dev() && empty($response) || $response >= 400) {
-    ob_start();
-    @include 'add/bad/dad/scaffold.php';
-    $scaffold   = trim(ob_get_clean()); // trim helps return ?: null (no opinion, significant whitespaces are in tags)
-    $response = http_response(404, $scaffold, ['Content-Type' => 'text/html; charset=UTF-8']);
+if (is_array($mirror)) {
+    http(...$mirror);
+    exit;
 }
 
-http_respond(...$response);
-exit;
+throw new RuntimeException('Not Found', 404);

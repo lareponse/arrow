@@ -5,12 +5,12 @@ require_once 'add/bad/dad/qb.php';
 
 function categories_get_all(): array
 {
-    return dbq("SELECT * FROM categories ORDER BY name")->fetchAll();
+    return dbq(db(), "SELECT * FROM categories ORDER BY name")->fetchAll();
 }
 
 function category_get_by(string $field, $value)
 {
-    return dbq("SELECT * FROM categories WHERE {$field} = ?", [$value])->fetch();
+    return dbq(db(), "SELECT * FROM categories WHERE {$field} = ?", [$value])->fetch();
 }
 
 function category_create(array $data)
@@ -20,7 +20,7 @@ function category_create(array $data)
         'slug' => $data['slug'],
         'description' => $data['description'] ?? null,
     ];
-    $stmt = dbq(...qb_create('categories', null, $insert_data));
+    $stmt = dbq(db(), ...qb_create('categories', null, $insert_data));
     return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }
 
@@ -35,12 +35,12 @@ function category_update(int $id, array $data): bool
 
     if (empty($update_data)) return false;
 
-    $stmt = dbq(...qb_update('categories', $update_data, 'id = ?', [$id]));
+    $stmt = dbq(db(), ...qb_update('categories', $update_data, 'id = ?', [$id]));
     return $stmt->rowCount() > 0;
 }
 
 function category_delete(int $id): bool
 {
-    $stmt = dbq("DELETE FROM categories WHERE id = ?", [$id]);
+    $stmt = dbq(db(), "DELETE FROM categories WHERE id = ?", [$id]);
     return $stmt->rowCount() > 0;
 }

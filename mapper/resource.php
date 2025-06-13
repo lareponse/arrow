@@ -5,7 +5,7 @@ require_once 'add/bad/dad/qb.php';
 
 function resources_get_all(int $limit = 10, int $offset = 0)
 {
-    return dbq(
+    return dbq(db(), 
         "SELECT r.*, u.username as uploader
          FROM resources r
          JOIN users u ON r.user_id = u.id
@@ -22,7 +22,7 @@ function resources_get_all(int $limit = 10, int $offset = 0)
  */
 function resource_get_by_slug($slug)
 {
-    return dbq(
+    return dbq(db(), 
         "SELECT r.*, u.username as uploader, u.full_name as uploader_name
          FROM resources r
          JOIN users u ON r.user_id = u.id
@@ -49,7 +49,7 @@ function resource_create($data)
         'status' => $data['status'] ?? 'draft',
         'user_id' => $data['user_id'],
     ];
-    $stmt = dbq(...qb_create('resources', null, $insert_data));
+    $stmt = dbq(db(), ...qb_create('resources', null, $insert_data));
 
     return $stmt->rowCount() > 0 ? db()->lastInsertId() : false;
 }
@@ -84,7 +84,7 @@ function resource_update($id, $data)
     if (empty($updateData)) {
         return false;
     }
-    $stmt = dbq(...qb_update('resources', $updateData, 'id = ?', [$id]));
+    $stmt = dbq(db(), ...qb_update('resources', $updateData, 'id = ?', [$id]));
     return $stmt->rowCount() > 0;
 }
 
@@ -97,13 +97,13 @@ function resource_update($id, $data)
 function resource_delete($id)
 {
     // Get file path before deleting record
-    $resource = dbq("SELECT file_path FROM resources WHERE id = ?", [$id])->fetch();
+    $resource = dbq(db(), "SELECT file_path FROM resources WHERE id = ?", [$id])->fetch();
 
     if (!$resource) {
         return false;
     }
 
-    $stmt = dbq("DELETE FROM resources WHERE id = ?", [$id]);
+    $stmt = dbq(db(), "DELETE FROM resources WHERE id = ?", [$id]);
 
     if ($stmt->rowCount() > 0) {
         // Delete physical file

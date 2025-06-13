@@ -17,13 +17,13 @@ function articles_get_published(int $limit = 10, int $offset = 0): array
             ORDER BY a.created_at DESC
             LIMIT ? OFFSET ?";
 
-    return dbq($sql, [$limit, $offset])->fetchAll();
+    return dbq(db(), $sql, [$limit, $offset])->fetchAll();
 }
 
 function articles_count_published()
 {
     $q = "SELECT COUNT(*) FROM articles WHERE status = 'published'";
-    return (int)dbq($q)->fetchColumn();
+    return (int)dbq(db(), $q)->fetchColumn();
 }
 /**
  * Get published article by slug
@@ -33,7 +33,7 @@ function articles_count_published()
  */
 function article_get_by_slug($slug)
 {
-    $article = dbq(
+    $article = dbq(db(), 
         "SELECT a.*, u.username as author, u.full_name as author_name
          FROM articles a
          JOIN users u ON a.user_id = u.id
@@ -46,7 +46,7 @@ function article_get_by_slug($slug)
     }
 
     // Get article categories
-    $article['categories'] = dbq(
+    $article['categories'] = dbq(db(), 
         "SELECT c.id, c.name, c.slug
          FROM categories c
          JOIN article_category ac ON c.id = ac.category_id
@@ -65,7 +65,7 @@ function article_get_by_slug($slug)
  */
 function article_create($data)
 {
-    return dbt(function () use ($data) {
+    return db_transaction(db(), function() use ($data) {
 
         $insert_data = [
             'title' => $data['title'],
@@ -76,7 +76,7 @@ function article_create($data)
             'status' => $data['status'] ?? 'draft',
             'user_id' => $data['user_id'],
         ];
-        $stmt = dbq(...qb_create('articles', null, $insert_data));
+        $stmt = dbq(db(), ...qb_create('articles', null, $insert_data));
 
         if ($stmt->rowCount() === 0) {
             return false;
@@ -87,7 +87,7 @@ function article_create($data)
         // Add categories if provided
         if (!empty($data['categories'])) {
             foreach ($data['categories'] as $category_id) {
-                $stmt = dbq(...qb_create('article_category', null, ['article_id' => $article_id, 'category_id' => $category_id]));
+                $stmt = dbq(db(), ...qb_create('article_category', null, ['article_id' => $article_id, 'category_id' => $category_id]));
             }
         }
 
@@ -104,7 +104,7 @@ function article_create($data)
  */
 function article_update($id, $data)
 {
-    return dbt(function () use ($id, $data) {
+    return db_transaction(db(), function() use ($id, $data) {
         $updateData = [];
 
         foreach (['title', 'slug', 'content', 'excerpt', 'image_url', 'status'] as $field) {
@@ -116,7 +116,7 @@ function article_update($id, $data)
         if (empty($updateData)) {
             return false;
         }
-        $stmt = dbq(...qb_update('articles', $updateData, 'id = ?', [$id]));
+        $stmt = dbq(db(), ...qb_update('articles', $updateData, 'id = ?', [$id]));
 
         if ($stmt->rowCount() === 0) {
             return false;
@@ -125,11 +125,11 @@ function article_update($id, $data)
         // Update categories if provided
         if (isset($data['categories'])) {
             // Remove existing categories
-            dbq("DELETE FROM article_category WHERE article_id = ?", [$id]);
+            dbq(db(), "DELETE FROM article_category WHERE article_id = ?", [$id]);
 
             // Add new categories
             foreach ($data['categories'] as $category_id)
-                $stmt = dbq(...qb_create('article_category', null, ['article_id' => $id, 'category_id' => $category_id]));
+                $stmt = dbq(db(), ...qb_create('article_category', null, ['article_id' => $id, 'category_id' => $category_id]));
         }
 
         return true;
@@ -144,9 +144,9 @@ function article_update($id, $data)
  */
 function article_delete(int $id)
 {
-    return dbt(function () use ($id) {
+    return db_transaction(db(), function() use ($id) {
         // Categories will be deleted via ON DELETE CASCADE
-        $stmt = dbq("DELETE FROM articles WHERE id = ?", [$id]);
+        $stmt = dbq(db(), "DELETE FROM articles WHERE id = ?", [$id]);
         return $stmt->rowCount() > 0;
     });
 }
