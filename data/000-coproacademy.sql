@@ -94,10 +94,22 @@ CREATE TABLE contact_request (
     request_status_id INT UNSIGNED NOT NULL
 ) ENGINE=InnoDB;
 
+CREATE TABLE event_booking (
+    event_id INT UNSIGNED NOT NULL,
+    participant_email VARCHAR(100) NOT NULL,
+    booking_status_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY (event_id, participant_email)
+);
+
+CREATE TABLE training_booking (
+    training_id INT UNSIGNED NOT NULL,
+    participant_email VARCHAR(100) NOT NULL,
+    booking_status_id INT UNSIGNED NOT NULL,
+    PRIMARY KEY (training_id, participant_email)
+);
+
 CREATE TABLE newsletter_subscription (
-    email VARCHAR(100) NOT NULL,
-    subscribedis_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    unsubscribedis_on TIMESTAMP NULL
+    email VARCHAR(100) NOT NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE user_session (
@@ -112,150 +124,217 @@ CREATE TABLE user_session (
 -- ===============================================
 
 ALTER TABLE taxonomy
-    ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-    ADD COLUMN slug      VARCHAR(255)     AS(TRIM(BOTH '-' FROM LOWER(REGEXP_REPLACE(label, '[^[:alnum:]]+', '-')))) STORED,
+    ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
+    ADD COLUMN slug      VARCHAR(255)     GENERATED ALWAYS AS (LOWER(REGEXP_REPLACE(label, '[^a-z0-9]+', '-'))) STORED,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
-
-ALTER TABLE taxonomy_content_type
-    ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
-    ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE trainer
-    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-    ADD COLUMN slug    VARCHAR(255)     AS(TRIM(BOTH '-' FROM LOWER(REGEXP_REPLACE(label, '[^[:alnum:]]+', '-')))) STORED,
+    ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
+    ADD COLUMN slug      VARCHAR(255)     GENERATED ALWAYS AS (LOWER(REGEXP_REPLACE(label, '[^a-z0-9]+', '-'))) STORED,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE article
-    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-    ADD COLUMN slug    VARCHAR(255)     AS(TRIM(BOTH '-' FROM LOWER(REGEXP_REPLACE(label, '[^[:alnum:]]+', '-')))) STORED,
+    ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
+    ADD COLUMN slug      VARCHAR(255)     GENERATED ALWAYS AS (LOWER(REGEXP_REPLACE(label, '[^a-z0-9]+', '-'))) STORED,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE event
-    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-    ADD COLUMN slug    VARCHAR(255)     AS(TRIM(BOTH '-' FROM LOWER(REGEXP_REPLACE(label, '[^[:alnum:]]+', '-')))) STORED,
+    ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
+    ADD COLUMN slug      VARCHAR(255)     GENERATED ALWAYS AS (LOWER(REGEXP_REPLACE(label, '[^a-z0-9]+', '-'))) STORED,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE training
-    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-    ADD COLUMN slug    VARCHAR(255)     AS(TRIM(BOTH '-' FROM LOWER(REGEXP_REPLACE(label, '[^[:alnum:]]+', '-')))) STORED,
+    ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
+    ADD COLUMN slug      VARCHAR(255)     GENERATED ALWAYS AS (LOWER(REGEXP_REPLACE(label, '[^a-z0-9]+', '-'))) STORED,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE training_program
-    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY,
-    ADD COLUMN slug    VARCHAR(255)     AS(TRIM(BOTH '-' FROM LOWER(REGEXP_REPLACE(label, '[^[:alnum:]]+', '-')))) STORED,
+    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
+    ADD COLUMN slug      VARCHAR(255) GENERATED ALWAYS AS (LOWER(REGEXP_REPLACE(label, '[^a-z0-9]+', '-'))) STORED,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE content_taxonomy
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE contact_request
-    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY,
+    ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
+
+ALTER TABLE event_booking
+    ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
+    ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
+
+ALTER TABLE training_booking
+    ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
+    ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE newsletter_subscription
-    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY,
+    ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 ALTER TABLE user_session
-    ADD COLUMN id      CHAR(32)         NOT NULL PRIMARY KEY,
+    ADD COLUMN id      INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL;
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
+
+ALTER TABLE taxonomy_content_type
+    ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
+    ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 -- ===============================================
--- 3. CONSTRAINTS, INDEXES & KEYS (unchanged)
+-- 3. CONSTRAINTS & KEYS
 -- ===============================================
 
 ALTER TABLE taxonomy
-    ADD CONSTRAINT fk_taxonomy_parent FOREIGN KEY (parent_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
-    ADD UNIQUE KEY uk_taxonomy_parent_slug (parent_id, slug),
+  ADD CONSTRAINT taxonomy_fk_parent_exists
+      FOREIGN KEY (parent_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
+  ADD CONSTRAINT taxonomy_uk_slug_per_parent
+      UNIQUE (parent_id, slug);
+
+ALTER TABLE taxonomy_content_type
+  ADD CONSTRAINT taxonomy_content_type_fk_taxonomy_exists
+      FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
+  ADD CONSTRAINT taxonomy_content_type_fk_content_type_exists
+      FOREIGN KEY (content_type_id) REFERENCES taxonomy(id) ON DELETE CASCADE;
+
+ALTER TABLE trainer
+  ADD CONSTRAINT trainer_uk_email_unique
+      UNIQUE (email);
+
+ALTER TABLE article
+  ADD CONSTRAINT article_fk_taxonomy_exists
+      FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE SET NULL,
+  ADD CONSTRAINT article_uk_slug_unique
+      UNIQUE (slug);
+
+ALTER TABLE event
+  ADD CONSTRAINT event_fk_taxonomy_exists
+      FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE SET NULL,
+  ADD CONSTRAINT event_fk_event_type_exists
+      FOREIGN KEY (event_type_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
+  ADD CONSTRAINT event_uk_slug_unique
+      UNIQUE (slug),
+    ADD CONSTRAINT event_ck_price_not_negative
+        CHECK (price_ht IS NULL OR price_ht >= 0);
+
+ALTER TABLE training
+    ADD CONSTRAINT training_fk_training_level_exists
+        FOREIGN KEY (training_level_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
+    ADD CONSTRAINT training_fk_trainer_exists
+        FOREIGN KEY (trainer_id) REFERENCES trainer(id) ON DELETE SET NULL,
+    ADD CONSTRAINT training_uk_slug_unique
+        UNIQUE (slug),
+    ADD CONSTRAINT training_ck_price_not_negative
+        CHECK (price_ht IS NULL OR price_ht >= 0);
+
+ALTER TABLE training_program
+    ADD CONSTRAINT training_program_fk_training_exists
+        FOREIGN KEY (training_id) REFERENCES training(id) ON DELETE CASCADE,
+    ADD CONSTRAINT training_program_uk_time_slot_unique
+        UNIQUE (training_id, day_number, time_start),
+    ADD CONSTRAINT training_program_ck_end_after_start
+        CHECK (time_end > time_start),
+    ADD CONSTRAINT training_program_ck_day_positive
+        CHECK (day_number > 0);
+
+ALTER TABLE event_booking
+    ADD CONSTRAINT event_booking_fk_event_exists
+        FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE RESTRICT;
+
+ALTER TABLE training_booking
+    ADD CONSTRAINT training_booking_fk_training_exists
+        FOREIGN KEY (training_id) REFERENCES training(id) ON DELETE RESTRICT;
+
+ALTER TABLE content_taxonomy
+    ADD CONSTRAINT content_taxonomy_fk_taxonomy_exists
+        FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
+    ADD CONSTRAINT content_taxonomy_fk_content_type_exists
+        FOREIGN KEY (content_type_id) REFERENCES taxonomy(id) ON DELETE CASCADE;
+
+ALTER TABLE contact_request
+    ADD CONSTRAINT contact_request_fk_contact_subject_exists
+        FOREIGN KEY (contact_subject_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
+    ADD CONSTRAINT contact_request_fk_request_status_exists
+        FOREIGN KEY (request_status_id) REFERENCES taxonomy(id) ON DELETE RESTRICT;
+
+ALTER TABLE newsletter_subscription
+    ADD CONSTRAINT newsletter_subscription_uk_email_unique
+        UNIQUE (email);
+
+
+-- ===============================================
+-- 4. INDEXES
+-- ===============================================
+
+ALTER TABLE taxonomy
     ADD INDEX idx_taxonomy_parent (parent_id),
     ADD INDEX idx_taxonomy_dis_on (dis_on);
 
 ALTER TABLE taxonomy_content_type
-    ADD CONSTRAINT fk_taxonomy_content_type_taxonomy FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
-    ADD CONSTRAINT fk_taxonomy_content_type_content FOREIGN KEY (content_type_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
     ADD INDEX idx_taxonomy_content_type_rev (content_type_id, taxonomy_id);
 
 ALTER TABLE trainer
-    ADD UNIQUE KEY uk_trainer_email (email),
     ADD INDEX idx_trainer_dis_on (dis_on);
 
 ALTER TABLE article
-    ADD CONSTRAINT fk_article_taxonomy FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE SET NULL,
-    ADD UNIQUE KEY uk_article_slug (slug),
     ADD INDEX idx_article_published (get_on),
     ADD INDEX idx_article_featured (featured),
-    ADD INDEX idx_article_taxonomy (taxonomy_id),
+    ADD INDEX idx_article_active_taxonomy (dis_on, taxonomy_id),
     ADD FULLTEXT KEY idx_article_search (label, summary, content);
 
 ALTER TABLE event
-    ADD CONSTRAINT fk_event_taxonomy FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE SET NULL,
-    ADD CONSTRAINT fk_event_type FOREIGN KEY (event_type_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
-    ADD UNIQUE KEY uk_event_slug (slug),
-    ADD CONSTRAINT ck_event_places CHECK (places_taken <= COALESCE(places_max, places_taken)),
     ADD INDEX idx_event_type (event_type_id),
     ADD INDEX idx_event_dis_on_date (dis_on, event_date),
-    ADD INDEX idx_event_dis_on (dis_on);
-
+    ADD INDEX idx_event_active_taxonomy (dis_on, taxonomy_id);
 ALTER TABLE training
-    ADD CONSTRAINT fk_training_trainer FOREIGN KEY (trainer_id) REFERENCES trainer(id) ON DELETE SET NULL,
-    ADD CONSTRAINT fk_training_level FOREIGN KEY (training_level_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
-    ADD UNIQUE KEY uk_training_slug (slug),
-    ADD CONSTRAINT ck_training_places CHECK (places_taken <= COALESCE(places_max, places_taken)),
     ADD INDEX idx_training_level (training_level_id),
     ADD INDEX idx_training_date (start_date),
     ADD INDEX idx_training_dis_on (dis_on);
 
 ALTER TABLE training_program
-    ADD CONSTRAINT fk_training_program_training FOREIGN KEY (training_id) REFERENCES training(id) ON DELETE CASCADE,
-    ADD UNIQUE KEY uk_training_program_time (training_id, day_number, time_start),
-    ADD CONSTRAINT ck_training_program_time CHECK (time_end > time_start),
     ADD INDEX idx_training_program_day (training_id, day_number);
 
-ALTER TABLE content_taxonomy
-    ADD CONSTRAINT fk_content_taxonomy_taxonomy FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
-    ADD CONSTRAINT fk_content_taxonomy_content_type FOREIGN KEY (content_type_id) REFERENCES taxonomy(id) ON DELETE CASCADE;
-
 ALTER TABLE contact_request
-    ADD CONSTRAINT fk_contact_request_subject FOREIGN KEY (contact_subject_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
-    ADD CONSTRAINT fk_contact_request_status FOREIGN KEY (request_status_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
     ADD INDEX idx_contact_status (request_status_id),
     ADD INDEX idx_contact_new_on (new_on),
     ADD INDEX idx_contact_subject (contact_subject_id);
 
 ALTER TABLE newsletter_subscription
-    ADD UNIQUE KEY uk_newsletter_email (email),
     ADD INDEX idx_newsletter_dis_on (dis_on);
 
 ALTER TABLE user_session
