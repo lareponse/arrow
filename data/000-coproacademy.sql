@@ -27,7 +27,7 @@ CREATE TABLE article (
     label VARCHAR(200) NOT NULL,
     summary TEXT NULL,
     content LONGTEXT NOT NULL,
-    taxonomy_id INT UNSIGNED NULL,
+    category ENUM('technology', 'business', 'design', 'marketing', 'development', 'management') NULL,
     reading_time SMALLINT UNSIGNED NULL,
     avatar VARCHAR(255) NULL,
     featured BOOLEAN NOT NULL DEFAULT FALSE
@@ -38,8 +38,7 @@ CREATE TABLE event (
     slug VARCHAR(255) GENERATED ALWAYS AS (LOWER(REGEXP_REPLACE(TRIM(BOTH '-' FROM REGEXP_REPLACE(label, '[^a-z0-9]+', '-')), '-{2,}', '-'))) STORED,
     label VARCHAR(200) NOT NULL,
     description TEXT NOT NULL,
-    taxonomy_id INT UNSIGNED NULL,
-    event_type_id INT UNSIGNED NOT NULL,
+    type ENUM('webinar', 'workshop', 'conference', 'masterclass', 'bootcamp') NOT NULL,
     event_date DATETIME NOT NULL,
     duration_minutes SMALLINT UNSIGNED NOT NULL,
     price_ht DECIMAL(8,2) NULL,
@@ -55,7 +54,7 @@ CREATE TABLE training (
     slug VARCHAR(255) GENERATED ALWAYS AS (LOWER(REGEXP_REPLACE(TRIM(BOTH '-' FROM REGEXP_REPLACE(label, '[^a-z0-9]+', '-')), '-{2,}', '-'))) STORED,
     label VARCHAR(200) NOT NULL,
     description TEXT NOT NULL,
-    training_level_id INT UNSIGNED NOT NULL,
+    level ENUM('beginner', 'intermediate', 'advanced', 'expert') NOT NULL,
     duration_days SMALLINT UNSIGNED NOT NULL,
     duration_hours SMALLINT UNSIGNED NOT NULL,
     price_ht DECIMAL(8,2) NOT NULL,
@@ -86,23 +85,23 @@ CREATE TABLE contact_request (
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NULL,
     company VARCHAR(100) NULL,
-    contact_subject_id INT UNSIGNED NOT NULL,
+    subject ENUM('general', 'training', 'support', 'partnership', 'billing', 'technical') NOT NULL,
     message TEXT NOT NULL,
     consent BOOLEAN NOT NULL,
-    request_status_id INT UNSIGNED NOT NULL
+    status ENUM('pending', 'processing', 'resolved', 'closed') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB;
 
 CREATE TABLE event_booking (
     event_id INT UNSIGNED NOT NULL,
     participant_email VARCHAR(100) NOT NULL,
-    booking_status_id INT UNSIGNED NOT NULL,
+    status ENUM('pending', 'confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'pending',
     PRIMARY KEY (event_id, participant_email)
 ) ENGINE=InnoDB;
 
 CREATE TABLE training_booking (
     training_id INT UNSIGNED NOT NULL,
     participant_email VARCHAR(100) NOT NULL,
-    booking_status_id INT UNSIGNED NOT NULL,
+    status ENUM('pending', 'confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'pending',
     PRIMARY KEY (training_id, participant_email)
 ) ENGINE=InnoDB;
 
@@ -160,31 +159,26 @@ ALTER TABLE training_program
 
 ALTER TABLE contact_request
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN published_at TIMESTAMP NULL DEFAULT NULL,
     ADD COLUMN updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ADD COLUMN disabled_at TIMESTAMP NULL DEFAULT NULL;
 
 ALTER TABLE event_booking
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN published_at TIMESTAMP NULL DEFAULT NULL,
     ADD COLUMN updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ADD COLUMN disabled_at TIMESTAMP NULL DEFAULT NULL;
 
 ALTER TABLE training_booking
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN published_at TIMESTAMP NULL DEFAULT NULL,
     ADD COLUMN updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ADD COLUMN disabled_at TIMESTAMP NULL DEFAULT NULL;
 
 ALTER TABLE newsletter_subscription
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN published_at TIMESTAMP NULL DEFAULT NULL,
     ADD COLUMN updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ADD COLUMN disabled_at TIMESTAMP NULL DEFAULT NULL;
 
 ALTER TABLE user_session
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN published_at TIMESTAMP NULL DEFAULT NULL,
     ADD COLUMN updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ADD COLUMN disabled_at TIMESTAMP NULL DEFAULT NULL;
 
@@ -203,24 +197,16 @@ ALTER TABLE trainer
       UNIQUE (email);
 
 ALTER TABLE article
-  ADD CONSTRAINT article_fk_taxonomy_exists
-      FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE SET NULL,
   ADD CONSTRAINT article_uk_slug_unique
       UNIQUE (slug);
 
 ALTER TABLE event
-  ADD CONSTRAINT event_fk_taxonomy_exists
-      FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE SET NULL,
-  ADD CONSTRAINT event_fk_event_type_exists
-      FOREIGN KEY (event_type_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
   ADD CONSTRAINT event_uk_slug_unique
       UNIQUE (slug),
     ADD CONSTRAINT event_ck_price_not_negative
         CHECK (price_ht IS NULL OR price_ht >= 0);
 
 ALTER TABLE training
-    ADD CONSTRAINT training_fk_training_level_exists
-        FOREIGN KEY (training_level_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
     ADD CONSTRAINT training_fk_trainer_exists
         FOREIGN KEY (trainer_id) REFERENCES trainer(id) ON DELETE SET NULL,
     ADD CONSTRAINT training_uk_slug_unique
@@ -240,21 +226,11 @@ ALTER TABLE training_program
 
 ALTER TABLE event_booking
     ADD CONSTRAINT event_booking_fk_event_exists
-        FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE RESTRICT,
-    ADD CONSTRAINT event_booking_fk_status_exists
-        FOREIGN KEY (booking_status_id) REFERENCES taxonomy(id) ON DELETE RESTRICT;
+        FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE RESTRICT;
 
 ALTER TABLE training_booking
     ADD CONSTRAINT training_booking_fk_training_exists
-        FOREIGN KEY (training_id) REFERENCES training(id) ON DELETE RESTRICT,
-    ADD CONSTRAINT training_booking_fk_status_exists
-        FOREIGN KEY (booking_status_id) REFERENCES taxonomy(id) ON DELETE RESTRICT;
-
-ALTER TABLE contact_request
-    ADD CONSTRAINT contact_request_fk_contact_subject_exists
-        FOREIGN KEY (contact_subject_id) REFERENCES taxonomy(id) ON DELETE RESTRICT,
-    ADD CONSTRAINT contact_request_fk_request_status_exists
-        FOREIGN KEY (request_status_id) REFERENCES taxonomy(id) ON DELETE RESTRICT;
+        FOREIGN KEY (training_id) REFERENCES training(id) ON DELETE RESTRICT;
 
 ALTER TABLE newsletter_subscription
     ADD CONSTRAINT newsletter_subscription_uk_email_unique
@@ -274,16 +250,16 @@ ALTER TABLE trainer
 ALTER TABLE article
     ADD INDEX idx_article_published (published_at),
     ADD INDEX idx_article_featured (featured),
-    ADD INDEX idx_article_active_taxonomy (disabled_at, taxonomy_id),
+    ADD INDEX idx_article_category (category),
     ADD FULLTEXT KEY idx_article_search (label, summary, content);
 
 ALTER TABLE event
-    ADD INDEX idx_event_type (event_type_id),
+    ADD INDEX idx_event_type (type),
     ADD INDEX idx_event_disabled_at_date (disabled_at, event_date),
-    ADD INDEX idx_event_active_taxonomy (disabled_at, taxonomy_id);
+    ADD INDEX idx_event_category (category);
 
 ALTER TABLE training
-    ADD INDEX idx_training_level (training_level_id),
+    ADD INDEX idx_training_level (level),
     ADD INDEX idx_training_date (start_date),
     ADD INDEX idx_training_disabled_at (disabled_at);
 
@@ -291,9 +267,9 @@ ALTER TABLE training_program
     ADD INDEX idx_training_program_day (training_id, day_number);
 
 ALTER TABLE contact_request
-    ADD INDEX idx_contact_status (request_status_id),
+    ADD INDEX idx_contact_status (status),
     ADD INDEX idx_contact_created_at (created_at),
-    ADD INDEX idx_contact_subject (contact_subject_id);
+    ADD INDEX idx_contact_subject (subject);
 
 ALTER TABLE newsletter_subscription
     ADD INDEX idx_newsletter_disabled_at (disabled_at);
