@@ -9,12 +9,6 @@ CREATE TABLE taxonomy (
     sort_order SMALLINT UNSIGNED NOT NULL
 ) ENGINE=InnoDB;
 
-CREATE TABLE taxonomy_content_type (
-    taxonomy_id INT UNSIGNED NOT NULL,
-    content_type_id INT UNSIGNED NOT NULL,
-    PRIMARY KEY (taxonomy_id, content_type_id)
-) ENGINE=InnoDB;
-
 CREATE TABLE trainer (
     label VARCHAR(100) NOT NULL,
     bio TEXT NULL,
@@ -28,7 +22,7 @@ CREATE TABLE article (
     summary TEXT NULL,
     content LONGTEXT NOT NULL,
     taxonomy_id INT UNSIGNED NULL,
-    reading_time TINYINT UNSIGNED NULL,
+    reading_time SMALLINT UNSIGNED NULL,
     avatar VARCHAR(255) NULL,
     featured BOOLEAN NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB;
@@ -53,12 +47,12 @@ CREATE TABLE training (
     label VARCHAR(200) NOT NULL,
     description TEXT NOT NULL,
     training_level_id INT UNSIGNED NOT NULL,
-    duration_days TINYINT UNSIGNED NOT NULL,
-    duration_hours TINYINT UNSIGNED NOT NULL,
+    duration_days SMALLINT UNSIGNED NOT NULL,
+    duration_hours SMALLINT UNSIGNED NOT NULL,
     price_ht DECIMAL(8,2) NOT NULL,
     start_date DATE NOT NULL,
-    places_max TINYINT UNSIGNED NULL,
-    places_taken TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    places_max SMALLINT UNSIGNED NULL,
+    places_taken SMALLINT UNSIGNED NOT NULL DEFAULT 0,
     objectives TEXT NULL,
     prerequisites TEXT NULL,
     avatar VARCHAR(255) NULL,
@@ -68,7 +62,7 @@ CREATE TABLE training (
 
 CREATE TABLE training_program (
     training_id INT UNSIGNED NOT NULL,
-    day_number TINYINT UNSIGNED NOT NULL,
+    day_number SMALLINT UNSIGNED NOT NULL,
     time_start TIME NOT NULL,
     time_end TIME NOT NULL,
     label VARCHAR(150) NOT NULL,
@@ -76,12 +70,6 @@ CREATE TABLE training_program (
     objectives TEXT NULL
 ) ENGINE=InnoDB;
 
-CREATE TABLE content_taxonomy (
-    content_id INT UNSIGNED NOT NULL,
-    taxonomy_id INT UNSIGNED NOT NULL,
-    content_type_id INT UNSIGNED NOT NULL,
-    PRIMARY KEY (content_id, taxonomy_id, content_type_id)
-) ENGINE=InnoDB;
 
 CREATE TABLE contact_request (
     label VARCHAR(100) NOT NULL,
@@ -99,14 +87,16 @@ CREATE TABLE event_booking (
     participant_email VARCHAR(100) NOT NULL,
     booking_status_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (event_id, participant_email)
-);
+) ENGINE=InnoDB;
+
 
 CREATE TABLE training_booking (
     training_id INT UNSIGNED NOT NULL,
     participant_email VARCHAR(100) NOT NULL,
     booking_status_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (training_id, participant_email)
-);
+) ENGINE=InnoDB;
+
 
 CREATE TABLE newsletter_subscription (
     email VARCHAR(100) NOT NULL
@@ -171,12 +161,6 @@ ALTER TABLE training_program
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
-ALTER TABLE content_taxonomy
-    ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
-    ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
-
 ALTER TABLE contact_request
     ADD COLUMN id        INT UNSIGNED     NOT NULL    AUTO_INCREMENT PRIMARY KEY FIRST,
     ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
@@ -210,11 +194,6 @@ ALTER TABLE user_session
     ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
-ALTER TABLE taxonomy_content_type
-    ADD COLUMN new_on    TIMESTAMP        NOT NULL    DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN get_on    TIMESTAMP        NULL        DEFAULT NULL,
-    ADD COLUMN set_on    TIMESTAMP        NULL        DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    ADD COLUMN dis_on    TIMESTAMP        NULL        DEFAULT NULL;
 
 -- ===============================================
 -- 3. CONSTRAINTS & KEYS
@@ -225,12 +204,6 @@ ALTER TABLE taxonomy
       FOREIGN KEY (parent_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
   ADD CONSTRAINT taxonomy_uk_slug_per_parent
       UNIQUE (parent_id, slug);
-
-ALTER TABLE taxonomy_content_type
-  ADD CONSTRAINT taxonomy_content_type_fk_taxonomy_exists
-      FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
-  ADD CONSTRAINT taxonomy_content_type_fk_content_type_exists
-      FOREIGN KEY (content_type_id) REFERENCES taxonomy(id) ON DELETE CASCADE;
 
 ALTER TABLE trainer
   ADD CONSTRAINT trainer_uk_email_unique
@@ -260,7 +233,7 @@ ALTER TABLE training
     ADD CONSTRAINT training_uk_slug_unique
         UNIQUE (slug),
     ADD CONSTRAINT training_ck_price_not_negative
-        CHECK (price_ht IS NULL OR price_ht >= 0);
+        CHECK (price_ht >= 0);
 
 ALTER TABLE training_program
     ADD CONSTRAINT training_program_fk_training_exists
@@ -274,17 +247,15 @@ ALTER TABLE training_program
 
 ALTER TABLE event_booking
     ADD CONSTRAINT event_booking_fk_event_exists
-        FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE RESTRICT;
+        FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE RESTRICT,
+    ADD CONSTRAINT event_booking_fk_status_exists
+        FOREIGN KEY (booking_status_id) REFERENCES taxonomy(id) ON DELETE RESTRICT;
 
 ALTER TABLE training_booking
     ADD CONSTRAINT training_booking_fk_training_exists
-        FOREIGN KEY (training_id) REFERENCES training(id) ON DELETE RESTRICT;
-
-ALTER TABLE content_taxonomy
-    ADD CONSTRAINT content_taxonomy_fk_taxonomy_exists
-        FOREIGN KEY (taxonomy_id) REFERENCES taxonomy(id) ON DELETE CASCADE,
-    ADD CONSTRAINT content_taxonomy_fk_content_type_exists
-        FOREIGN KEY (content_type_id) REFERENCES taxonomy(id) ON DELETE CASCADE;
+        FOREIGN KEY (training_id) REFERENCES training(id) ON DELETE RESTRICT,
+    ADD CONSTRAINT training_booking_fk_status_exists
+        FOREIGN KEY (booking_status_id) REFERENCES taxonomy(id) ON DELETE RESTRICT;
 
 ALTER TABLE contact_request
     ADD CONSTRAINT contact_request_fk_contact_subject_exists
@@ -304,9 +275,6 @@ ALTER TABLE newsletter_subscription
 ALTER TABLE taxonomy
     ADD INDEX idx_taxonomy_parent (parent_id),
     ADD INDEX idx_taxonomy_dis_on (dis_on);
-
-ALTER TABLE taxonomy_content_type
-    ADD INDEX idx_taxonomy_content_type_rev (content_type_id, taxonomy_id);
 
 ALTER TABLE trainer
     ADD INDEX idx_trainer_dis_on (dis_on);
