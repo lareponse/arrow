@@ -3,6 +3,6 @@
 
 <?php
 return function ($view) {
-    http(200, ob_capture(__DIR__ . DIRECTORY_SEPARATOR . 'layout.php', $view), ['Content-Type' => 'text/html; charset=UTF-8']);
+    http(200, io_absorb(__DIR__ . DIRECTORY_SEPARATOR . 'layout.php', $view), ['Content-Type' => 'text/html; charset=UTF-8']);
 }
 ?>

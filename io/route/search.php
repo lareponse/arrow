@@ -12,7 +12,7 @@ return function ($quest) {
         // Search articles
         $articles = dbq(db(), 
             "SELECT 'article' as type, id, title, slug, excerpt as description, created_at
-             FROM articles 
+             FROM article 
              WHERE status = 'published' AND (title LIKE ? OR content LIKE ?)
              ORDER BY created_at DESC LIMIT 10",
             ["%{$query}%", "%{$query}%"]
@@ -21,7 +21,7 @@ return function ($quest) {
         // Search events
         $events = dbq(db(), 
             "SELECT 'event' as type, id, title, slug, description, start_datetime as created_at
-             FROM events 
+             FROM event 
              WHERE status = 'published' AND (title LIKE ? OR description LIKE ?)
              ORDER BY start_datetime DESC LIMIT 10",
             ["%{$query}%", "%{$query}%"]

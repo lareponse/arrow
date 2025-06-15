@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+require_once 'add/bad/dad/db.php';
 /**
  * Schema-aware CRUD mapper for BADDAD
  * Expect success, let database handle constraints
