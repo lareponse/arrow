@@ -10,10 +10,10 @@ return static function (...$args): array {
     // $upcoming_events = events_get_upcoming(3);
 
     return [
-        'payload' => [
-            'title' => 'Welcome to copro.academy',
-            'recent_articles' => $recent_articles,
-            'upcoming_events' => $upcoming_events
-        ]
+        // 'payload' => [
+        //     'title' => 'Welcome to copro.academy',
+        //     'recent_articles' => $recent_articles,
+        //     'upcoming_events' => $upcoming_events
+        // ]
     ];
 };

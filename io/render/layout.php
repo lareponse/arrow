@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($data['title'] ?? 'copro.academy') ?></title>
+    <title><?= htmlspecialchars($title ?? 'copro.academy') ?></title>
     <meta name="description" content="<?= htmlspecialchars($data['description'] ?? 'Professional development and educational resources') ?>">
 </head>
 
