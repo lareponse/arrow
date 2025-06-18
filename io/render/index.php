@@ -3,6 +3,8 @@
 
 <?php
 return function ($view) {
-    http(200, io_absorb(__DIR__ . DIRECTORY_SEPARATOR . 'layout.php', $view), ['Content-Type' => 'text/html; charset=UTF-8']);
+    $route = [IO_PATH => __DIR__ . DIRECTORY_SEPARATOR . 'layout.php', IO_ARGS => $view];
+    $quest = io_quest($route, [], IO_ABSORB);
+    http_out(200, $quest[IO_ABSORB], ['Content-Type' => 'text/html; charset=UTF-8']);
 }
 ?>
