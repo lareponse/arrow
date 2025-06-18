@@ -5,20 +5,28 @@ set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../..');
 require 'add/bad/dad/dev.php';
 require 'add/bad/error.php';
 require 'add/bad/io.php';
+require 'add/bad/db.php';
 require 'add/bad/auth.php';
 
-define('HOME_BASE', realpath(__DIR__ . '/../io'));
-define('SAFE_PATH', io_guard(http_guard(4096, 9)));
-define('FILE_ROOT', 'index');
+require 'app/morph/html.php';
 
-$continue   = io_start(HOME_BASE . '/route', SAFE_PATH, FILE_ROOT);
-$mirror     = io_start(HOME_BASE . '/render/', SAFE_PATH, FILE_ROOT, $continue);
-vd(0, $mirror);die;
+// config: where to start (io), where to go (re_quest)
+$io         = realpath(__DIR__ . '/../io') ;
+$re_quest   = http_in(4096, 9);
 
-$mirror     = io_absorb($mirror[IO_PATH], $continue[IO_ARGS] ?: []);
-if (is_array($mirror)) {
-    http(...$mirror);
+// coding: find the route and invoke it
+$in_route   = io_route("$io/route", $re_quest, 'index');
+$in_quest   = io_quest($in_route, [], IO_INVOKE);
+
+// render: find the render file and absorb it
+$out_route  = io_route("$io/render/", $re_quest, 'index');
+$out_quest  = io_quest($out_route, $in_quest[IO_INVOKE], IO_ABSORB);
+
+if(is_string($out_quest[IO_ABSORB])){
+    http_out(200, $out_quest[IO_ABSORB], ['Content-Type' => 'text/html; charset=utf-8']);
     exit;
 }
 
-http(404, 'Not Found');
+error_log('404 Not Found for ' . $re_quest . ' in ' . $io);
+
+http_out(404, 'Not Found');
