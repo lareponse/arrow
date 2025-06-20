@@ -1,5 +1,5 @@
 <?php
-// io/render/admin/article/alter.php
+
 [$data, $output] = $args;
 $article = $data['article'] ?? [];
 $categories = $data['categories'] ?? [];
@@ -29,14 +29,34 @@ $is_edit = !empty($article['id']);
             <label for="label">Titre *</label>
             <input
                 type="text"
-                id="label"
                 name="label"
                 value="<?= htmlspecialchars($article['label'] ?? '') ?>"
                 required
                 maxlength="200"
                 aria-describedby="label-help">
+
+            <label for="label">Slug *</label>
+            <input
+                type="text"
+                name="slug"
+                value="<?= htmlspecialchars($article['slug'] ?? '') ?>"
+                required
+                maxlength="200"
+                aria-describedby="label-help">
             <small id="label-help">Le slug sera généré automatiquement</small>
         </fieldset>
+        <script type="module">
+            import slugify from '/assets/js/slug.js';
+            document.addEventListener('DOMContentLoaded', () => {
+                const labelInput = document.querySelector('input[name="label"]');
+                const slugInput = document.querySelector('input[name="slug"]');
+                
+
+                labelInput.addEventListener('input', () => {
+                    slugInput.value = slugify(labelInput.value);
+                });
+            });
+        </script>
 
         <fieldset class="form-group">
             <label for="summary">Résumé</label>
