@@ -1,8 +1,4 @@
 <?php
-
-[$data, $output] = $args;
-$article = $data['article'] ?? [];
-$categories = $data['categories'] ?? [];
 $is_edit = !empty($article['id']);
 ?>
 
@@ -45,13 +41,12 @@ $is_edit = !empty($article['id']);
                 aria-describedby="label-help">
             <small id="label-help">Le slug sera généré automatiquement</small>
         </fieldset>
+
         <script type="module">
             import slugify from '/assets/js/slug.js';
             document.addEventListener('DOMContentLoaded', () => {
                 const labelInput = document.querySelector('input[name="label"]');
                 const slugInput = document.querySelector('input[name="slug"]');
-                
-
                 labelInput.addEventListener('input', () => {
                     slugInput.value = slugify(labelInput.value);
                 });
@@ -124,14 +119,12 @@ $is_edit = !empty($article['id']);
             </header>
 
             <fieldset class="form-group">
-                <label for="category_id">Catégorie</label>
-                <select id="category_id" name="category_id">
-                    <option value="">Aucune catégorie</option>
-                    <?php foreach ($categories as $cat): ?>
-                        <option
-                            value="<?= $cat['id'] ?>"
-                            <?= ($article['category_id'] ?? '') == $cat['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($cat['label']) ?>
+                <label for="category_slug">Catégorie</label>
+                <select name="category_slug">
+                    <?php foreach (vd($categories) as $slug => $label): ?>
+                        <option value="<?= $slug ?>"
+                            <?= ($article['category_slug'] ?? '') == $cat['id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($label) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -141,14 +134,42 @@ $is_edit = !empty($article['id']);
                 <label for="reading_time">Temps de lecture (minutes)</label>
                 <input
                     type="number"
-                    id="reading_time"
                     name="reading_time"
+                    id="reading_time"
                     min="1"
                     max="60"
                     value="<?= $article['reading_time'] ?? '' ?>"
                     aria-describedby="reading-help">
                 <small id="reading-help">Laissez vide pour calcul automatique</small>
             </fieldset>
+
+            <script type="module">
+                import reading_time from '/assets/js/reading-time.js';
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const textArea = document.querySelector('textarea[name="content"]');
+                    const timeInput = document.querySelector('input[name="reading_time"]');
+
+                    if (!textArea || !timeInput) return;
+
+                    const updateReadingTime = () => {
+                        const content = textArea.value.trim();
+                        if (content === '') {
+                            timeInput.value = '';
+                        } else {
+                            // reading_time() returns a Number of whole minutes
+                            timeInput.value = reading_time(content);
+                        }
+                    };
+
+                    // Compute on load (in case the textarea is pre-filled)
+                    updateReadingTime();
+
+                    // Recompute on every edit
+                    textArea.addEventListener('input', updateReadingTime);
+                });
+            </script>
+
         </section>
 
         <section class="media-box">

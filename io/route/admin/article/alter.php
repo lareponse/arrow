@@ -1,106 +1,86 @@
 <?php
 // io/route/admin/article/alter.php
 
-return function ($args = null) {
-    $article = [];
-    $id = $args['slug'] ?: null;
+require_once 'app/mapper/taxonomy.php';
+require_once 'add/bad/dad/db_row.php';
 
-    if ($id) {
-        $article = dbq(db(), "SELECT * FROM article WHERE id = ? AND revoked_at IS NULL", [$id])->fetch();
+return function ($slug = null) {
+    $article = [];
+
+    $slug = $slug[0] ?: null;
+    $row = row_innit('article');
+
+    if ($slug) {
+        $row = row($row, ROW_RELOAD, ['slug' => $slug]);
+        $article = dbq(db(), "SELECT * FROM article WHERE slug = ? AND revoked_at IS NULL", [$slug])->fetch();
         if (!$article) {
             throw new DomainException('Article not found', 404);
         }
     }
-
+    vd($article);
     // Handle POST submission
     if (!empty($_POST)) {
-        $data = [
-            'label' => trim($_POST['label'] ?? ''),
-            'summary' => trim($_POST['summary'] ?? ''),
-            'content' => trim($_POST['content'] ?? ''),
-            'category_id' => (int)($_POST['category_id'] ?? 0) ?: null,
-            'reading_time' => (int)($_POST['reading_time'] ?? 0) ?: null,
-            'featured' => !empty($_POST['featured']),
-        ];
 
+        $clean = $_POST;
+        $clean['category_id'] = tag_id_by_slug($_POST['category_slug'], 'article-categorie') ?: null;
+        $clean['reading_time'] = (int)($_POST['reading_time'] ?? 0) ?: null;
+        $clean['featured'] = (int)!empty($_POST['featured']);
 
-        // Auto-generate slug if needed
-        if (!$id || empty($article['slug'])) {
-            $data['slug'] = generate_slug($data['label'], 'article');
-        }
+        $row = row($row, ROW_FIELD);
+        $row = row($row, ROW_IMPORT, $clean);
+        $row = row($row, ROW_PERSIST | ROW_RELOAD);
+        http_out(302, '', ['Location' => "/admin/article/alter/". $row[ROW_SAVED]['slug']]);
+        
+        // // Handle file upload
+        // if (!empty($_FILES['avatar']['tmp_name'])) {
+        //     $upload = handle_image_upload($_FILES['avatar'], 'articles');
+        //     if ($upload) {
+        //         $data['avatar'] = $upload;
+        //     }
+        // }
 
-        // Handle file upload
-        if (!empty($_FILES['avatar']['tmp_name'])) {
-            $upload = handle_image_upload($_FILES['avatar'], 'articles');
-            if ($upload) {
-                $data['avatar'] = $upload;
-            }
-        }
+        // // Handle delete action
+        // if (($_POST['action'] ?? '') === 'delete' && $id) {
+        //     dbq(db(), "UPDATE article SET revoked_at = NOW() WHERE id = ?", [$id]);
+        //     http_out(302, '', ['Location' => '/admin/article/list']);
+        // }
 
-        // Handle delete action
-        if (($_POST['action'] ?? '') === 'delete' && $id) {
-            dbq(db(), "UPDATE article SET revoked_at = NOW() WHERE id = ?", [$id]);
-            http_out(302, '', ['Location' => '/admin/article/list']);
-        }
+        // // Insert or update
+        // if ($id && !empty($_POST['id'])) {
+        //     // Update existing
+        //     $update_data = $data;
 
-        // Insert or update
-        if ($id && !empty($_POST['id'])) {
-            // Update existing
-            $update_data = $data;
+        //     // Handle publication status
+        //     if (!empty($_POST['published']) && !$article['enabled_at']) {
+        //         $update_data['enabled_at'] = date('Y-m-d H:i:s');
+        //     } elseif (empty($_POST['published']) && $article['enabled_at']) {
+        //         $update_data['enabled_at'] = null;
+        //     }
 
-            // Handle publication status
-            if (!empty($_POST['published']) && !$article['enabled_at']) {
-                $update_data['enabled_at'] = date('Y-m-d H:i:s');
-            } elseif (empty($_POST['published']) && $article['enabled_at']) {
-                $update_data['enabled_at'] = null;
-            }
+        //     [$sql, $binds] = qb_update('article', $update_data, ['id' => $id]);
+        //     dbq(db(), $sql, $binds);
 
-            [$sql, $binds] = qb_update('article', $update_data, ['id' => $id]);
-            dbq(db(), $sql, $binds);
+        //     http_out(302, '', ['Location' => "/admin/article/alter/$id"]);
+        // } else {
+        //     // Insert new
+        //     if (!empty($_POST['published'])) {
+        //         $data['enabled_at'] = date('Y-m-d H:i:s');
+        //     }
 
-            http_out(302, '', ['Location' => "/admin/article/alter/$id"]);
-        } else {
-            // Insert new
-            if (!empty($_POST['published'])) {
-                $data['enabled_at'] = date('Y-m-d H:i:s');
-            }
+        //     [$sql, $binds] = qb_create('article', null, $data);
+        //     dbq(db(), $sql, $binds);
+        //     $new_id = db()->lastInsertId();
 
-            [$sql, $binds] = qb_create('article', null, $data);
-            dbq(db(), $sql, $binds);
-            $new_id = db()->lastInsertId();
-
-            http_out(302, '', ['Location' => "/admin/article/alter/$new_id"]);
-        }
+        //     http_out(302, '', ['Location' => "/admin/article/alter/$new_id"]);
+        // }
     }
 
     return [
         'title' => $id ? "Modifier l'article - {$article['label']}" : 'Nouvel article',
         'article' => $article,
-        'categories' => tag_by_parent('article-categorie'),
+        'categories' => (tag_by_parent('article-categorie')),
     ];
 };
-
-
-function generate_slug(string $text, ?string $table = null): string
-{
-    // Basic slug generation
-    $slug = strtolower(trim($text));
-    $slug = preg_replace('/[^a-z0-9-]/', '-', $slug);
-    $slug = preg_replace('/-+/', '-', $slug);
-    $slug = trim($slug, '-');
-
-    // Ensure uniqueness if table provided
-    if ($table) {
-        $base_slug = $slug;
-        $counter = 1;
-
-        while (dbq(db(), "SELECT 1 FROM $table WHERE slug = ? AND revoked_at IS NULL", [$slug])->fetchColumn()) {
-            $slug = $base_slug . '-' . $counter++;
-        }
-    }
-
-    return $slug;
-}
 
 function handle_image_upload(array $file, string $folder): ?string
 {
