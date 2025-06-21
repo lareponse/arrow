@@ -43,7 +43,7 @@ $is_edit = !empty($article['id']);
         </fieldset>
 
         <script type="module">
-            import slugify from '/assets/js/slug.js';
+            import slugify from '/asset/js/slug.js';
             document.addEventListener('DOMContentLoaded', () => {
                 const labelInput = document.querySelector('input[name="label"]');
                 const slugInput = document.querySelector('input[name="slug"]');
@@ -121,9 +121,9 @@ $is_edit = !empty($article['id']);
             <fieldset class="form-group">
                 <label for="category_slug">Catégorie</label>
                 <select name="category_slug">
-                    <?php foreach (vd($categories) as $slug => $label): ?>
+                    <?php foreach (($categories) as $slug => $label): ?>
                         <option value="<?= $slug ?>"
-                            <?= ($article['category_slug'] ?? '') == $cat['id'] ? 'selected' : '' ?>>
+                            <?= ($article['category_slug'] ?? '') == $slug ? 'selected' : '' ?>>
                             <?= htmlspecialchars($label) ?>
                         </option>
                     <?php endforeach; ?>
@@ -144,7 +144,7 @@ $is_edit = !empty($article['id']);
             </fieldset>
 
             <script type="module">
-                import reading_time from '/assets/js/reading-time.js';
+                import reading_time from '/asset/js/reading-time.js';
 
                 document.addEventListener('DOMContentLoaded', () => {
                     const textArea = document.querySelector('textarea[name="content"]');
@@ -252,5 +252,5 @@ $is_edit = !empty($article['id']);
 
 <?php
 return function ($this_html, $args = []) {
-    return ob_ret_get('app/morph/admin_layout.php', ($args ?? []) + ['main' => $this_html])[1];
+    return ob_ret_get('app/morph/admin_layout.php', ($args ?? []) + ['main' => $this_html, 'css' => '/asset/css/alter.css'])[1];
 };

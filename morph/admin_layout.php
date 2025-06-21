@@ -8,8 +8,11 @@ $user = whoami();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?: 'Copro Academy Admin') ?></title>
-    <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="/asset/css/admin.css">
     <meta name="robots" content="noindex,nofollow">
+    <?php if (isset($css)) : ?>
+        <link rel="stylesheet" href="<?= htmlspecialchars($css) ?>">
+    <?php endif; ?>
 </head>
 <body class="admin">
     <header class="admin-header">
@@ -25,7 +28,7 @@ $user = whoami();
         </div>
         <div class="admin-user">
             <span><?= htmlspecialchars($user) ?></span>
-            <a href="/admin/logout">Déconnexion</a>
+            <a href="/logout">Déconnexion</a>
         </div>
     </header>
     <main class="admin-main">
