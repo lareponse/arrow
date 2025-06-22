@@ -12,7 +12,7 @@
     gap: var(--space-sm);
 }
 
-.article-form {
+.alter-form {
     display: grid;
     gap: var(--space-xl);
     grid-template-columns: 1fr;
@@ -110,7 +110,7 @@
 }
 
 @media (min-width: 64rem) {
-    .article-form {
+    .alter-form {
         grid-template-columns: 1fr 20rem;
         grid-template-areas:
             "main sidebar"
