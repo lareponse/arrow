@@ -177,21 +177,11 @@ $is_edit = !empty($training['id']);
                 <label for="avatar">
                     <?= !empty($training['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
                 </label>
-
-                <div class="file-drop" onclick="this.querySelector('input').click()">
-                    <input type="file" name="avatar" id="avatar"
-                        accept="image/jpeg,image/png,image/webp" hidden>
-
-                    <?php if (!empty($training['avatar'])): ?>
-                        <img src="<?= htmlspecialchars($training['avatar']) ?>" class="current-image">
-                    <?php endif; ?>
-
-                    <div class="drop-text">
-                        📁 Cliquez ou glissez une image ici
-                        <small>JPEG, PNG, WebP • Max 2MB</small>
-                    </div>
-                </div>
+                <input type="file" name="avatar" id="avatar"
+                    accept="image/jpeg,image/png,image/webp">
+                <small>JPEG, PNG ou WebP. Max 2MB.</small>
             </fieldset>
+
         </section>
 
         <?php if ($is_edit): ?>
