@@ -269,5 +269,5 @@ $is_edit = !empty($event['id']);
 
 <?php
 return function ($this_html, $args = []) {
-    return ob_ret_get('app/morph/admin_layout.php', ($args ?? []) + ['main' => $this_html, 'css' => '/asset/css/alter.css'])[1];
+    return ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $this_html, 'css' => '/asset/css/alter.css'])[1];
 };

@@ -181,17 +181,11 @@ function map_with_taxonomy(string $table, array $taxonomy_fields = [], array $co
         $select_fields[] = "$table_alias.label as {$alias}_label";
     }
 
-    $options += ['include_revoked' => false];
-    if (!$options['include_revoked']) {
-        $conditions['revoked_at'] = null;
-    }
-
     [$where_sql, $where_binds] = qb_where($conditions);
 
     $sql = "SELECT " . implode(', ', $select_fields) . " FROM $base_table " . implode(' ', $joins) . " $where_sql";
 
     if ($options['order'] ?? null) $sql .= " ORDER BY {$options['order']}";
     if ($options['limit'] ?? null) $sql .= " LIMIT {$options['limit']} OFFSET " . ($options['offset'] ?? 0);
-
     return dbq(db(), $sql, $where_binds)->fetchAll();
 }
