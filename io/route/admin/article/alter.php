@@ -3,6 +3,7 @@
 
 require_once 'app/mapper/taxonomy.php';
 require_once 'add/bad/dad/db_row.php';
+require_once 'add/bad/dad/upload.php';
 
 return function ($slug = null) {
     $slug = $slug[0] ?: null;
@@ -43,41 +44,3 @@ return function ($slug = null) {
         'categories' => (tag_by_parent('article-categorie')),
     ];
 };
-
-function upload(array $file, string $folder): ?string
-{
-    // Basic validation
-    if ($file['error'] !== UPLOAD_ERR_OK) {
-        return null;
-    }
-
-    if ($file['size'] > 2 * 1024 * 1024) { // 2MB
-        throw new InvalidArgumentException('Image too large', 400);
-    }
-
-    $allowed = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!in_array($file['type'], $allowed)) {
-        throw new InvalidArgumentException('Invalid image type', 400);
-    }
-
-    // Generate filename
-    $ext = match ($file['type']) {
-        'image/jpeg' => 'jpg',
-        'image/png' => 'png',
-        'image/webp' => 'webp',
-    };
-
-    $filename = uniqid() . '.' . $ext;
-
-    if (!is_dir($folder)) {
-        mkdir($folder, 0755, true);
-    }
-
-    $target = "$folder/$filename";
-
-    if (move_uploaded_file($file['tmp_name'], $target)) {
-        return $target;
-    }
-
-    return null;
-}

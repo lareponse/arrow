@@ -1,4 +1,5 @@
 <?php
+// io/render/admin/article/alter.php
 $is_edit = !empty($article['id']);
 ?>
 
@@ -16,7 +17,7 @@ $is_edit = !empty($article['id']);
     <?php endif; ?>
 </header>
 
-<form method="post" class="article-form" enctype="multipart/form-data">
+<form method="post" class="alter-form" enctype="multipart/form-data">
     <?= csrf_field(3600) ?>
     <input type="hidden" name="id" value="<?= $article['id'] ?? null ?>">
 

@@ -1,18 +1,14 @@
 <?php
-// io/render/admin/article/alter.php
-[$data, $output] = $args;
-$article = $data['article'] ?? [];
-$categories = $data['categories'] ?? [];
-$is_edit = !empty($article['id']);
+$is_edit = !empty($event['id']);
 ?>
 
 <header class="page-header">
-    <h1><?= $is_edit ? 'Modifier l\'article' : 'Nouvel article' ?></h1>
+    <h1><?= $is_edit ? 'Modifier l\'événement' : 'Nouvel événement' ?></h1>
     <?php if ($is_edit): ?>
         <nav class="page-actions">
-            <a href="/admin/article/list" class="btn secondary">Retour à la liste</a>
-            <?php if ($article['enabled_at']): ?>
-                <a href="/article/<?= $article['slug'] ?>" class="btn secondary" target="_blank">
+            <a href="/admin/event/list" class="btn secondary">Retour à la liste</a>
+            <?php if (!empty($event['enabled_at'])): ?>
+                <a href="/event/<?= $event['slug'] ?>" class="btn secondary" target="_blank">
                     Voir sur le site
                 </a>
             <?php endif; ?>
@@ -20,18 +16,18 @@ $is_edit = !empty($article['id']);
     <?php endif; ?>
 </header>
 
-<form method="post" class="article-form" enctype="multipart/form-data">
+<form method="post" class="alter-form" enctype="multipart/form-data">
     <?= csrf_field(3600) ?>
-    <input type="hidden" name="id" value="<?= $article['id'] ?? null ?>">
+    <input type="hidden" name="id" value="<?= $event['id'] ?? null ?>">
 
     <section class="form-main">
         <fieldset class="form-group">
-            <label for="label">Titre *</label>
+            <label for="label">Titre de l'événement *</label>
             <input
                 type="text"
                 id="label"
                 name="label"
-                value="<?= htmlspecialchars($article['label'] ?? '') ?>"
+                value="<?= htmlspecialchars($event['label'] ?? '') ?>"
                 required
                 maxlength="200"
                 aria-describedby="label-help">
@@ -39,24 +35,76 @@ $is_edit = !empty($article['id']);
         </fieldset>
 
         <fieldset class="form-group">
-            <label for="summary">Résumé</label>
+            <label for="description">Description *</label>
             <textarea
-                id="summary"
-                name="summary"
-                rows="3"
-                maxlength="500"
-                aria-describedby="summary-help"><?= htmlspecialchars($article['summary'] ?? '') ?></textarea>
-            <small id="summary-help">Description courte pour les réseaux sociaux et moteurs de recherche</small>
+                id="description"
+                name="description"
+                rows="10"
+                required
+                class="content-editor"><?= htmlspecialchars($event['description'] ?? '') ?></textarea>
         </fieldset>
 
+        <div class="form-row">
+            <fieldset class="form-group">
+                <label for="event_date">Date et heure *</label>
+                <input
+                    type="datetime-local"
+                    id="event_date"
+                    name="event_date"
+                    value="<?= $event['event_date'] ? date('Y-m-d\TH:i', strtotime($event['event_date'])) : '' ?>"
+                    required>
+            </fieldset>
+
+            <fieldset class="form-group">
+                <label for="duration_minutes">Durée (minutes) *</label>
+                <input
+                    type="number"
+                    id="duration_minutes"
+                    name="duration_minutes"
+                    min="15"
+                    max="480"
+                    value="<?= $event['duration_minutes'] ?? '' ?>"
+                    required
+                    aria-describedby="duration-help">
+                <small id="duration-help">Entre 15 minutes et 8 heures</small>
+            </fieldset>
+        </div>
+
+        <div class="form-row">
+            <fieldset class="form-group">
+                <label for="speaker">Intervenant</label>
+                <input
+                    type="text"
+                    id="speaker"
+                    name="speaker"
+                    value="<?= htmlspecialchars($event['speaker'] ?? '') ?>"
+                    maxlength="100">
+            </fieldset>
+
+            <fieldset class="form-group">
+                <label for="places_max">Nombre de places</label>
+                <input
+                    type="number"
+                    id="places_max"
+                    name="places_max"
+                    min="1"
+                    max="1000"
+                    value="<?= $event['places_max'] ?? '' ?>"
+                    aria-describedby="places-help">
+                <small id="places-help">Laissez vide pour illimité</small>
+            </fieldset>
+        </div>
+
         <fieldset class="form-group">
-            <label for="content">Contenu *</label>
-            <textarea
-                id="content"
-                name="content"
-                rows="20"
-                required
-                class="content-editor"><?= htmlspecialchars($article['content'] ?? '') ?></textarea>
+            <label for="location">Lieu</label>
+            <input
+                type="text"
+                id="location"
+                name="location"
+                value="<?= htmlspecialchars($event['location'] ?? '') ?>"
+                maxlength="200"
+                aria-describedby="location-help">
+            <small id="location-help">Adresse physique ou plateforme en ligne</small>
         </fieldset>
     </section>
 
@@ -73,14 +121,14 @@ $is_edit = !empty($article['id']);
                         type="checkbox"
                         name="published"
                         value="1"
-                        <?= !empty($article['enabled_at']) ? 'checked' : '' ?>>
-                    <span class="checkbox-text">Publier l'article</span>
+                        <?= !empty($event['enabled_at']) ? 'checked' : '' ?>>
+                    <span class="checkbox-text">Publier l'événement</span>
                 </label>
-                <?php if ($article['enabled_at']): ?>
+                <?php if ($event['enabled_at']): ?>
                     <small>
                         Publié le
-                        <time datetime="<?= $article['enabled_at'] ?>">
-                            <?= strftime('%d %B %Y à %H:%M', strtotime($article['enabled_at'])) ?>
+                        <time datetime="<?= $event['enabled_at'] ?>">
+                            <?= strftime('%d %B %Y à %H:%M', strtotime($event['enabled_at'])) ?>
                         </time>
                     </small>
                 <?php endif; ?>
@@ -90,10 +138,10 @@ $is_edit = !empty($article['id']);
                 <label class="checkbox-label">
                     <input
                         type="checkbox"
-                        name="featured"
+                        name="online"
                         value="1"
-                        <?= !empty($article['featured']) ? 'checked' : '' ?>>
-                    <span class="checkbox-text">Article à la une</span>
+                        <?= !empty($event['online']) ? 'checked' : '' ?>>
+                    <span class="checkbox-text">Événement en ligne</span>
                 </label>
             </fieldset>
         </section>
@@ -104,30 +152,31 @@ $is_edit = !empty($article['id']);
             </header>
 
             <fieldset class="form-group">
-                <label for="category">Catégorie</label>
-                <select id="category" name="category">
+                <label for="category_slug">Catégorie</label>
+                <select id="category_slug" name="category_slug">
                     <option value="">Aucune catégorie</option>
-                    <?php foreach ($categories as $cat): ?>
+                    <?php vd($categories); ?>
+                    <?php foreach ($categories as $slug => $label): ?>
                         <option
-                            value="<?= $cat ?>"
-                            <?= ($article['category'] ?? '') === $cat ? 'selected' : '' ?>>
-                            <?= ucfirst($cat) ?>
+                            value="<?= $slug ?>"
+                            <?= ($event['category_slug'] ?? '') === $slug ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($label) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </fieldset>
 
             <fieldset class="form-group">
-                <label for="reading_time">Temps de lecture (minutes)</label>
+                <label for="price_ht">Prix HT (€)</label>
                 <input
                     type="number"
-                    id="reading_time"
-                    name="reading_time"
-                    min="1"
-                    max="60"
-                    value="<?= $article['reading_time'] ?? '' ?>"
-                    aria-describedby="reading-help">
-                <small id="reading-help">Laissez vide pour calcul automatique</small>
+                    id="price_ht"
+                    name="price_ht"
+                    min="0"
+                    step="0.01"
+                    value="<?= $event['price_ht'] ?? '' ?>"
+                    aria-describedby="price-help">
+                <small id="price-help">Laissez vide pour gratuit</small>
             </fieldset>
         </section>
 
@@ -136,10 +185,10 @@ $is_edit = !empty($article['id']);
                 <h2>Image</h2>
             </header>
 
-            <?php if (!empty($article['avatar'])): ?>
+            <?php if (!empty($event['avatar'])): ?>
                 <figure class="current-image">
                     <img
-                        src="<?= htmlspecialchars($article['avatar']) ?>"
+                        src="<?= htmlspecialchars($event['avatar']) ?>"
                         alt="Image actuelle"
                         loading="lazy">
                     <figcaption>Image actuelle</figcaption>
@@ -148,7 +197,7 @@ $is_edit = !empty($article['id']);
 
             <fieldset class="form-group">
                 <label for="avatar">
-                    <?= !empty($article['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
+                    <?= !empty($event['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
                 </label>
                 <input
                     type="file"
@@ -169,22 +218,31 @@ $is_edit = !empty($article['id']);
                 <dl class="stats-list">
                     <dt>Créé le</dt>
                     <dd>
-                        <time datetime="<?= $article['created_at'] ?>">
-                            <?= strftime('%d %B %Y', strtotime($article['created_at'])) ?>
+                        <time datetime="<?= $event['created_at'] ?>">
+                            <?= strftime('%d %B %Y', strtotime($event['created_at'])) ?>
                         </time>
                     </dd>
 
-                    <?php if ($article['updated_at']): ?>
+                    <?php if ($event['updated_at']): ?>
                         <dt>Modifié le</dt>
                         <dd>
-                            <time datetime="<?= $article['updated_at'] ?>">
-                                <?= strftime('%d %B %Y à %H:%M', strtotime($article['updated_at'])) ?>
+                            <time datetime="<?= $event['updated_at'] ?>">
+                                <?= strftime('%d %B %Y à %H:%M', strtotime($event['updated_at'])) ?>
                             </time>
                         </dd>
                     <?php endif; ?>
 
                     <dt>Slug</dt>
-                    <dd><code><?= htmlspecialchars($article['slug'] ?? 'auto-généré') ?></code></dd>
+                    <dd><code><?= htmlspecialchars($event['slug'] ?? 'auto-généré') ?></code></dd>
+
+                    <?php if ($event['event_date']): ?>
+                        <dt>Date de l'événement</dt>
+                        <dd>
+                            <time datetime="<?= $event['event_date'] ?>">
+                                <?= strftime('%d %B %Y à %H:%M', strtotime($event['event_date'])) ?>
+                            </time>
+                        </dd>
+                    <?php endif; ?>
                 </dl>
             </section>
         <?php endif; ?>
@@ -192,9 +250,9 @@ $is_edit = !empty($article['id']);
 
     <footer class="form-actions">
         <button type="submit" class="btn">
-            <?= $is_edit ? 'Mettre à jour' : 'Créer l\'article' ?>
+            <?= $is_edit ? 'Mettre à jour' : 'Créer l\'événement' ?>
         </button>
-        <a href="/admin/article/list" class="btn secondary">Annuler</a>
+        <a href="/admin/event/list" class="btn secondary">Annuler</a>
 
         <?php if ($is_edit): ?>
             <button
@@ -202,7 +260,7 @@ $is_edit = !empty($article['id']);
                 name="action"
                 value="delete"
                 class="btn danger"
-                data-confirm="Êtes-vous sûr de vouloir supprimer cet article ?">
+                data-confirm="Êtes-vous sûr de vouloir supprimer cet événement ?">
                 Supprimer
             </button>
         <?php endif; ?>
@@ -211,5 +269,5 @@ $is_edit = !empty($article['id']);
 
 <?php
 return function ($this_html, $args = []) {
-    return ob_ret_get('app/morph/admin_layout.php', ($args ?? []) + ['main' => $this_html])[1];
+    return ob_ret_get('app/morph/admin_layout.php', ($args ?? []) + ['main' => $this_html, 'css' => '/asset/css/alter.css'])[1];
 };
