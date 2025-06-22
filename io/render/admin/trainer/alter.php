@@ -26,29 +26,17 @@ $is_edit = !empty($trainer['id']);
             <input type="text" name="label" id="label"
                 value="<?= htmlspecialchars($trainer['label'] ?? '') ?>"
                 required maxlength="100">
-
-            <label for="slug">Slug *</label>
-            <input type="text" name="slug" id="slug"
+            <label for="label">Slug *</label>
+            <input
+                type="text"
+                name="slug"
                 value="<?= htmlspecialchars($trainer['slug'] ?? '') ?>"
-                required maxlength="100">
+                required
+                maxlength="200"
+                aria-describedby="label-help">
             <small>Généré automatiquement à partir du nom</small>
         </fieldset>
 
-        <script type="module">
-            import slugify from '/asset/js/slug.js';
-            document.addEventListener('DOMContentLoaded', () => {
-                const labelInput = document.querySelector('#label');
-                const slugInput = document.querySelector('#slug');
-                labelInput.addEventListener('input', () => {
-                    if (!slugInput.dataset.manual) {
-                        slugInput.value = slugify(labelInput.value);
-                    }
-                });
-                slugInput.addEventListener('input', () => {
-                    slugInput.dataset.manual = 'true';
-                });
-            });
-        </script>
 
         <fieldset class="form-group">
             <label for="email">Email</label>

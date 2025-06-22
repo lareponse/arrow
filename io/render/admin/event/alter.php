@@ -31,6 +31,14 @@ $is_edit = !empty($event['id']);
                 required
                 maxlength="200"
                 aria-describedby="label-help">
+            <label for="label">Slug *</label>
+            <input
+                type="text"
+                name="slug"
+                value="<?= htmlspecialchars($event['slug'] ?? '') ?>"
+                required
+                maxlength="200"
+                aria-describedby="label-help">
             <small id="label-help">Le slug sera généré automatiquement</small>
         </fieldset>
 
@@ -154,8 +162,6 @@ $is_edit = !empty($event['id']);
             <fieldset class="form-group">
                 <label for="category_slug">Catégorie</label>
                 <select id="category_slug" name="category_slug">
-                    <option value="">Aucune catégorie</option>
-                    <?php vd($categories); ?>
                     <?php foreach ($categories as $slug => $label): ?>
                         <option
                             value="<?= $slug ?>"

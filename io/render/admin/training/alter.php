@@ -25,22 +25,16 @@ $is_edit = !empty($training['id']);
                 value="<?= htmlspecialchars($training['label'] ?? '') ?>"
                 required maxlength="200">
 
-            <label for="slug">Slug *</label>
-            <input type="text" name="slug" id="slug"
+            <label for="label">Slug *</label>
+            <input
+                type="text"
+                name="slug"
                 value="<?= htmlspecialchars($training['slug'] ?? '') ?>"
-                required maxlength="200">
+                required
+                maxlength="200"
+                aria-describedby="label-help">
         </fieldset>
 
-        <script type="module">
-            import slugify from '/asset/js/slug.js';
-            document.addEventListener('DOMContentLoaded', () => {
-                const labelInput = document.querySelector('#label');
-                const slugInput = document.querySelector('#slug');
-                labelInput.addEventListener('input', () => {
-                    slugInput.value = slugify(labelInput.value);
-                });
-            });
-        </script>
 
         <fieldset class="form-group">
             <label for="description">Description *</label>
@@ -140,7 +134,6 @@ $is_edit = !empty($training['id']);
             <fieldset class="form-group">
                 <label for="level_slug">Niveau *</label>
                 <select name="level_slug" id="level_slug" required>
-                    <option value="">Sélectionner un niveau...</option>
                     <?php foreach ($levels as $slug => $label): ?>
                         <option value="<?= $slug ?>"
                             <?= ($training['level_slug'] ?? '') == $slug ? 'selected' : '' ?>>
@@ -153,7 +146,6 @@ $is_edit = !empty($training['id']);
             <fieldset class="form-group">
                 <label for="trainer_id">Formateur</label>
                 <select name="trainer_id" id="trainer_id">
-                    <option value="">Aucun formateur assigné</option>
                     <?php foreach ($trainers as $trainer): ?>
                         <option value="<?= $trainer['id'] ?>"
                             <?= ($training['trainer_id'] ?? '') == $trainer['id'] ? 'selected' : '' ?>>
@@ -185,9 +177,20 @@ $is_edit = !empty($training['id']);
                 <label for="avatar">
                     <?= !empty($training['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
                 </label>
-                <input type="file" name="avatar" id="avatar"
-                    accept="image/jpeg,image/png,image/webp">
-                <small>JPEG, PNG ou WebP. Max 2MB.</small>
+
+                <div class="file-drop" onclick="this.querySelector('input').click()">
+                    <input type="file" name="avatar" id="avatar"
+                        accept="image/jpeg,image/png,image/webp" hidden>
+
+                    <?php if (!empty($training['avatar'])): ?>
+                        <img src="<?= htmlspecialchars($training['avatar']) ?>" class="current-image">
+                    <?php endif; ?>
+
+                    <div class="drop-text">
+                        📁 Cliquez ou glissez une image ici
+                        <small>JPEG, PNG, WebP • Max 2MB</small>
+                    </div>
+                </div>
             </fieldset>
         </section>
 

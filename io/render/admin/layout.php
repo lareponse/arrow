@@ -4,6 +4,7 @@ $user = whoami();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@ $user = whoami();
         <link rel="stylesheet" href="<?= htmlspecialchars($css) ?>">
     <?php endif; ?>
 </head>
+
 <body class="admin">
     <header class="admin-header">
         <div class="admin-nav">
@@ -43,6 +45,43 @@ $user = whoami();
                 }
             }
         });
+    </script>
+
+    <script type="module">
+        import slugify from '/asset/js/slug.js';
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // auto-generate slug from label input
+            const labelInput = document.querySelector('input[name="label"]');
+            const slugInput = document.querySelector('input[name="slug"]');
+            labelInput.addEventListener('input', () => {
+                slugInput.value = slugify(labelInput.value);
+            });
+
+
+            // file upload drag-and-drop
+            document.querySelectorAll('.file-drop').forEach(drop => {
+                const input = drop.querySelector('input[type="file"]');
+
+                drop.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    drop.style.borderColor = '#3b82f6';
+                });
+
+                drop.addEventListener('dragleave', () => {
+                    drop.style.borderColor = '#d1d5db';
+                });
+
+                drop.addEventListener('drop', e => {
+                    e.preventDefault();
+                    drop.style.borderColor = '#d1d5db';
+                    input.files = e.dataTransfer.files;
+                });
+            });
+        });
+
+
+   
     </script>
 </body>
 
