@@ -19,7 +19,7 @@
 </section>
 
 <?php if (empty($articles)): ?>
-    <div class="empty-state">
+    <div class="panel empty-state">
         <p>Aucun article trouvé.</p>
         <a href="/admin/article/alter" class="btn">Créer le premier article</a>
     </div>

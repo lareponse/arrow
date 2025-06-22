@@ -137,14 +137,6 @@
 }
 
 /* Cards */
-.card {
-    background: var(--white);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    padding: var(--space-lg);
-}
-
 .card-header {
     display: flex;
     align-items: center;
@@ -282,13 +274,6 @@
     grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
 }
 
-.stat-card {
-    background: var(--white);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
-}
-
 .stat-card h3 {
     font-size: var(--text-sm);
     font-weight: 600;
@@ -340,36 +325,28 @@
 .activity-list,
 .events-list {
     list-style: none;
-    background: var(--white);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius);
 }
 
-.activity-item,
-.event-item {
+.dashboard-item {
     border-block-end: var(--border-width) solid var(--border-color);
 }
 
-.activity-item:last-child,
-.event-item:last-child {
+.dashboard-item:last-child {
     border-block-end: none;
 }
 
-.activity-item article,
-.event-item article {
+.dashboard-item article {
     padding: var(--space-lg);
 }
 
-.activity-header,
-.event-header {
+.dashboard-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-block-end: var(--space-sm);
 }
 
-.activity-header h3 a,
-.event-header h3 a {
+.dashboard-header h3 a {
     color: var(--primary-blue);
     text-decoration: none;
 }
@@ -405,10 +382,6 @@
 }
 
 .empty-state {
-    background: var(--white);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: var(--space-xl);
     text-align: center;
     color: #666;
 }
@@ -420,10 +393,6 @@
 }
 
 .action-card {
-    background: var(--white);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
     text-decoration: none;
     color: var(--text-dark);
     transition: var(--transition);
@@ -580,16 +549,6 @@
     gap: var(--space-md);
     padding-block-start: var(--space-lg);
     border-block-start: var(--border-width) solid var(--border-color);
-}
-
-.publish-box,
-.meta-box,
-.media-box,
-.stats-box {
-    background: var(--white);
-    border: var(--border-width) solid var(--border-color);
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
 }
 
 .publish-box header h2,

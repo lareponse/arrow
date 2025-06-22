@@ -21,7 +21,7 @@ $statTypes = [
     <h2 id="stats-heading" class="sr-only">Statistiques générales</h2>
 
     <?php foreach ($statTypes as $stat): ?>
-        <article class="stat-card">
+        <article class="panel empty-state stat-card">
             <header>
                 <h3><?= $stat['label'] ?></h3>
                 <data value="<?= $stats[$stat['key'] . '_total'] ?>" class="stat-number">
@@ -46,13 +46,13 @@ $statTypes = [
         </header>
 
         <?php if (empty($recent['contacts'])): ?>
-            <p class="empty-state">Aucune demande de contact récente</p>
+            <p class="panel empty-state">Aucune demande de contact récente</p>
         <?php else: ?>
             <ol class="activity-list">
                 <?php foreach ($recent['contacts'] as $contact): ?>
-                    <li class="activity-item">
+                    <li class="dashboard-item">
                         <article>
-                            <header class="activity-header">
+                            <header class="dashboard-header">
                                 <h3>
                                     <a href="/admin/contact/view/<?= $contact['id'] ?>">
                                         <?= htmlspecialchars($contact['label']) ?>
@@ -85,13 +85,13 @@ $statTypes = [
         </header>
 
         <?php if (empty($recent['events'])): ?>
-            <p class="empty-state">Aucun événement programmé</p>
+            <p class="panel empty-state">Aucun événement programmé</p>
         <?php else: ?>
-            <ol class="events-list">
+            <ol class="panel events-list">
                 <?php foreach ($recent['events'] as $event): ?>
-                    <li class="event-item">
+                    <li class="dashboard-item">
                         <article>
-                            <header class="event-header">
+                            <header class="dashboard-header">
                                 <h3>
                                     <a href="/admin/event/alter/<?= $event['id'] ?>">
                                         <?= htmlspecialchars($event['label']) ?>
@@ -131,22 +131,22 @@ $statTypes = [
 <section class="quick-actions" aria-labelledby="actions-heading">
     <h2 id="actions-heading">Actions rapides</h2>
     <nav class="actions-grid">
-        <a href="/admin/article/alter" class="action-card">
+        <a href="/admin/article/alter"class="panel empty-state action-card">
             <strong>Nouvel article</strong>
             <span>Créer un nouvel article de blog</span>
         </a>
 
-        <a href="/admin/training/alter" class="action-card">
+        <a href="/admin/training/alter"class="panel empty-state action-card">
             <strong>Nouvelle formation</strong>
             <span>Ajouter une formation au catalogue</span>
         </a>
 
-        <a href="/admin/event/alter" class="action-card">
+        <a href="/admin/event/alter"class="panel empty-state action-card">
             <strong>Nouvel événement</strong>
             <span>Planifier un webinaire ou conférence</span>
         </a>
 
-        <a href="/admin/trainer/alter" class="action-card">
+        <a href="/admin/trainer/alter"class="panel empty-state action-card">
             <strong>Nouveau formateur</strong>
             <span>Ajouter un formateur à l'équipe</span>
         </a>

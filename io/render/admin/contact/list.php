@@ -16,7 +16,7 @@
 </section>
 
 <?php if (empty($contacts)): ?>
-    <div class="empty-state">
+    <div class="panel empty-state">
         <p>Aucune demande de contact trouvée.</p>
     </div>
 <?php else: ?>

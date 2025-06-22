@@ -68,7 +68,7 @@ $is_edit = !empty($article['id']);
     </section>
 
     <aside class="form-sidebar">
-        <section class="publish-box">
+        <section class="panel publish-box">
             <header>
                 <h2>Publication</h2>
             </header>
@@ -105,7 +105,7 @@ $is_edit = !empty($article['id']);
             </fieldset>
         </section>
 
-        <section class="meta-box">
+        <section class="panel meta-box">
             <header>
                 <h2>Métadonnées</h2>
             </header>
@@ -164,7 +164,7 @@ $is_edit = !empty($article['id']);
 
         </section>
 
-        <section class="media-box">
+        <section class="panel media-box">
             <header>
                 <h2>Image</h2>
             </header>
@@ -194,7 +194,7 @@ $is_edit = !empty($article['id']);
         </section>
 
         <?php if ($is_edit): ?>
-            <section class="stats-box">
+            <section class="panel stats-box">
                 <header>
                     <h2>Statistiques</h2>
                 </header>

@@ -35,7 +35,7 @@
 </section>
 
 <?php if (empty($events)): ?>
-    <div class="empty-state">
+    <div class="panel empty-state">
         <p>Aucun événement trouvé.</p>
         <a href="/admin/event/alter" class="btn">Créer le premier événement</a>
     </div>

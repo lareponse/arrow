@@ -31,7 +31,7 @@
 </section>
 
 <?php if (empty($trainers)): ?>
-    <div class="empty-state">
+    <div class="panel empty-state">
         <p>Aucun formateur trouvé.</p>
         <a href="/admin/trainer/alter" class="btn">Ajouter le premier formateur</a>
     </div>

@@ -35,7 +35,7 @@
 </section>
 
 <?php if (empty($trainings)): ?>
-    <div class="empty-state">
+    <div class="panel empty-state">
         <p>Aucune formation trouvée.</p>
         <a href="/admin/training/alter" class="btn">Créer la première formation</a>
     </div>
