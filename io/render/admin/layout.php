@@ -9,7 +9,12 @@ $user = whoami();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Copro Academy Admin') ?></title>
-    <link rel="stylesheet" href="/asset/css/admin.css">
+    <link rel="stylesheet" href="/asset/css/admin/variables.css">
+    <link rel="stylesheet" href="/asset/css/admin/base.css">
+    <link rel="stylesheet" href="/asset/css/admin/utilities.css">
+    <link rel="stylesheet" href="/asset/css/admin/layout.css">
+    <link rel="stylesheet" href="/asset/css/admin/components.css">
+
     <meta name="robots" content="noindex,nofollow">
     <?php if (isset($css)) : ?>
         <link rel="stylesheet" href="<?= htmlspecialchars($css) ?>">
@@ -79,9 +84,6 @@ $user = whoami();
                 });
             });
         });
-
-
-   
     </script>
 </body>
 
