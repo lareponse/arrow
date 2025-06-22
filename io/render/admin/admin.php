@@ -103,7 +103,7 @@ $statTypes = [
                                 <dt class="sr-only">Date</dt>
                                 <dd>
                                     <time datetime="<?= $event['event_date'] ?>">
-                                        <?= date('%d %B %Y à %H:%M', strtotime($event['event_date'])) ?>
+                                        <?= $event['event_date'] ?>
                                     </time>
                                 </dd>
                                 <?php if ($event['places_max']): ?>
