@@ -26,7 +26,7 @@
                                 value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"
                                 required>
                             <?php if (isset($data['errors']['name'])): ?>
-                                <div class="form-error"><?= htmlspecialchars($data['errors']['name']) ?></div>
+                                <div class="form-error"><?= htmlspecialchars($data['errors']['name'] ?? '') ?></div>
                             <?php endif; ?>
                         </div>
 
