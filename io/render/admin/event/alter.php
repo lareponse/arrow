@@ -116,7 +116,7 @@ $is_edit = !empty($event['id']);
         </fieldset>
     </section>
 
-    <aside class="form-sidebar">
+    <aside>
         <section class="panel publish-box">
             <header>
                 <h2>Publication</h2>

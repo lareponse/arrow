@@ -94,7 +94,7 @@ $is_edit = !empty($training['id']);
         </fieldset>
     </section>
 
-    <aside class="form-sidebar">
+    <aside>
         <section class="panel publish-box">
             <header>
                 <h2>Publication</h2>
@@ -160,31 +160,104 @@ $is_edit = !empty($training['id']);
             </fieldset>
         </section>
 
-        <section class="panel media-box">
-            <header>
-                <h2>Image de la formation</h2>
-            </header>
+        <?php if ($is_edit && $training['id']): ?>
 
-            <?php if (!empty($training['avatar'])): ?>
-                <figure class="current-image">
-                    <img src="<?= htmlspecialchars($training['avatar']) ?>"
-                        alt="Image actuelle" loading="lazy">
-                    <figcaption>Image actuelle</figcaption>
-                </figure>
-            <?php endif; ?>
+            <section class="panel media-box">
+                <header>
+                    <h2>Image de la formation</h2>
+                </header>
 
-            <fieldset class="form-group">
-                <label for="avatar">
-                    <?= !empty($training['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
-                </label>
-                <input type="file" name="avatar" id="avatar"
-                    accept="image/jpeg,image/png,image/webp">
-                <small>JPEG, PNG ou WebP. Max 2MB.</small>
-            </fieldset>
+                <?php if (!empty($training['avatar'])): ?>
+                    <figure class="current-image">
+                        <img src="<?= htmlspecialchars($training['avatar']) ?>"
+                            alt="Image actuelle" loading="lazy">
+                        <figcaption>Image actuelle</figcaption>
+                    </figure>
+                <?php endif; ?>
 
-        </section>
+                <fieldset class="form-group">
+                    <label for="avatar">
+                        <?= !empty($training['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
+                    </label>
+                    <input type="file" name="avatar" id="avatar"
+                        accept="image/jpeg,image/png,image/webp">
+                    <small>JPEG, PNG ou WebP. Max 2MB.</small>
+                </fieldset>
 
-        <?php if ($is_edit): ?>
+            </section>
+
+            <!-- Program Overview Panel -->
+            <section class="panel program-panel">
+                <header class="panel-header">
+                    <h3>Programme de formation</h3>
+                    <a href="/admin/training/program/<?= $training['id'] ?>" class="btn small">Gérer le programme</a>
+                </header>
+
+                <?php
+                // Get program sessions for this training
+                $program_sessions = dbq(db(), "
+                SELECT day_number, COUNT(*) as sessions_count,
+                       MIN(time_start) as first_session,
+                       MAX(time_end) as last_session,
+                       SUM(TIMESTAMPDIFF(MINUTE, time_start, time_end)) as total_minutes
+                FROM training_program 
+                WHERE training_id = ? 
+                GROUP BY day_number
+                ORDER BY day_number", [$training['id']])->fetchAll();
+
+                $total_sessions = dbq(db(), "SELECT COUNT(*) FROM training_program WHERE training_id = ?", [$training['id']])->fetchColumn();
+                ?>
+
+                <?php if (empty($program_sessions)): ?>
+                    <div class="panel-content empty-state">
+                        <p>Aucun programme détaillé</p>
+                        <small>Créez le programme jour par jour avec les sessions, horaires et objectifs.</small>
+                        <a href="/admin/training/program/<?= $training['id'] ?>" class="btn secondary small">Créer le programme</a>
+                    </div>
+                <?php else: ?>
+                    <div class="panel-content">
+                        <div class="program-stats">
+                            <div class="stat-row">
+                                <span class="stat-label">Sessions totales:</span>
+                                <strong><?= $total_sessions ?></strong>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Jours programmés:</span>
+                                <strong><?= count($program_sessions) ?>/<?= $training['duration_days'] ?></strong>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Durée programmée:</span>
+                                <strong>
+                                    <?php
+                                    $total_minutes = array_sum(array_column($program_sessions, 'total_minutes'));
+                                    echo round($total_minutes / 60, 1) . 'h';
+                                    ?>
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+                <?php endif; ?>
+   
+                    <nav class="quick-actions">
+   
+                        <?php if ($training['enabled_at']): ?>
+                            <a href="/training/<?= $training['slug'] ?>" class="action-link" target="_blank">
+                                <strong>Voir sur le site</strong>
+                                <span>Page publique de la formation</span>
+                            </a>
+                        <?php endif; ?>
+
+                        <?php
+                        $bookings_count = dbq(db(), "SELECT COUNT(*) FROM booking WHERE training_id = ? AND revoked_at IS NULL", [$training['id']])->fetchColumn();
+                        ?>
+                        <a href="/admin/booking/list?training_id=<?= $training['id'] ?>" class="action-link">
+                            <strong>Inscriptions (<?= $bookings_count ?>)</strong>
+                            <span>Gérer les participants</span>
+                        </a>
+                    </nav>
+            </section>
+
             <section class="panel stats-box">
                 <header>
                     <h2>Statistiques</h2>
@@ -246,6 +319,7 @@ $is_edit = !empty($training['id']);
         <?php endif; ?>
     </footer>
 </form>
+
 
 <style>
     .form-row {
