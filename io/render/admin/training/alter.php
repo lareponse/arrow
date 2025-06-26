@@ -190,7 +190,7 @@ $is_edit = !empty($training['id']);
             <section class="panel program-panel">
                 <header class="panel-header">
                     <h3>Programme de formation</h3>
-                    <a href="/admin/training/program/<?= $training['id'] ?>" class="btn small">Gérer le programme</a>
+                    <a href="/admin/training/program/<?= $training['slug'] ?>" class="btn small">Gérer le programme</a>
                 </header>
 
                 <?php
@@ -319,53 +319,6 @@ $is_edit = !empty($training['id']);
         <?php endif; ?>
     </footer>
 </form>
-
-
-<style>
-    .form-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .training-form .form-main {
-        max-width: none;
-    }
-
-    .stats-list {
-        display: grid;
-        gap: 0.5rem;
-    }
-
-    .stats-list dt {
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.25rem;
-    }
-
-    .stats-list dd {
-        color: #6b7280;
-        margin: 0 0 1rem 0;
-        font-size: 0.875rem;
-    }
-
-    .current-image {
-        margin-bottom: 1rem;
-    }
-
-    .current-image img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 4px;
-    }
-
-    .current-image figcaption {
-        font-size: 0.75rem;
-        color: #6b7280;
-        margin-top: 0.25rem;
-    }
-</style>
 
 <?php
 return function ($this_html, $args = []) {

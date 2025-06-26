@@ -1,13 +1,26 @@
 <?php
 require_once 'add/bad/dad/db_row.php';
 
-return function ($training_slug = null) {
-    $training = row_assoc(db(), 'training', ['slug' => $training_slug, 'revoked_at' => null]);
-    $training_id = $training['id'];
-    if (!$training_id) {
-        http_out(404, 'Training ID required');
+return function ($args = null) {
+    [$training_slug, $session_id] = $args;
+    $training = row(db(), 'training');
+    $training = $training(ROW_LOAD, ['slug' => $training_slug, 'revoked_at' => null]);
+
+    if (!$training) {
+        http_out(302, '', ['Location' => '/admin/training', 'X-Message' => 'Training not found']);
     }
 
+    $session = row(db(), 'training_program');
+    if($session_id)
+        $session(ROW_LOAD, ['id' => $session_id]);
+
+    if (!empty($_POST)) {
+        (require_once __DIR__.'/post.php')($training, $session);
+    }
+
+    $session = $session(ROW_GET);
+
+    $training_id = $training['id'];
     // Get all sessions grouped by day
     $sessions = dbq(db(), "
         SELECT * FROM training_program 
@@ -18,22 +31,13 @@ return function ($training_slug = null) {
     $program_by_day = [];
     $total_duration = 0;
 
-    foreach ($sessions as $session) {
-        $program_by_day[$session['day_number']][] = $session;
+    foreach ($sessions as $ordered) {
+        $program_by_day[$ordered['day_number']][] = $ordered;
 
         // Calculate session duration in minutes
-        $start = strtotime($session['time_start']);
-        $end = strtotime($session['time_end']);
+        $start = strtotime($ordered['time_start']);
+        $end = strtotime($ordered['time_end']);
         $total_duration += ($end - $start) / 60;
-    }
-
-    // Get session for editing if specified
-    $edit_session = null;
-    if (!empty($_GET['edit'])) {
-        $edit_session = dbq(db(), "
-            SELECT * FROM training_program 
-            WHERE id = ? AND training_id = ?
-        ", [(int)$_GET['edit'], $training_id])->fetch();
     }
 
     // Generate day list for empty days
@@ -41,13 +45,12 @@ return function ($training_slug = null) {
     for ($day = 1; $day <= $training['duration_days']; $day++) {
         $all_days[$day] = $program_by_day[$day] ?? [];
     }
-
     return [
         'title' => "Programme - {$training['label']}",
         'training' => $training,
         'program_by_day' => $all_days,
         'sessions' => $sessions,
         'total_duration' => round($total_duration / 60, 1), // hours
-        'edit_session' => $edit_session,
+        'edit_session' => $session,
     ];
 };
