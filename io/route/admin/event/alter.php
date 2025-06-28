@@ -36,7 +36,7 @@ return function ($args) {
             foreach ($_FILES as $name => $file)
                 $clean[$name] = upload($file, $_SERVER['DOCUMENT_ROOT'] . '/asset/image/event/' . $name);
 
-        $event(ROW_FIELDS);
+        $event(ROW_SCHEMA);
         $event(ROW_SET, $clean);
         $event(ROW_SAVE);
         $event(ROW_LOAD);

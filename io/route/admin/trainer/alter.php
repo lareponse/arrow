@@ -46,7 +46,7 @@ return function ($slug = null) {
             $clean['avatar'] = upload($_FILES['avatar'], $_SERVER['DOCUMENT_ROOT'] . '/asset/image/trainer/');
         }
 
-        $trainer(ROW_FIELDS);
+        $trainer(ROW_SCHEMA);
         $trainer(ROW_SET, $clean);
         $trainer(ROW_SAVE);
         $trainer(ROW_LOAD);

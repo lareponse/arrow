@@ -66,7 +66,7 @@ return function (array $training, callable $session) {
     }
 
     // Save session
-    $session(ROW_FIELDS);
+    $session(ROW_SCHEMA);
     $session(ROW_SET, $clean);
     $session(ROW_SAVE);
 

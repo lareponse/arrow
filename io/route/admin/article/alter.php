@@ -30,7 +30,7 @@ return function ($slug = null) {
         if (!empty($_FILES))
             foreach ($_FILES as $name => $file)
                 $clean[$name] = upload($file, $_SERVER['DOCUMENT_ROOT'] . '/asset/image/article/' . $name);
-        $article(ROW_FIELDS);
+        $article(ROW_SCHEMA);
         $article(ROW_SET, $clean);
         $article(ROW_SAVE);
         $article(ROW_LOAD);
