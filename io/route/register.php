@@ -7,7 +7,7 @@ return function ($quest) {
     $errors = [];
 
     // Check if already logged in
-    if (!whoami()) {
+    if (!auth()) {
         // Redirect to home
         header('Location: /');
         exit;

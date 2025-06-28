@@ -11,6 +11,8 @@ require 'add/bad/auth.php';
 require 'app/morph/html.php';
 
 // config: where to start (io), where to go (re_quest)
+auth('username', 'hashed_password'); 
+
 $io         = realpath(__DIR__ . '/../io') ;
 $re_quest   = http_in(4096, 9);
 
@@ -29,4 +31,4 @@ if(is_string($out_quest[IO_ABSORB])){
 
 error_log('404 Not Found for ' . $re_quest . ' in ' . $io);
 
-http_out(404, 'Not Found');
+http_out(404, 'Not Found at all');

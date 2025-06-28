@@ -1,6 +1,6 @@
 <?php
 
-return function ($quest) {
+return function ($args=null) {
 
     $redirect = $_GET['redirect'] ?? '/';
 
@@ -8,11 +8,9 @@ return function ($quest) {
         $username = $_POST['username']      ?: throw new DomainException('Username required', 403);
         $password = $_POST['password']      ?: throw new DomainException('Password required', 403);
 
-        if (auth_login($username, $password)) {
+        if (auth($username, $password)) {
             header('Location: ' . $redirect);
             exit;
         }
     }
-
-    // return ['status' => 200, 'body' => render(['redirect' => $redirect, 'username' => $_POST['username']])];
 };

@@ -1,6 +1,6 @@
 <?php
 extract($io ?? []);
-$user = whoami();
+$user = auth();
 ?>
 <!DOCTYPE html>
 <html lang="fr">

@@ -16,14 +16,14 @@ return function ($slug) {
     }
 
     // Check if user is authenticated for protected resources
-    if (isset($resource['is_protected']) && $resource['is_protected'] && !whoami()) {
+    if (isset($resource['is_protected']) && $resource['is_protected'] && !auth()) {
         // Redirect to login page
         header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
         exit;
     }
     $data_insert = [
         'resource_id' => $resource['id'],
-        'user_id' => whoami(),
+        'user_id' => auth(),
         'ip_address' => $_SERVER['REMOTE_ADDR'],
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
         'download_time' => date('Y-m-d H:i:s')
