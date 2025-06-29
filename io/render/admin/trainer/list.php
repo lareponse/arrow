@@ -4,28 +4,21 @@
         <a href="/admin/trainer/alter" class="btn">Nouveau formateur</a>
     </nav>
 </header>
-
 <section class="content-filters">
     <nav class="filter-tabs">
-        <a href="/admin/trainer/list"
-            class="<?= empty($current_status) ? 'active' : '' ?>">Tous</a>
-        <a href="/admin/trainer/list?status=active"
-            class="<?= $current_status === 'active' ? 'active' : '' ?>">Actifs</a>
-        <a href="/admin/trainer/list?status=inactive"
-            class="<?= $current_status === 'inactive' ? 'active' : '' ?>">Inactifs</a>
+        <button type="button" class="filter-tab active" data-status="">Tous</button>
+        <button type="button" class="filter-tab" data-status="active">Actifs</button>
+        <button type="button" class="filter-tab" data-status="inactive">Inactifs</button>
     </nav>
 
     <form method="get" class="search-form">
-        <?php if ($current_status): ?>
-            <input type="hidden" name="status" value="<?= htmlspecialchars($current_status) ?>">
-        <?php endif; ?>
         <input type="search"
             name="q"
             value="<?= htmlspecialchars($search ?? '') ?>"
             placeholder="Rechercher formateurs...">
         <button type="submit">Rechercher</button>
         <?php if ($search): ?>
-            <a href="/admin/trainer/list<?= $current_status ? '?status=' . urlencode($current_status) : '' ?>" class="btn secondary">Effacer</a>
+            <a href="/admin/trainer/list" class="btn secondary">Effacer</a>
         <?php endif; ?>
     </form>
 </section>
@@ -50,7 +43,8 @@
             </thead>
             <tbody>
                 <?php foreach ($trainers as $trainer): ?>
-                    <tr>
+                    <tr data-status="<?= $trainer['enabled_at'] ? 'active' : 'inactive' ?>">
+                        <!-- existing row content stays the same -->
                         <td>
                             <div class="trainer-info">
                                 <?php if ($trainer['avatar']): ?>
@@ -121,7 +115,6 @@
             </tbody>
         </table>
     </div>
-
     <?php if ($pagination['total_pages'] > 1): ?>
         <nav class="pagination">
             <?php
@@ -142,9 +135,31 @@
             <?php endif; ?>
         </nav>
     <?php endif; ?>
+    <!-- pagination stays the same -->
 <?php endif; ?>
 
 <style>
+    .filter-tabs {
+        display: flex;
+        gap: var(--space-sm);
+        margin-bottom: var(--space-md);
+    }
+
+    .filter-tab {
+        padding: var(--space-sm) var(--space-md);
+        background: none;
+        border: none;
+        color: #6b7280;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        font: inherit;
+    }
+
+    .filter-tab.active {
+        color: #3b82f6;
+        border-bottom-color: #3b82f6;
+    }
+
     .trainer-info {
         display: flex;
         align-items: center;
@@ -200,6 +215,25 @@
         text-decoration: underline;
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('.filter-tab');
+        const rows = document.querySelectorAll('tbody tr[data-status]');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const status = tab.dataset.status;
+                rows.forEach(row => {
+                    row.style.display = !status || row.dataset.status === status ? '' : 'none';
+                });
+            });
+        });
+    });
+</script>
 
 <?php
 return function ($this_html, $args = []) {
