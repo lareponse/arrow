@@ -1,45 +1,27 @@
 <?php
 require_once 'add/bad/dad/qb.php';
 
-return function ($quest) {
-    
-    
-    $errors = [];
-    $success = false;
+return function ($args = null) {
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $name = trim($_POST['name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $message = trim($_POST['message'] ?? '');
-
-        if (empty($name)) $errors['name'] = 'Name is required';
-        if (empty($email)) $errors['email'] = 'Email is required';
-        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors['email'] = 'Invalid email';
-        if (empty($message)) $errors['message'] = 'Message is required';
-
-        if (empty($errors)) {
-            // Store contact message
-            $insert_data = [
-                'name' => $name,
-                'email' => $email,
-                'message' => $message,
-                'created_at' => date('Y-m-d H:i:s')
-            ];
-            $stmt = dbq(db(), ...qb_create('contact_messages', $insert_data));
-            $success = $stmt->rowCount() > 0;
-
-            if ($success) {
-                // Clear form
-                $_POST = [];
-            }
-        }
-    }
-
-    return [
-        'payload' => [
-            'title' => 'Contact Us - copro.academy',
-            'errors' => $errors,
-            'success' => $success
-        ]
+    $db = db();
+    // Initialize variables
+    $data = [
+        'nom'        => '',
+        'email'      => '',
+        'telephone'  => '',
+        'entreprise' => '',
+        'sujet'      => '',
+        'message'    => '',
+        'consent'    => ''
     ];
+
+    $data = ['title' => 'Contactez-nous', 'description' => 'Contactez-nous pour toute question sur nos formations, événements ou services. Notre équipe est là pour vous aider.'];
+
+    $sql = "SELECT slug, label FROM `coproacademy`;";
+    ($_ = dbq($db, $sql)) && ($_ = $_->fetchAll(PDO::FETCH_KEY_PAIR))   && $data['coproacademy'] = $_;
+
+    $sql = "SELECT * FROM `faq` ORDER BY `sort_order`;";
+    ($_ = dbq($db, $sql)) && ($_ = $_->fetchAll(PDO::FETCH_ASSOC))      && $data['faq'] = $_;
+
+    return $data;
 };
