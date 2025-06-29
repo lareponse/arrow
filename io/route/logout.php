@@ -5,6 +5,7 @@
  */
 return function ($quest) {
     // Clear auth cookie
+    auth(AUTH_REVOKE);
     setcookie('auth_token', '', [
         'expires' => time() - 3600,
         'path' => '/',
