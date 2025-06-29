@@ -54,7 +54,7 @@ CREATE VIEW event_plus AS
   COUNT(eb.event_id) as bookings_count
   FROM event e
   LEFT JOIN taxonomy tc ON e.category_id = tc.id
-  LEFT JOIN event_booking eb ON e.id = eb.event_id AND eb.revoked_at IS NULL
+  LEFT JOIN booking eb ON e.id = eb.event_id AND eb.revoked_at IS NULL
   WHERE e.revoked_at IS NULL
   GROUP BY e.id, e.label, e.category_id, e.event_date, e.places_max, tc.label
   ORDER BY e.event_date ASC

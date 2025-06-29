@@ -1,32 +1,3 @@
-DROP TABLE IF EXISTS coproacademy;
-CREATE TABLE coproacademy (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  slug        VARCHAR(100)   NOT NULL UNIQUE,
-  label       TEXT           NOT NULL
-) ENGINE=InnoDB;
-
-INSERT INTO coproacademy (slug, label) VALUES
-  ('email',                'CoProAcademy@contact.be'),
-  ('email-response-time',  'Réponse sous 24 h ouvrées'),
-  ('telephone',            '+32 510 08 00 01'),
-  ('telephone-hours',      'Lundi – Vendredi : 9 h – 17 h'),
-  ('adresse',              '292B Rue de Stalle\n1180 Uccle, Belgique'),
-  ('facebook',             'https://facebook.com/coproacademy'),
-  ('instagram',            'https://instagram.com/coproacademy'),
-  ('linkedin',             'https://linkedin.com/company/coproacademy');
-
-
-DROP TABLE IF EXISTS faq;
-CREATE TABLE faq (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  slug        VARCHAR(100)   NOT NULL UNIQUE,
-  label       VARCHAR(255)   NOT NULL,
-  content     TEXT           NOT NULL,
-  sort_order  SMALLINT       UNSIGNED NOT NULL DEFAUlT 0,
-
-  created_at  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
 
 INSERT INTO faq (slug, label, content) VALUES ('comment-sinscrire-formation','Comment s\'inscrire à une formation ?','Vous pouvez vous inscrire directement via notre formulaire de contact en sélectionnant "Inscription à une formation". Nous vous recontacterons pour finaliser votre inscription et vous communiquer les modalités pratiques.');
 INSERT INTO faq (slug, label, content) VALUES ('formations-certifiees','Vos formations sont-elles certifiées ?','Oui, toutes nos formations sont certifiées et reconnues dans le cadre de la formation professionnelle continue. Elles donnent droit à des attestations de formation.');
@@ -36,20 +7,6 @@ INSERT INTO faq (slug, label, content) VALUES ('tarifs-formation','Quels sont vo
 INSERT INTO faq (slug, label, content) VALUES ('formateurs-experts','Qui sont vos formateurs ?','Nos formateurs sont des experts reconnus dans leur domaine, avec une expérience significative en formation professionnelle. Ils allient théorie et pratique pour une pédagogie efficace.');
 INSERT INTO faq (slug, label, content) VALUES ('modalites-paiement','Quelles sont les modalités de paiement ?','Nous acceptons les paiements par virement bancaire, chèque ou carte de crédit. Un acompte peut être demandé pour confirmer votre inscription. Les détails vous seront fournis lors de la finalisation de votre inscription.');
 
-
-DROP TABLE IF EXISTS service;
-CREATE TABLE service (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    label VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    image_src VARCHAR(255) NOT NULL,
-    alt_text VARCHAR(255) NOT NULL,
-    link VARCHAR(255) NOT NULL,
-    link_text VARCHAR(100) NOT NULL,
-    sort_order  SMALLINT       UNSIGNED NOT NULL DEFAUlT 0,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
 
 INSERT INTO service (label, image_src, alt_text, content, link, link_text, sort_order) VALUES
 ('Gestion de copropriétés','/static/assets/hero.jpeg','Gestion de copropriétés','Accompagnement professionnel et outils adaptés pour optimiser la gestion de votre copropriété.','/contact','En savoir plus',1),
@@ -85,3 +42,14 @@ INSERT INTO event (
 ('atelier-hebdomadaire-innovation','Atelier hebdomadaire: Innovation','Description de l''atelier hebdomadaire 5.',1,'2025-07-29 09:30:00',60,0.00,80,'/static/assets/event5.jpg','Émilie Dupuis','En ligne',TRUE),
 ('atelier-hebdomadaire-marketing-digital','Atelier hebdomadaire: Marketing digital','Description de l''atelier hebdomadaire 6.',1,'2025-08-05 13:00:00',90,100.00,25,'/static/assets/event6.jpg','François Dubois','Centre C, Bruxelles',FALSE),
 ('atelier-hebdomadaire-compliance','Atelier hebdomadaire: Compliance','Description de l''atelier hebdomadaire 7.',1,'2025-08-12 16:00:00',60,20.00,60,'/static/assets/event7.jpg','Géraldine Mercier','En ligne',TRUE);
+
+
+INSERT INTO training (
+  slug, label, content, level_id, duration_days, duration_hours,
+  price_ht, start_date, places_max, objectives, prerequisites,
+  avatar, trainer_id, certification
+) VALUES
+('introduction-gestion-copropriete','Introduction à la gestion de copropriété','Formation de base pour comprendre les enjeux de la gestion collective et acquérir les fondamentaux juridiques et pratiques.',1,2,14,450.00,'2025-09-15',NULL,'Maîtriser le cadre légal belge; Comprendre les rôles et responsabilités; Gérer les assemblées générales',NULL,'/static/assets/hero.jpeg',NULL,FALSE),
+('gestion-financiere-copropriete','Gestion financière de copropriété','Approfondissement des aspects financiers : budgets, comptes, provisions, et gestion des impayés.',2,3,21,650.00,'2025-10-22',NULL,'Élaborer et suivre un budget; Gérer les provisions et fonds; Traiter les impayés efficacement',NULL,'/static/assets/hero.jpeg',NULL,FALSE),
+('contentieux-mediation-copropriete','Contentieux et médiation en copropriété','Gestion des conflits, procédures contentieuses et techniques de médiation adaptées aux copropriétés.',3,2,14,550.00,'2025-11-18',NULL,'Prévenir et gérer les conflits; Maîtriser les procédures judiciaires; Utiliser la médiation efficacement',NULL,'/static/assets/hero.jpeg',NULL,FALSE),
+('reglementation-energetique-travaux','Réglementation énergétique et travaux','Comprendre les obligations énergétiques et la gestion des travaux d\'amélioration dans les copropriétés.',1,1,7,320.00,'2025-12-12',NULL,'Connaître la réglementation PEB; Organiser les travaux énergétiques; Optimiser les aides et subventions',NULL,'/static/assets/hero.jpeg',NULL,FALSE);
