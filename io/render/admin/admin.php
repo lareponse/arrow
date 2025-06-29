@@ -48,33 +48,28 @@ $statTypes = [
         <?php if (empty($recent['contacts'])): ?>
             <p class="panel empty-state">Aucune demande de contact récente</p>
         <?php else: ?>
-            <ol class="activity-list">
-                <?php foreach ($recent['contacts'] as $contact): ?>
-                    <li class="dashboard-item">
-                        <article>
-                            <header class="dashboard-header">
-                                <h3>
-                                    <a href="/admin/contact/view/<?= $contact['id'] ?>">
-                                        <?= htmlspecialchars($contact['label']) ?>
-                                    </a>
-                                </h3>
-                                <span class="status <?= $contact['status'] ?>">
-                                    <?= ucfirst($contact['status']) ?>
-                                </span>
-                            </header>
-                            <p class="activity-subject">
-                                Sujet: <?= htmlspecialchars($contact['subject']) ?>
-                            </p>
-                            <footer class="activity-meta">
-                                <time datetime="<?= $contact['created_at'] ?>">
-                                    <?= date('%d/%m à %H:%M', strtotime($contact['created_at'])) ?>
-                                </time>
-                                <address><?= htmlspecialchars($contact['email']) ?></address>
-                            </footer>
-                        </article>
-                    </li>
-                <?php endforeach; ?>
-            </ol>
+            <table class="panel table activity-list">
+                <thead>
+                    <tr>
+                        <th>Contact</th>
+                        <th>Statut</th>
+                        <th>Sujet</th>
+                        <th>Date</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($recent['contacts'] as $contact): ?>
+                        <tr class="dashboard-item">
+                            <td><a href="/admin/contact/view/<?= $contact['id'] ?>"><?= htmlspecialchars($contact['label'] ?? '') ?></a></td>
+                            <td><span class="status <?= $contact['status'] ?>"><?= htmlspecialchars($contact['status_label'] ?? '') ?></span></td>
+                            <td><?= htmlspecialchars($contact['subject_label'] ?? '') ?></td>
+                            <td><time datetime="<?= $contact['created_at'] ?>"><?= $contact['created_at'] ?></time></td>
+                            <td><?= htmlspecialchars($contact['email'] ?? '') ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         <?php endif; ?>
     </section>
 
@@ -90,37 +85,16 @@ $statTypes = [
             <ol class="panel events-list">
                 <?php foreach ($recent['events'] as $event): ?>
                     <li class="dashboard-item">
-                        <article>
-                            <header class="dashboard-header">
-                                <h3>
-                                    <a href="/admin/event/alter/<?= $event['id'] ?>">
-                                        <?= htmlspecialchars($event['label']) ?>
-                                    </a>
-                                </h3>
-                                <span class="event-category"><?= ucfirst($event['category']) ?></span>
-                            </header>
-                            <dl class="event-details">
-                                <dt class="sr-only">Date</dt>
-                                <dd>
-                                    <time datetime="<?= $event['event_date'] ?>">
-                                        <?= $event['event_date'] ?>
-                                    </time>
-                                </dd>
-                                <?php if ($event['places_max']): ?>
-                                    <dt class="sr-only">Places disponibles</dt>
-                                    <dd>
-                                        <data value="<?= $event['bookings_count'] ?>">
-                                            <?= $event['bookings_count'] ?>
-                                        </data>
-                                        /
-                                        <data value="<?= $event['places_max'] ?>">
-                                            <?= $event['places_max'] ?>
-                                        </data>
-                                        places
-                                    </dd>
-                                <?php endif; ?>
-                            </dl>
-                        </article>
+                        <h3>
+                            <a href="/admin/event/alter/<?= $event['id'] ?>">
+                                <?= htmlspecialchars($event['label']) ?>
+                            </a>
+                            <span class="event-category"><?= ucfirst($event['category']) ?></span>
+                        </h3>
+                        <time datetime="<?= $event['event_date'] ?>"><?= $event['event_date'] ?></time>
+                        <?php if ($event['places_max']): ?>
+                            <span class="places"><?= $event['bookings_count'] ?>/<?= $event['places_max'] ?> places</span>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ol>
@@ -131,22 +105,22 @@ $statTypes = [
 <section class="quick-actions" aria-labelledby="actions-heading">
     <h2 id="actions-heading">Actions rapides</h2>
     <nav class="actions-grid">
-        <a href="/admin/article/alter"class="panel empty-state action-card">
+        <a href="/admin/article/alter" class="panel empty-state action-card">
             <strong>Nouvel article</strong>
             <span>Créer un nouvel article de blog</span>
         </a>
 
-        <a href="/admin/training/alter"class="panel empty-state action-card">
+        <a href="/admin/training/alter" class="panel empty-state action-card">
             <strong>Nouvelle formation</strong>
             <span>Ajouter une formation au catalogue</span>
         </a>
 
-        <a href="/admin/event/alter"class="panel empty-state action-card">
+        <a href="/admin/event/alter" class="panel empty-state action-card">
             <strong>Nouvel événement</strong>
             <span>Planifier un webinaire ou conférence</span>
         </a>
 
-        <a href="/admin/trainer/alter"class="panel empty-state action-card">
+        <a href="/admin/trainer/alter" class="panel empty-state action-card">
             <strong>Nouveau formateur</strong>
             <span>Ajouter un formateur à l'équipe</span>
         </a>
