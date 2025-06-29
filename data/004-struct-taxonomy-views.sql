@@ -25,8 +25,8 @@ CREATE VIEW article_with_cateogry AS
   JOIN taxonomy_with_parent AS c ON a.category_id = c.id
   WHERE a.revoked_at IS NULL;
 
-DROP VIEW IF EXISTS training_with_level_trainer;
-CREATE VIEW training_with_level_trainer AS
+DROP VIEW IF EXISTS training_plus;
+CREATE VIEW training_plus AS
   SELECT
     training.*,
     l.slug      AS level_slug,
@@ -40,7 +40,7 @@ CREATE VIEW training_with_level_trainer AS
 
 DROP VIEW IF EXISTS contact_request_plus;
 CREATE VIEW contact_request_plus AS
-  SELECT cr.id, cr.label, cr.email, cr.subject_id, cr.status_id, ts.label as subject_label, tst.label as status_label
+  SELECT cr.id, cr.label, cr.email, cr.subject_id, cr.status_id, cr.created_at, ts.label as subject_label, tst.label as status_label
   FROM contact_request cr
   LEFT JOIN taxonomy ts ON cr.subject_id = ts.id
   LEFT JOIN taxonomy tst ON cr.status_id = tst.id
@@ -58,3 +58,5 @@ CREATE VIEW event_plus AS
   WHERE e.revoked_at IS NULL
   GROUP BY e.id, e.label, e.category_id, e.event_date, e.places_max, tc.label
   ORDER BY e.event_date ASC
+
+
