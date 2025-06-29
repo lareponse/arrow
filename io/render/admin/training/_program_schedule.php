@@ -50,20 +50,21 @@
 
                             <div class="session-actions">
                                 <a href="/admin/training/session/<?= $training['slug'] ?>/<?= $session['id'] ?>" class="btn small">Modifier</a>
+                                <a href="/admin/delete/session/<?= $session['id'] ?>"
+                                    onclick="return confirm('Supprimer cette session ?')"
+                                    class="btn small danger">Supprimer</a>
                                 <div class="dropdown">
                                     <button type="button" class="btn small secondary dropdown-toggle">•••</button>
                                     <div class="dropdown-menu">
                                         <?php for ($target_day = 1; $target_day <= $training['duration_days']; $target_day++): ?>
                                             <?php if ($target_day != $day): ?>
-                                                <a href="?duplicate=<?= $session['id'] ?>&to_day=<?= $target_day ?>" class="dropdown-item">
+                                                <a href="/admin/training/session/duplicate/<?= $training['slug'] ?>/<?= $session['id'] ?>?to_day=<?= $target_day ?>" class="dropdown-item">
                                                     Dupliquer vers Jour <?= $target_day ?>
                                                 </a>
                                             <?php endif; ?>
                                         <?php endfor; ?>
                                         <hr>
-                                        <a href="?delete=<?= $session['id'] ?>"
-                                            onclick="return confirm('Supprimer cette session ?')"
-                                            class="dropdown-item danger">Supprimer</a>
+
                                     </div>
                                 </div>
                             </div>

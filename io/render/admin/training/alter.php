@@ -84,13 +84,25 @@ $is_edit = !empty($training['id']);
         <fieldset class="form-group">
             <label for="objectives">Objectifs pédagogiques</label>
             <textarea name="objectives" id="objectives" rows="4"><?= htmlspecialchars($training['objectives'] ?? '') ?></textarea>
-            <small>Décrivez ce que les participants apprendront</small>
+            <small>Décrivez ce que les participants apprendront; veillez a separer chaque objectif par un point virgule (;)</small>
         </fieldset>
 
         <fieldset class="form-group">
             <label for="prerequisites">Prérequis</label>
             <textarea name="prerequisites" id="prerequisites" rows="3"><?= htmlspecialchars($training['prerequisites'] ?? '') ?></textarea>
             <small>Connaissances ou expérience nécessaires</small>
+        </fieldset>
+
+        <fieldset class="form-group">
+            <label for="pause">Pause/Lunch</label>
+            <textarea name="pause" id="pause" rows="4"><?= htmlspecialchars($training['pause'] ?? '') ?></textarea>
+            <small>Dispositions pour le cafe du matin ou la pause du midi</small>
+        </fieldset>
+
+        <fieldset class="form-group">
+            <label for="parking">Parking</label>
+            <textarea name="parking" id="parking" rows="3"><?= htmlspecialchars($training['parking'] ?? '') ?></textarea>
+            <small>Dispositions pour le parking</small>
         </fieldset>
     </section>
 
@@ -238,24 +250,24 @@ $is_edit = !empty($training['id']);
 
                     </div>
                 <?php endif; ?>
-   
-                    <nav class="quick-actions">
-   
-                        <?php if ($training['enabled_at']): ?>
-                            <a href="/training/<?= $training['slug'] ?>" class="action-link" target="_blank">
-                                <strong>Voir sur le site</strong>
-                                <span>Page publique de la formation</span>
-                            </a>
-                        <?php endif; ?>
 
-                        <?php
-                        $bookings_count = dbq(db(), "SELECT COUNT(*) FROM booking WHERE training_id = ? AND revoked_at IS NULL", [$training['id']])->fetchColumn();
-                        ?>
-                        <a href="/admin/booking/list?training_id=<?= $training['id'] ?>" class="action-link">
-                            <strong>Inscriptions (<?= $bookings_count ?>)</strong>
-                            <span>Gérer les participants</span>
+                <nav class="quick-actions">
+
+                    <?php if ($training['enabled_at']): ?>
+                        <a href="/training/<?= $training['slug'] ?>" class="action-link" target="_blank">
+                            <strong>Voir sur le site</strong>
+                            <span>Page publique de la formation</span>
                         </a>
-                    </nav>
+                    <?php endif; ?>
+
+                    <?php
+                    $bookings_count = dbq(db(), "SELECT COUNT(*) FROM booking WHERE training_id = ? AND revoked_at IS NULL", [$training['id']])->fetchColumn();
+                    ?>
+                    <a href="/admin/booking/list?training_id=<?= $training['id'] ?>" class="action-link">
+                        <strong>Inscriptions (<?= $bookings_count ?>)</strong>
+                        <span>Gérer les participants</span>
+                    </a>
+                </nav>
             </section>
 
             <section class="panel stats-box">
