@@ -32,19 +32,18 @@ INSERT INTO service (label, image_src, alt_text, content, link, link_text, sort_
 
 
 TRUNCATE TABLE trainer;
-INSERT INTO trainer (slug, label, bio, avatar, email, hire_date) 
-VALUES
-('sophie-dubois','Sophie Dubois','Me. Sophie Dubois est avocate spécialisée en résolution de conflits et médiation au sein de copropriétés, avec plus de 10 ans d’expérience.','/static/assets/trainers/sophie-dubois.jpg','sophie.dubois@example.com','2019-04-15'),
-('julien-martin','Julien Martin','Julien Martin est expert en gestion financière de copropriétés et formateur reconnu pour ses analyses budgétaires approfondies.','/static/assets/trainers/julien-martin.jpg','julien.martin@example.com','2020-09-01'),
-('amina-traore','Amina Traoré','Amina Traoré est experte en urbanisme et inclusion sociale, d’origine malienne et active à Bruxelles.','/static/assets/trainers/amina-traore.jpg','amina.traore@example.be','2018-07-20'),
-('samir-el-haddad','Samir El Haddad','Samir El Haddad est spécialiste en rénovation durable, issu de la communauté marocaine de Belgique.','/static/assets/trainers/samir-el-haddad.jpg','samir.haddad@example.be','2017-11-05'),
-('nguyen-anh','Nguyen Anh','Nguyen Anh, d’origine vietnamienne, est consultant en digitalisation de la gestion de copropriété.','/static/assets/trainers/nguyen-anh.jpg','nguyen.anh@example.be','2020-03-17'),
-('marie-louise-lemaire','Marie-Louise Lemaire','Marie-Louise Lemaire est formatrice wallonne de Namur, experte en fiscalité immobilière.','/static/assets/trainers/marie-louise-lemaire.jpg','marie.lemaire@example.be','2018-05-30'),
-('dirk-de-smet','Dirk De Smet','Dirk De Smet est consultant en gouvernance immobilière pour le Brabant flamand.','/static/assets/trainers/dirk-de-smet.jpg','dirk.desmet@example.be','2015-09-17'),
-('fabrice-mbala','Fabrice Mbala','Fabrice Mbala est expert en contentieux et médiation, d’origine congolaise et basé à Liège.','/static/assets/trainers/fabrice-mbala.jpg','fabrice.mbala@example.be','2016-02-14'),
-('celine-francois','Céline François','Céline François est experte en fiscalité immobilière et accompagne les copropriétaires dans leurs déclarations fiscales.','/static/assets/trainers/celine-francois.jpg','celine.francois@example.com','2022-02-28'),
-('ferhat-kaya','Ferhat Kaya','Ferhat Kaya est ingénieur en efficacité énergétique d’origine turque, intervenant à Anderlecht sur des projets de rénovation durable.','/static/assets/trainers/ferhat-kaya.jpg','ferhat.kaya@example.be','2019-09-23');
-
+INSERT INTO trainer (slug, label, title, bio, avatar, email, hire_date) 
+VALUES 
+('sophie-dubois','Sophie Dubois','Avocate spécialisée en médiation','Me. Sophie Dubois est avocate spécialisée en résolution de conflits et médiation au sein de copropriétés, avec plus de 10 ans d’expérience.','/static/assets/trainers/sophie-dubois.jpg','sophie.dubois@example.com','2019-04-15'),
+('julien-martin','Julien Martin','Expert en gestion financière','Julien Martin est expert en gestion financière de copropriétés et formateur reconnu pour ses analyses budgétaires approfondies.','/static/assets/trainers/julien-martin.jpg','julien.martin@example.com','2020-09-01'),
+('amina-traore','Amina Traoré','Experte en urbanisme','Amina Traoré est experte en urbanisme et inclusion sociale, d’origine malienne et active à Bruxelles.','/static/assets/trainers/amina-traore.jpg','amina.traore@example.be','2018-07-20'),
+('samir-el-haddad','Samir El Haddad','Spécialiste en rénovation durable','Samir El Haddad est spécialiste en rénovation durable, issu de la communauté marocaine de Belgique.','/static/assets/trainers/samir-el-haddad.jpg','samir.haddad@example.be','2017-11-05'),
+('nguyen-anh','Nguyen Anh','Consultant en digitalisation','Nguyen Anh, d’origine vietnamienne, est consultant en digitalisation de la gestion de copropriété.','/static/assets/trainers/nguyen-anh.jpg','nguyen.anh@example.be','2020-03-17'),
+('marie-louise-lemaire','Marie-Louise Lemaire','Experte en fiscalité immobilière','Marie-Louise Lemaire est formatrice wallonne de Namur, experte en fiscalité immobilière.','/static/assets/trainers/marie-louise-lemaire.jpg','marie.lemaire@example.be','2018-05-30'),
+('dirk-de-smet','Dirk De Smet','Consultant en gouvernance immobilière','Dirk De Smet est consultant en gouvernance immobilière pour le Brabant flamand.','/static/assets/trainers/dirk-de-smet.jpg','dirk.desmet@example.be','2015-09-17'),
+('fabrice-mbala','Fabrice Mbala','Expert en contentieux','Fabrice Mbala est expert en contentieux et médiation, d’origine congolaise et basé à Liège.','/static/assets/trainers/fabrice-mbala.jpg','fabrice.mbala@example.be','2016-02-14'),
+('celine-francois','Céline François','Experte en fiscalité immobilière','Céline François est experte en fiscalité immobilière et accompagne les copropriétaires dans leurs déclarations fiscales.','/static/assets/trainers/celine-francois.jpg','celine.francois@example.com','2022-02-28'),
+('ferhat-kaya','Ferhat Kaya','Ingénieur en efficacité énergétique','Ferhat Kaya est ingénieur en efficacité énergétique d’origine turque, intervenant à Anderlecht sur des projets de rénovation durable.','/static/assets/trainers/ferhat-kaya.jpg','ferhat.kaya@example.be','2019-09-23');
 
 
 
@@ -151,73 +150,71 @@ SET @t_intro = (SELECT id FROM training WHERE slug = 'introduction-gestion-copro
 SET @t_gf    = (SELECT id FROM training WHERE slug = 'gestion-financiere-copropriete');
 SET @t_cm    = (SELECT id FROM training WHERE slug = 'contentieux-mediation-copropriete');
 SET @t_reg   = (SELECT id FROM training WHERE slug = 'reglementation-energetique-travaux');
-
 INSERT INTO training_program (
   slug, label, content, training_id, day_number, time_start, time_end, objectives
 ) VALUES
-('introduction-gestion-copropriete-day1-session1','09:00–10:30 — Introduction à la gestion de copropriété',NULL,@t_intro,1,'09:00:00','10:30:00',NULL),
-('introduction-gestion-copropriete-day1-session2','10:40–12:10 — Cadre juridique et obligations',NULL,@t_intro,1,'10:40:00','12:10:00',NULL),
-('introduction-gestion-copropriete-day1-game1','12:10–12:25 — Jeu d’échauffement',NULL,@t_intro,1,'12:10:00','12:25:00',NULL),
-('introduction-gestion-copropriete-day1-game2','13:10–13:25 — Activité de groupe',NULL,@t_intro,1,'13:10:00','13:25:00',NULL),
-('introduction-gestion-copropriete-day1-session3','13:25–14:55 — Rôle des organes de la copropriété',NULL,@t_intro,1,'13:25:00','14:55:00',NULL),
-('introduction-gestion-copropriete-day1-session4','15:05–16:35 — Assemblées générales et décisions',NULL,@t_intro,1,'15:05:00','16:35:00',NULL),
-('introduction-gestion-copropriete-day1-free','16:35–17:05 — Espace libre (Q&R)',NULL,@t_intro,1,'16:35:00','17:05:00',NULL),
+('introduction-gestion-copropriete-day1-session1','Introduction à la gestion de copropriété',NULL,@t_intro,1,'09:00:00','10:30:00',NULL),
+('introduction-gestion-copropriete-day1-session2','Cadre juridique et obligations',NULL,@t_intro,1,'10:40:00','12:10:00',NULL),
+('introduction-gestion-copropriete-day1-game1','Jeu de cloture',NULL,@t_intro,1,'12:10:00','12:25:00',NULL),
+('introduction-gestion-copropriete-day1-game2','Activité de groupe',NULL,@t_intro,1,'13:10:00','13:25:00',NULL),
+('introduction-gestion-copropriete-day1-session3','Rôle des organes de la copropriété',NULL,@t_intro,1,'13:25:00','14:55:00',NULL),
+('introduction-gestion-copropriete-day1-session4','Assemblées générales et décisions',NULL,@t_intro,1,'15:05:00','16:35:00',NULL),
+('introduction-gestion-copropriete-day1-free','Espace libre (Q&R)',NULL,@t_intro,1,'16:35:00','17:05:00',NULL),
 
-('introduction-gestion-copropriete-day2-session1','09:00–10:30 — Gestion quotidienne et budget',NULL,@t_intro,2,'09:00:00','10:30:00',NULL),
-('introduction-gestion-copropriete-day2-session2','10:40–12:10 — Maintenance et charges',NULL,@t_intro,2,'10:40:00','12:10:00',NULL),
-('introduction-gestion-copropriete-day2-game1','12:10–12:25 — Jeu d’échauffement',NULL,@t_intro,2,'12:10:00','12:25:00',NULL),
-('introduction-gestion-copropriete-day2-game2','13:10–13:25 — Activité de groupe',NULL,@t_intro,2,'13:10:00','13:25:00',NULL),
-('introduction-gestion-copropriete-day2-session3','13:25–14:55 — Risques et responsabilités',NULL,@t_intro,2,'13:25:00','14:55:00',NULL),
-('introduction-gestion-copropriete-day2-session4','15:05–16:35 — Synthèse et étude de cas',NULL,@t_intro,2,'15:05:00','16:35:00',NULL),
-('introduction-gestion-copropriete-day2-free','16:35–17:05 — Espace libre (Q&R)',NULL,@t_intro,2,'16:35:00','17:05:00',NULL),
+('introduction-gestion-copropriete-day2-session1','Gestion quotidienne et budget',NULL,@t_intro,2,'09:00:00','10:30:00',NULL),
+('introduction-gestion-copropriete-day2-session2','Maintenance et charges',NULL,@t_intro,2,'10:40:00','12:10:00',NULL),
+('introduction-gestion-copropriete-day2-game1','Jeu de cloture',NULL,@t_intro,2,'12:10:00','12:25:00',NULL),
+('introduction-gestion-copropriete-day2-game2','Activité de groupe',NULL,@t_intro,2,'13:10:00','13:25:00',NULL),
+('introduction-gestion-copropriete-day2-session3','Risques et responsabilités',NULL,@t_intro,2,'13:25:00','14:55:00',NULL),
+('introduction-gestion-copropriete-day2-session4','Synthèse et étude de cas',NULL,@t_intro,2,'15:05:00','16:35:00',NULL),
+('introduction-gestion-copropriete-day2-free','Espace libre (Q&R)',NULL,@t_intro,2,'16:35:00','17:05:00',NULL),
 
-('gestion-financiere-copropriete-day1-session1','09:00–10:30 — Principes de budgétisation',NULL,@t_gf,1,'09:00:00','10:30:00',NULL),
-('gestion-financiere-copropriete-day1-session2','10:40–12:10 — Suivi des comptes',NULL,@t_gf,1,'10:40:00','12:10:00',NULL),
-('gestion-financiere-copropriete-day1-game1','12:10–12:25 — Jeu d’échauffement',NULL,@t_gf,1,'12:10:00','12:25:00',NULL),
-('gestion-financiere-copropriete-day1-game2','13:10–13:25 — Activité de groupe',NULL,@t_gf,1,'13:10:00','13:25:00',NULL),
-('gestion-financiere-copropriete-day1-session3','13:25–14:55 — Provisions et fonds',NULL,@t_gf,1,'13:25:00','14:55:00',NULL),
-('gestion-financiere-copropriete-day1-session4','15:05–16:35 — Gestion des impayés',NULL,@t_gf,1,'15:05:00','16:35:00',NULL),
-('gestion-financiere-copropriete-day1-free','16:35–17:05 — Espace libre (Q&R)',NULL,@t_gf,1,'16:35:00','17:05:00',NULL),
+('gestion-financiere-copropriete-day1-session1','Principes de budgétisation',NULL,@t_gf,1,'09:00:00','10:30:00',NULL),
+('gestion-financiere-copropriete-day1-session2','Suivi des comptes',NULL,@t_gf,1,'10:40:00','12:10:00',NULL),
+('gestion-financiere-copropriete-day1-game1','Jeu de cloture',NULL,@t_gf,1,'12:10:00','12:25:00',NULL),
+('gestion-financiere-copropriete-day1-game2','Activité de groupe',NULL,@t_gf,1,'13:10:00','13:25:00',NULL),
+('gestion-financiere-copropriete-day1-session3','Provisions et fonds',NULL,@t_gf,1,'13:25:00','14:55:00',NULL),
+('gestion-financiere-copropriete-day1-session4','Gestion des impayés',NULL,@t_gf,1,'15:05:00','16:35:00',NULL),
+('gestion-financiere-copropriete-day1-free','Espace libre (Q&R)',NULL,@t_gf,1,'16:35:00','17:05:00',NULL),
 
-('gestion-financiere-copropriete-day2-session1','09:00–10:30 — Analyse financière avancée',NULL,@t_gf,2,'09:00:00','10:30:00',NULL),
-('gestion-financiere-copropriete-day2-session2','10:40–12:10 — Tableaux de bord',NULL,@t_gf,2,'10:40:00','12:10:00',NULL),
-('gestion-financiere-copropriete-day2-game1','12:10–12:25 — Jeu d’échauffement',NULL,@t_gf,2,'12:10:00','12:25:00',NULL),
-('gestion-financiere-copropriete-day2-game2','13:10–13:25 — Activité de groupe',NULL,@t_gf,2,'13:10:00','13:25:00',NULL),
-('gestion-financiere-copropriete-day2-session3','13:25–14:55 — Prévisions et planning',NULL,@t_gf,2,'13:25:00','14:55:00',NULL),
-('gestion-financiere-copropriete-day2-session4','15:05–16:35 — Cas pratiques',NULL,@t_gf,2,'15:05:00','16:35:00',NULL),
-('gestion-financiere-copropriete-day2-free','16:35–17:05 — Espace libre (Q&R)',NULL,@t_gf,2,'16:35:00','17:05:00',NULL),
+('gestion-financiere-copropriete-day2-session1','Analyse financière avancée',NULL,@t_gf,2,'09:00:00','10:30:00',NULL),
+('gestion-financiere-copropriete-day2-session2','Tableaux de bord',NULL,@t_gf,2,'10:40:00','12:10:00',NULL),
+('gestion-financiere-copropriete-day2-game1','Jeu de cloture',NULL,@t_gf,2,'12:10:00','12:25:00',NULL),
+('gestion-financiere-copropriete-day2-game2','Activité de groupe',NULL,@t_gf,2,'13:10:00','13:25:00',NULL),
+('gestion-financiere-copropriete-day2-session3','Prévisions et planning',NULL,@t_gf,2,'13:25:00','14:55:00',NULL),
+('gestion-financiere-copropriete-day2-session4','Cas pratiques',NULL,@t_gf,2,'15:05:00','16:35:00',NULL),
+('gestion-financiere-copropriete-day2-free','Espace libre (Q&R)',NULL,@t_gf,2,'16:35:00','17:05:00',NULL),
 
-('gestion-financiere-copropriete-day3-session1','09:00–10:30 — Audit et conformité',NULL,@t_gf,3,'09:00:00','10:30:00',NULL),
-('gestion-financiere-copropriete-day3-session2','10:40–12:10 — Optimisation des coûts',NULL,@t_gf,3,'10:40:00','12:10:00',NULL),
-('gestion-financiere-copropriete-day3-game1','12:10–12:25 — Jeu d’échauffement',NULL,@t_gf,3,'12:10:00','12:25:00',NULL),
-('gestion-financiere-copropriete-day3-game2','13:10–13:25 — Activité de groupe',NULL,@t_gf,3,'13:10:00','13:25:00',NULL),
-('gestion-financiere-copropriete-day3-session3','13:25–14:55 — Reporting financier',NULL,@t_gf,3,'13:25:00','14:55:00',NULL),
-('gestion-financiere-copropriete-day3-session4','15:05–16:35 — Atelier de restitution',NULL,@t_gf,3,'15:05:00','16:35:00',NULL),
-('gestion-financiere-copropriete-day3-free','16:35–17:05 — Espace libre (Q&R)',NULL,@t_gf,3,'16:35:00','17:05:00',NULL),
+('gestion-financiere-copropriete-day3-session1','Audit et conformité',NULL,@t_gf,3,'09:00:00','10:30:00',NULL),
+('gestion-financiere-copropriete-day3-session2','Optimisation des coûts',NULL,@t_gf,3,'10:40:00','12:10:00',NULL),
+('gestion-financiere-copropriete-day3-game1','Jeu de cloture',NULL,@t_gf,3,'12:10:00','12:25:00',NULL),
+('gestion-financiere-copropriete-day3-game2','Activité de groupe',NULL,@t_gf,3,'13:10:00','13:25:00',NULL),
+('gestion-financiere-copropriete-day3-session3','Reporting financier',NULL,@t_gf,3,'13:25:00','14:55:00',NULL),
+('gestion-financiere-copropriete-day3-session4','Atelier de restitution',NULL,@t_gf,3,'15:05:00','16:35:00',NULL),
+('gestion-financiere-copropriete-day3-free','Espace libre (Q&R)',NULL,@t_gf,3,'16:35:00','17:05:00',NULL),
 
-('contentieux-mediation-copropriete-day1-session1','09:00–10:30 — Identification des conflits',NULL,@t_cm,1,'09:00:00','10:30:00',NULL),
-('contentieux-mediation-copropriete-day1-session2','10:40–12:10 — Procédures contentieuses',NULL,@t_cm,1,'10:40:00','12:10:00',NULL),
-('contentieux-mediation-copropriete-day1-game1','12:10–12:25 — Jeu d’échauffement',NULL,@t_cm,1,'12:10:00','12:25:00',NULL),
-('contentieux-mediation-copropriete-day1-game2','13:10–13:25 — Activité de groupe',NULL,@t_cm,1,'13:10:00','13:25:00',NULL),
-('contentieux-mediation-copropriete-day1-session3','13:25–14:55 — Techniques de médiation',NULL,@t_cm,1,'13:25:00','14:55:00',NULL),
-('contentieux-mediation-copropriete-day1-session4','15:05–16:35 — Simulation de cas',NULL,@t_cm,1,'15:05:00','16:35:00',NULL),
-('contentieux-mediation-copropriete-day1-free','16:35–17:05 — Espace libre (Q&R)',NULL,@t_cm,1,'16:35:00','17:05:00',NULL),
+('contentieux-mediation-copropriete-day1-session1','Identification des conflits',NULL,@t_cm,1,'09:00:00','10:30:00',NULL),
+('contentieux-mediation-copropriete-day1-session2','Procédures contentieuses',NULL,@t_cm,1,'10:40:00','12:10:00',NULL),
+('contentieux-mediation-copropriete-day1-game1','Jeu de cloture',NULL,@t_cm,1,'12:10:00','12:25:00',NULL),
+('contentieux-mediation-copropriete-day1-game2','Activité de groupe',NULL,@t_cm,1,'13:10:00','13:25:00',NULL),
+('contentieux-mediation-copropriete-day1-session3','Techniques de médiation',NULL,@t_cm,1,'13:25:00','14:55:00',NULL),
+('contentieux-mediation-copropriete-day1-session4','Simulation de cas',NULL,@t_cm,1,'15:05:00','16:35:00',NULL),
+('contentieux-mediation-copropriete-day1-free','Espace libre (Q&R)',NULL,@t_cm,1,'16:35:00','17:05:00',NULL),
 
-('contentieux-mediation-copropriete-day2-session1','09:00–10:30 — Stratégies de résolution',NULL,@t_cm,2,'09:00:00','10:30:00',NULL),
-('contentieux-mediation-copropriete-day2-session2','10:40–12:10 — Négociation et consensus',NULL,@t_cm,2,'10:40:00','12:10:00',NULL),
-('contentieux-mediation-copropriete-day2-game1','12:10–12:25 — Jeu d’échauffement',NULL,@t_cm,2,'12:10:00','12:25:00',NULL),
-('contentieux-mediation-copropriete-day2-game2','13:10–13:25 — Activité de groupe',NULL,@t_cm,2,'13:10:00','13:25:00',NULL),
-('contentieux-mediation-copropriete-day2-session3','13:25–14:55 — Cadre légal approfondi',NULL,@t_cm,2,'13:25:00','14:55:00',NULL),
-('contentieux-mediation-copropriete-day2-session4','15:05–16:35 — Retours d’expérience',NULL,@t_cm,2,'15:05:00','16:35:00',NULL),
-('contentieux-mediation-copropriete-day2-free','16:35–17:05 — Espace libre (Q&R)',NULL,@t_cm,2,'16:35:00','17:05:00',NULL),
+('contentieux-mediation-copropriete-day2-session1','Stratégies de résolution',NULL,@t_cm,2,'09:00:00','10:30:00',NULL),
+('contentieux-mediation-copropriete-day2-session2','Négociation et consensus',NULL,@t_cm,2,'10:40:00','12:10:00',NULL),
+('contentieux-mediation-copropriete-day2-game1','Jeu de cloture',NULL,@t_cm,2,'12:10:00','12:25:00',NULL),
+('contentieux-mediation-copropriete-day2-game2','Activité de groupe',NULL,@t_cm,2,'13:10:00','13:25:00',NULL),
+('contentieux-mediation-copropriete-day2-session3','Cadre légal approfondi',NULL,@t_cm,2,'13:25:00','14:55:00',NULL),
+('contentieux-mediation-copropriete-day2-session4','Retours d’expérience',NULL,@t_cm,2,'15:05:00','16:35:00',NULL),
+('contentieux-mediation-copropriete-day2-free','Espace libre (Q&R)',NULL,@t_cm,2,'16:35:00','17:05:00',NULL),
 
-('reglementation-energetique-travaux-day1-session1','09:00–10:30 — Réglementation énergétique PEB',NULL,@t_reg,1,'09:00:00','10:30:00',NULL),
-('reglementation-energetique-travaux-day1-session2','10:40–12:10 — Obligations et subventions',NULL,@t_reg,1,'10:40:00','12:10:00',NULL),
-('reglementation-energetique-travaux-day1-game1','12:10–12:25 — Jeu d’échauffement',NULL,@t_reg,1,'12:10:00','12:25:00',NULL),
-('reglementation-energetique-travaux-day1-game2','13:10–13:25 — Activité de groupe',NULL,@t_reg,1,'13:10:00','13:25:00',NULL),
-('reglementation-energetique-travaux-day1-session3','13:25–14:55 — Planification des travaux',NULL,@t_reg,1,'13:25:00','14:55:00',NULL),
-('reglementation-energetique-travaux-day1-session4','15:05–16:35 — Études de cas',NULL,@t_reg,1,'15:05:00','16:35:00',NULL),
-('reglementation-energetique-travaux-day1-free','16:35–17:05 — Espace libre (Q&R)',NULL,@t_reg,1,'16:35:00','17:05:00',NULL);
-
+('reglementation-energetique-travaux-day1-session1','Réglementation énergétique PEB',NULL,@t_reg,1,'09:00:00','10:30:00',NULL),
+('reglementation-energetique-travaux-day1-session2','Obligations et subventions',NULL,@t_reg,1,'10:40:00','12:10:00',NULL),
+('reglementation-energetique-travaux-day1-game1','Jeu de cloture',NULL,@t_reg,1,'12:10:00','12:25:00',NULL),
+('reglementation-energetique-travaux-day1-game2','Activité de groupe',NULL,@t_reg,1,'13:10:00','13:25:00',NULL),
+('reglementation-energetique-travaux-day1-session3','Planification des travaux',NULL,@t_reg,1,'13:25:00','14:55:00',NULL),
+('reglementation-energetique-travaux-day1-session4','Études de cas',NULL,@t_reg,1,'15:05:00','16:35:00',NULL),
+('reglementation-energetique-travaux-day1-free','Espace libre (Q&R)',NULL,@t_reg,1,'16:35:00','17:05:00',NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

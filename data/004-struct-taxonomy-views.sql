@@ -35,7 +35,7 @@ CREATE VIEW training_plus AS
     trainer.label     AS trainer_label
   FROM training
   JOIN taxonomy_with_parent AS l ON training.level_id = l.id
-  JOIN trainer ON training.trainer_id = trainer.id
+  LEFT JOIN trainer ON training.trainer_id = trainer.id
   WHERE training.revoked_at IS NULL;
 
 DROP VIEW IF EXISTS contact_request_plus;

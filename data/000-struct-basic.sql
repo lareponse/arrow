@@ -67,12 +67,49 @@ DROP TABLE IF EXISTS trainer;
 CREATE TABLE trainer (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     slug VARCHAR(105) NOT NULL,
-    label VARCHAR(100) NOT NULL,
+    label VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NULL,
     bio TEXT NULL,
     avatar VARCHAR(255) NULL,
     email VARCHAR(100) NULL,
     hire_date DATE NULL
 ) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS training;
+CREATE TABLE training (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(205) NOT NULL,
+    label VARCHAR(200) NOT NULL,
+    subtitle VARCHAR(255) NULL,
+    content TEXT NOT NULL,
+    level_id INT UNSIGNED NOT NULL,
+    duration_days SMALLINT UNSIGNED NOT NULL,
+    duration_hours SMALLINT UNSIGNED NOT NULL,
+    price_ht DECIMAL(8, 2) NOT NULL,
+    start_date DATE NOT NULL,
+    places_max SMALLINT UNSIGNED NULL,
+    objectives TEXT NULL,
+    prerequisites TEXT NULL,
+    pause TEXT NULL,
+    parking TEXT NULL,
+    avatar VARCHAR(255) NULL,
+    trainer_id INT UNSIGNED NULL,
+    certification BOOLEAN NOT NULL DEFAULT FALSE
+) ENGINE = InnoDB;
+
+
+DROP TABLE IF EXISTS training_program;
+CREATE TABLE training_program (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(155) NOT NULL,
+    label VARCHAR(150) NOT NULL,
+    content TEXT NULL,
+    training_id INT UNSIGNED NOT NULL,
+    day_number SMALLINT UNSIGNED NOT NULL,
+    time_start TIME NOT NULL,
+    time_end TIME NOT NULL,
+    objectives TEXT NULL
+) ENGINE = InnoDB;
 
 
 DROP TABLE IF EXISTS article;
@@ -107,38 +144,6 @@ CREATE TABLE event (
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS training;
-CREATE TABLE training (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    slug VARCHAR(205) NOT NULL,
-    label VARCHAR(200) NOT NULL,
-    content TEXT NOT NULL,
-    level_id INT UNSIGNED NOT NULL,
-    duration_days SMALLINT UNSIGNED NOT NULL,
-    duration_hours SMALLINT UNSIGNED NOT NULL,
-    price_ht DECIMAL(8,2) NOT NULL,
-    start_date DATE NOT NULL,
-    places_max SMALLINT UNSIGNED NULL,
-    objectives TEXT NULL,
-    prerequisites TEXT NULL,
-    avatar VARCHAR(255) NULL,
-    trainer_id INT UNSIGNED NULL,
-    certification BOOLEAN NOT NULL DEFAULT FALSE
-) ENGINE=InnoDB;
-
-
-DROP TABLE IF EXISTS training_program;
-CREATE TABLE training_program (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    slug VARCHAR(155) NOT NULL,
-    label VARCHAR(150) NOT NULL,
-    content TEXT NULL,
-    training_id INT UNSIGNED NOT NULL,
-    day_number SMALLINT UNSIGNED NOT NULL,
-    time_start TIME NOT NULL,
-    time_end TIME NOT NULL,
-    objectives TEXT NULL
-) ENGINE=InnoDB;
 
 
 DROP TABLE IF EXISTS contact_request;
@@ -209,6 +214,12 @@ ALTER TABLE article
     ADD COLUMN revoked_at TIMESTAMP NULL DEFAULT NULL;
 
 ALTER TABLE event
+    ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    ADD COLUMN enabled_at TIMESTAMP NULL DEFAULT NULL,
+    ADD COLUMN revoked_at TIMESTAMP NULL DEFAULT NULL;
+
+ALTER TABLE trainer
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     ADD COLUMN enabled_at TIMESTAMP NULL DEFAULT NULL,
