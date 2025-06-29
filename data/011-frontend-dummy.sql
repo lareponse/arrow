@@ -1,5 +1,15 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+TRUNCATE TABLE coproacademy;
+INSERT INTO coproacademy (slug, label) VALUES
+  ('email',                'info@copro.academy.be'),
+  ('email-response-time',  'Réponse sous 24 h ouvrées'),
+  ('telephone',            '+32 510 08 00 01'),
+  ('telephone-hours',      'Lundi – Vendredi : 9 h – 17 h'),
+  ('adresse',              '292B Rue de Stalle\n1180 Uccle, Belgique'),
+  ('facebook',             'https://facebook.com/coproacademy'),
+  ('instagram',            'https://instagram.com/coproacademy'),
+  ('linkedin',             'https://linkedin.com/company/coproacademy');
 
 
 TRUNCATE TABLE faq;
