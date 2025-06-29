@@ -13,7 +13,7 @@
             <?php endif; ?>
 
             <form action="/register" method="post" class="auth-form">
-                <?= csrf_form() ?>
+                <?= csrf_field() ?>
 
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
