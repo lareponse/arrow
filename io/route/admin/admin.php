@@ -1,6 +1,7 @@
 <?php
 
 return function () {
+    auth(AUTH_GUARD);
     return [
         'title' => 'Tableau de bord - Copro Academy Admin',
         'stats' => stats(),
@@ -10,7 +11,6 @@ return function () {
         ],
     ];
 };
-
 
 function stats()
 {

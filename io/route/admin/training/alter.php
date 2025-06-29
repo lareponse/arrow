@@ -1,11 +1,11 @@
 <?php
-require_once 'add/bad/dad/db_row.php';
+require_once 'add/bad/dad/arrow.php';
 require_once 'app/mapper/taxonomy.php';
 require_once 'app/upload.php';
 
 return function ($slug = null) {
     $slug = $slug[0] ?: null;
-    $training = row(db(), 'training_with_level_trainer');
+    $training = row(db(), 'training_plus');
 
     if ($slug) {
         $training(ROW_LOAD, ['slug' => $slug]);

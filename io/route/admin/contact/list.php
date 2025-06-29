@@ -3,6 +3,8 @@ require_once 'app/mapper/mapper.php';
 require_once 'app/mapper/taxonomy.php';
 
 return function ($args) {
+    auth(AUTH_GUARD);
+
     $page = max(1, (int)($_GET['page'] ?? 1));
     $limit = 20;
     $offset = ($page - 1) * $limit;
