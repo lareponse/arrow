@@ -22,6 +22,7 @@ picture,
 video,
 canvas,
 svg {
+  border-radius: 0;
   display: block;
   max-width: 100%;
 }
@@ -52,8 +53,8 @@ body {
 }
 
 /* Remove list styles on ul, ol elements with a list role */
-ul[role='list'],
-ol[role='list'] {
+ul[role="list"],
+ol[role="list"] {
   list-style: none;
 }
 

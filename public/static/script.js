@@ -1,10 +1,10 @@
 /**
- * COPRO ACADEMY - Optimized JavaScript with Masonry Layout
- * CORRECTIONS: Articles visibility, load more button, dynamic carousel
+ * COPRO ACADEMY - JavaScript corrigé
+ * Carousel, Articles et Formations fonctionnels
  */
 
 // ===================================
-// UTILITIES (inchangé)
+// UTILITIES
 // ===================================
 const utils = {
   delay: (ms) => new Promise((res) => setTimeout(res, ms)),
@@ -23,103 +23,51 @@ const utils = {
     }),
   hide: (el) => {
     el.style.display = "none";
-    el.classList.add("filtered-hidden");
+    el.setAttribute("data-hidden", "true");
   },
   show: (el) => {
-    el.style.display = "block";
-    el.classList.remove("filtered-hidden");
+    el.style.display = "";
+    el.setAttribute("data-hidden", "false");
+    el.classList.add("visible");
   },
   getUrlParam: (name) => new URLSearchParams(window.location.search).get(name),
 };
 
 // ===================================
-// CAROUSEL DYNAMIQUE
+// CAROUSEL HÉRO - CORRIGÉ
 // ===================================
-class Carousel {
-  constructor(selector, options = {}) {
-    this.track = document.querySelector(selector);
-    this.images = this.track?.querySelectorAll(".carousel-image") || [];
+class HeroCarousel {
+  constructor() {
+    this.hero = document.querySelector(".hero");
+    this.images = document.querySelectorAll(".hero__image");
     this.currentIndex = 0;
-    this.intervalTime = options.interval || 4000;
+    this.intervalTime = 4000;
     this.intervalId = null;
-    this.autoSlide = options.autoSlide !== false;
-    this.imageData = options.images || [];
+
+    if (!this.hero || this.images.length <= 1) return;
 
     this.init();
   }
 
   init() {
-    // Si des images dynamiques sont fournies, les créer
-    if (this.imageData.length && this.track) {
-      this.createImages();
-    }
-
-    if (!this.images.length) return;
-
-    this.show(0);
-    if (this.autoSlide) {
-      this.start();
-      this.track.addEventListener("mouseenter", () => this.stop());
-      this.track.addEventListener("mouseleave", () => this.start());
-    }
-
-    this.createControls();
-  }
-
-  createImages() {
-    this.track.innerHTML = "";
-    this.imageData.forEach((img, idx) => {
-      const imgEl = document.createElement("div");
-      imgEl.className = "carousel-image";
-      imgEl.innerHTML = `
-        <img src="${img.src}" alt="${img.alt || ""}" loading="${
-        idx === 0 ? "eager" : "lazy"
-      }">
-        ${
-          img.caption
-            ? `<div class="carousel-caption">${img.caption}</div>`
-            : ""
-        }
-      `;
-      this.track.appendChild(imgEl);
+    // Assurer qu'une image est active au départ
+    this.images.forEach((img, index) => {
+      img.classList.remove("hero__image--active");
+      if (index === 0) img.classList.add("hero__image--active");
     });
-    this.images = this.track.querySelectorAll(".carousel-image");
+
+    this.start();
   }
 
-  createControls() {
-    if (this.images.length <= 1) return;
-
-    const controls = document.createElement("div");
-    controls.className = "carousel-controls";
-    controls.innerHTML = `
-      <button class="carousel-btn carousel-prev" aria-label="Image précédente">‹</button>
-      <button class="carousel-btn carousel-next" aria-label="Image suivante">›</button>
-    `;
-
-    this.track.appendChild(controls);
-
-    controls
-      .querySelector(".carousel-prev")
-      .addEventListener("click", () => this.prev());
-    controls
-      .querySelector(".carousel-next")
-      .addEventListener("click", () => this.next());
-  }
-
-  show(i) {
-    this.images.forEach((img) => img.classList.remove("active"));
-    this.images[i].classList.add("active");
-    this.currentIndex = i;
+  show(index) {
+    this.images.forEach((img) => img.classList.remove("hero__image--active"));
+    this.images[index].classList.add("hero__image--active");
+    this.currentIndex = index;
   }
 
   next() {
-    this.show((this.currentIndex + 1) % this.images.length);
-  }
-
-  prev() {
-    this.show(
-      (this.currentIndex - 1 + this.images.length) % this.images.length
-    );
+    const nextIndex = (this.currentIndex + 1) % this.images.length;
+    this.show(nextIndex);
   }
 
   start() {
@@ -128,90 +76,10 @@ class Carousel {
   }
 
   stop() {
-    clearInterval(this.intervalId);
-  }
-}
-
-// ===================================
-// MASONRY LAYOUT (inchangé)
-// ===================================
-class Masonry {
-  constructor(selector, gap = 15) {
-    this.container = document.querySelector(selector);
-    this.gap = gap;
-    this.isList = false;
-    this._bindResize();
-    this.refresh();
-  }
-
-  _getCols() {
-    const w = this.container.offsetWidth;
-    if (w < 768) return 1;
-    if (w < 1024) return 2;
-    return 3;
-  }
-
-  _getColWidth(cols) {
-    return (this.container.offsetWidth - (cols - 1) * this.gap) / cols;
-  }
-
-  _reset() {
-    this.cols = this._getCols();
-    this.heights = Array(this.cols).fill(0);
-    this.items = Array.from(this.container.querySelectorAll(".card"));
-    this.container.style.position = "relative";
-  }
-
-  _position() {
-    if (this.isList) return;
-    const colW = this._getColWidth(this.cols);
-    this.items.forEach((el) => {
-      if (el.classList.contains("filtered-hidden")) return;
-      const span = el.classList.contains("card-wide") && this.cols > 1 ? 2 : 1;
-      let idx = 0;
-      if (span > 1) {
-        let minH = Infinity;
-        for (let i = 0; i <= this.cols - span; i++) {
-          const h = Math.max(...this.heights.slice(i, i + span));
-          if (h < minH) {
-            minH = h;
-            idx = i;
-          }
-        }
-      } else {
-        idx = this.heights.indexOf(Math.min(...this.heights));
-      }
-      const x = idx * (colW + this.gap);
-      const y = this.heights[idx];
-      Object.assign(el.style, {
-        position: "absolute",
-        width: `${colW * span + this.gap * (span - 1)}px`,
-        left: `${x}px`,
-        top: `${y}px`,
-      });
-      const h = el.offsetHeight;
-      for (let i = idx; i < idx + span; i++) this.heights[i] = y + h + this.gap;
-    });
-    this.container.style.height = `${Math.max(...this.heights)}px`;
-  }
-
-  refresh() {
-    if (!this.container) return;
-    this._reset();
-    setTimeout(() => this._position(), 50);
-  }
-
-  setList(isList) {
-    this.isList = isList;
-    this.container.style.height = isList ? "auto" : this.container.style.height;
-    this.refresh();
-  }
-
-  _bindResize() {
-    window.addEventListener("resize", () => {
-      clearTimeout(this._resizeTimer);
-      this._resizeTimer = setTimeout(() => this.refresh(), 200);
-    });
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
   }
 }
 
@@ -223,113 +91,173 @@ class ArticlesPage {
     this.container = document.getElementById("articlesContainer");
     if (!this.container) return;
 
-    this.filterBtns = document.querySelectorAll(".filter-btn");
+    this.filterLinks = document.querySelectorAll(".filter-btn");
     this.gridBtn = document.getElementById("gridView");
     this.listBtn = document.getElementById("listView");
     this.loadBtn = document.getElementById("loadMore");
+    this.viewControls = document.getElementById("viewControls");
 
     this.allItems = Array.from(this.container.querySelectorAll(".card"));
     this.itemsPerLoad = 6;
-    this.currentIndex = 8; // Afficher 8 articles par défaut
+    this.currentlyShown = this.itemsPerLoad;
     this.isListView = false;
-
-    // CORRECTION: Initialiser le filtre par défaut
     this.currentFilter = "all";
 
-    // Définir le bouton actif par défaut
-    this._setActiveFilter();
+    this.init();
+  }
 
-    this.masonry = new Masonry("#articlesContainer");
-
-    this._bind();
+  init() {
+    this._enhanceFilters();
+    this._bindEvents();
     this._applyFilter();
   }
 
-  _setActiveFilter() {
-    // Activer le premier bouton ou le bouton "all" par défaut
-    const allBtn = Array.from(this.filterBtns).find(
-      (btn) => btn.dataset.type === "all"
-    );
-    const defaultBtn = allBtn || this.filterBtns[0];
-
-    if (defaultBtn) {
-      this.filterBtns.forEach((btn) => btn.classList.remove("active"));
-      defaultBtn.classList.add("active");
-      this.currentFilter = defaultBtn.dataset.type || "all";
+  _enhanceFilters() {
+    // Montrer les contrôles de vue
+    if (this.viewControls) {
+      this.viewControls.style.display = "flex";
+      setTimeout(() => {
+        this.viewControls.style.opacity = "1";
+      }, 300);
     }
   }
 
-  _bind() {
-    this.filterBtns.forEach((btn) =>
-      btn.addEventListener("click", () => this._filter(btn))
+  _bindEvents() {
+    // Filtres
+    this.filterLinks.forEach((link) =>
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        this._handleFilter(link);
+      })
     );
+
+    // Vues
     this.gridBtn?.addEventListener("click", () => this._toggleView(false));
     this.listBtn?.addEventListener("click", () => this._toggleView(true));
+
+    // Bouton charger plus
     this.loadBtn?.addEventListener("click", () => this._loadMore());
   }
 
-  _filter(btn) {
-    this.filterBtns.forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-    this.currentFilter = btn.dataset.type;
-    this.currentIndex = 8; // Reset à 8 articles
+  _handleFilter(link) {
+    // Mettre à jour le filtre actif
+    this.filterLinks.forEach((l) => l.classList.remove("active"));
+    link.classList.add("active");
+
+    this.currentFilter = link.dataset.type;
+    this.currentlyShown = this.itemsPerLoad; // Reset
     this._applyFilter();
   }
 
   _applyFilter() {
-    // CORRECTION: Vérifier que currentFilter est défini
-    const filter = this.currentFilter || "all";
+    const filteredItems = this._getFilteredItems();
 
-    this.allItems.forEach((item, idx) => {
-      const matches = filter === "all" || item.dataset.type === filter;
-      if (matches && idx < this.currentIndex) {
-        utils.show(item);
-      } else {
-        utils.hide(item);
-      }
+    // Cacher tous les éléments
+    this.allItems.forEach((item) => utils.hide(item));
+
+    // Montrer les éléments filtrés (jusqu'à currentlyShown)
+    filteredItems.slice(0, this.currentlyShown).forEach((item) => {
+      utils.show(item);
     });
 
-    this.masonry.refresh();
-    this._updateLoadBtn();
-  }
-
-  _toggleView(list) {
-    this.isListView = list;
-    this.container.classList.toggle("list-view", list);
-    this.gridBtn?.classList.toggle("active", !list);
-    this.listBtn?.classList.toggle("active", list);
-    this.masonry.setList(list);
-  }
-
-  _loadMore() {
-    if (!this.loadBtn) return;
-
-    this.loadBtn.disabled = true;
-    const nextIndex = Math.min(
-      this.currentIndex + this.itemsPerLoad,
-      this._getFilteredItems().length
-    );
-
-    utils.delay(300).then(() => {
-      this.currentIndex = nextIndex;
-      this._applyFilter();
-      this.loadBtn.disabled = false;
-    });
+    this._updateLoadButton(filteredItems);
   }
 
   _getFilteredItems() {
+    if (this.currentFilter === "all") {
+      return this.allItems;
+    }
     return this.allItems.filter(
-      (item) =>
-        this.currentFilter === "all" || item.dataset.type === this.currentFilter
+      (item) => item.dataset.type === this.currentFilter
     );
   }
 
-  _updateLoadBtn() {
+  _updateLoadButton(filteredItems) {
     if (!this.loadBtn) return;
 
-    const filteredItems = this._getFilteredItems();
-    const hasMore = filteredItems.length > this.currentIndex;
-    this.loadBtn.style.display = hasMore ? "block" : "none";
+    const hasMore = filteredItems.length > this.currentlyShown;
+
+    this.loadBtn.style.display = filteredItems.length > 0 ? "block" : "none";
+    this.loadBtn.disabled = !hasMore;
+
+    if (!hasMore) {
+      this.loadBtn.style.display = "none";
+    }
+  }
+
+  _loadMore() {
+    if (!this.loadBtn || this.loadBtn.disabled) return;
+
+    this.loadBtn.disabled = true;
+    this.loadBtn.textContent = "Chargement...";
+
+    setTimeout(() => {
+      this.currentlyShown += this.itemsPerLoad;
+      this._applyFilter();
+    }, 500);
+  }
+
+  _toggleView(listView) {
+    this.isListView = listView;
+    this.container.classList.toggle("list-view", listView);
+    this.gridBtn?.classList.toggle("active", !listView);
+    this.listBtn?.classList.toggle("active", listView);
+  }
+}
+
+// ===================================
+// FORMATIONS PAGE - NOUVEAU
+// ===================================
+class FormationsPage {
+  constructor() {
+    this.container = document.getElementById("formationsContainer");
+    if (!this.container) return;
+
+    this.filterBtns = document.querySelectorAll(".filter-btn");
+    this.allCards = Array.from(
+      this.container.querySelectorAll(".formation-card")
+    );
+    this.currentFilter = "all";
+
+    this.init();
+  }
+
+  init() {
+    this._bindEvents();
+    this._applyFilter();
+  }
+
+  _bindEvents() {
+    this.filterBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        this._handleFilter(btn);
+      });
+    });
+  }
+
+  _handleFilter(btn) {
+    // Mettre à jour le bouton actif
+    this.filterBtns.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    this.currentFilter = btn.dataset.type;
+    this._applyFilter();
+  }
+
+  _applyFilter() {
+    this.allCards.forEach((card) => {
+      const cardType = card.dataset.type;
+      const shouldShow =
+        this.currentFilter === "all" || cardType === this.currentFilter;
+
+      if (shouldShow) {
+        utils.show(card);
+        card.style.animation = "fadeInUp 0.6s ease";
+      } else {
+        utils.hide(card);
+      }
+    });
   }
 }
 
@@ -346,12 +274,14 @@ const navbar = {
       const open = nav.classList.toggle("navbar__nav--open");
       burger.setAttribute("aria-expanded", open);
     });
+
     document.addEventListener("click", (e) => {
       if (!burger.contains(e.target) && !nav.contains(e.target)) {
         nav.classList.remove("navbar__nav--open");
         burger.setAttribute("aria-expanded", "false");
       }
     });
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && nav.classList.contains("navbar__nav--open")) {
         nav.classList.remove("navbar__nav--open");
@@ -390,34 +320,49 @@ const contactForm = {
   init() {
     const form = document.getElementById("contactForm");
     if (!form) return;
+
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       this._handleSubmit(form);
     });
+
     form.querySelectorAll("input,textarea,select").forEach((field) => {
       field.addEventListener("blur", () => this._validateField(field));
       field.addEventListener("input", () => this._clearFieldError(field));
     });
+
     this._prefillSubject();
   },
 
   _validateField(field) {
     const val = field.value.trim();
     let msg = "";
-    if (field.hasAttribute("required") && !val)
+
+    if (field.hasAttribute("required") && !val) {
       msg = "Ce champ est obligatoire";
-    else if (field.type === "email" && val && !/^[^@]+@[^@]+\.[^@]+$/.test(val))
+    } else if (
+      field.type === "email" &&
+      val &&
+      !/^[^@]+@[^@]+\.[^@]+$/.test(val)
+    ) {
       msg = "Email invalide";
-    else if (field.name === "message" && val.length && val.length < 20)
+    } else if (field.name === "message" && val.length && val.length < 20) {
       msg = "Au moins 20 caractères";
-    if (msg) this._showError(field, msg);
-    else this._clearFieldError(field);
+    }
+
+    if (msg) {
+      this._showError(field, msg);
+    } else {
+      this._clearFieldError(field);
+    }
+
     return !msg;
   },
 
   _showError(field, msg) {
     field.classList.add("error");
     field.setAttribute("aria-invalid", "true");
+
     let err = document.getElementById(field.id + "-error");
     if (!err) {
       err = document.createElement("div");
@@ -436,34 +381,27 @@ const contactForm = {
     if (err) err.textContent = "";
   },
 
-  announce(errors) {
-    const a = document.createElement("div");
-    a.role = "alert";
-    a.className = "sr-only";
-    a.textContent = `Le formulaire contient ${errors} erreur${
-      errors > 1 ? "s" : ""
-    }.`;
-    document.body.appendChild(a);
-    setTimeout(() => a.remove(), 3000);
-  },
-
   async _handleSubmit(form) {
     let errs = 0;
     form.querySelectorAll("input,textarea,select").forEach((f) => {
       if (!this._validateField(f)) errs++;
     });
+
     if (errs) {
-      this.announce(errs);
       form.querySelector(".error")?.focus();
       return;
     }
+
     const btn = form.querySelector('button[type="submit"]');
     const orig = btn.textContent;
     btn.textContent = "Envoi en cours...";
     btn.disabled = true;
+
     await utils.delay(2000);
+
     btn.textContent = "✓ Message envoyé !";
     btn.style.background = "#2ecc71";
+
     setTimeout(() => {
       form.reset();
       btn.textContent = orig;
@@ -476,70 +414,158 @@ const contactForm = {
     const sujet = utils.getUrlParam("sujet");
     if (!sujet) return;
     const sel = document.getElementById("sujet");
-    if (sel && sel.querySelector(`option[value="${sujet}"]`)) sel.value = sujet;
-  },
-};
-
-const articleDetail = {
-  init(dataMap) {
-    const hero = document.querySelector(".article-hero");
-    if (!hero) return;
-    const id = utils.getUrlParam("id");
-    if (!id || !dataMap[id]) return (window.location.href = "articles.html");
-    const art = dataMap[id];
-    document.title = `${art.title} - Copro Academy`;
-    document.getElementById("article-category").textContent = art.category;
-    document.getElementById("article-date").textContent = utils.formatDate(
-      art.date
-    );
-    document.getElementById("article-title").textContent = art.title;
-    document.getElementById("article-summary").textContent = art.summary;
-    document.getElementById("article-author").textContent = art.author;
-    document.getElementById("reading-time").textContent = art.readingTime;
-    document.querySelectorAll(".share-btn").forEach((btn) =>
-      btn.addEventListener("click", () => {
-        if (navigator.share)
-          navigator.share({ title: document.title, url: window.location.href });
-        else
-          navigator.clipboard
-            .writeText(window.location.href)
-            .then(() => alert("Lien copié !"));
-      })
-    );
+    if (sel && sel.querySelector(`option[value="${sujet}"]`)) {
+      sel.value = sujet;
+    }
   },
 };
 
 // ===================================
-// INITIALIZATION - CORRIGÉE
+// INITIALIZATION
 // ===================================
 document.addEventListener("DOMContentLoaded", () => {
-  // Carousel dynamique avec exemple d'images
-  const carouselImages = [
-    {
-      src: "assets/collegues-de-taille-moyenne-apprenant.jpg",
-      alt: "Copropriété moderne",
-      caption: "Gestion moderne de copropriété",
-    },
-    {
-      src: "assets/agent-immobilier-masculin-faisant-des-affaires-et-montrant-la-maison-a-un-couple-d-acheteurs-potentiels.jpg",
-      alt: "Assemblée générale",
-      caption: "Assemblées générales efficaces",
-    },
-    {
-      src: "assets/tenir-la-cle-a-la-main-a-l-exterieur.jpg",
-      alt: "Maintenance",
-      caption: "Maintenance préventive",
-    },
-  ];
-
-  new Carousel("#carouselTrack", {
-    images: carouselImages,
-    interval: 5000,
-  });
-
+  // Initialiser tous les composants
+  new HeroCarousel();
   navbar.init();
   newsletter.init();
   contactForm.init();
   new ArticlesPage();
-  articleDetail.init(window.articlesData || {});
+  new FormationsPage();
+  new TableOfContents(); // ← Ajouter cette ligne
+
+  console.log("Copro Academy: Tous les composants initialisés");
 });
+// ===================================
+// TABLE OF CONTENTS - ACTIVE TRACKING
+// ===================================
+// ===================================
+// TABLE OF CONTENTS - ACTIVE TRACKING CORRIGÉ
+// ===================================
+class TableOfContents {
+  constructor() {
+    this.toc = document.querySelector(".table-of-contents, .toc");
+    this.tocLinks = document.querySelectorAll(
+      ".table-of-contents a, .toc__link"
+    );
+    // Chercher les sections avec ID au lieu des h2[id]
+    this.sections = document.querySelectorAll(
+      "section[id], .article-body section[id], .content-main section[id]"
+    );
+
+    if (!this.toc || this.tocLinks.length === 0 || this.sections.length === 0)
+      return;
+
+    this.currentActiveLink = null;
+    this.init();
+  }
+
+  init() {
+    // Utiliser IntersectionObserver pour de meilleures performances
+    this.setupIntersectionObserver();
+
+    // Click handlers pour smooth scroll
+    this.tocLinks.forEach((link) => {
+      link.addEventListener("click", (e) => this.handleTocClick(e));
+    });
+
+    console.log("TOC initialized with", this.sections.length, "sections");
+  }
+
+  setupIntersectionObserver() {
+    // Options pour l'IntersectionObserver
+    const options = {
+      root: null,
+      rootMargin: "-20% 0px -35% 0px", // Zone de détection
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    };
+
+    // Callback pour l'intersection
+    const callback = (entries) => {
+      // Trier les entrées par position verticale
+      const visibleSections = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => {
+          return a.boundingClientRect.top - b.boundingClientRect.top;
+        });
+
+      // Prendre la première section visible
+      if (visibleSections.length > 0) {
+        const activeSection = visibleSections[0].target;
+        this.setActiveSection(activeSection.id);
+      }
+    };
+
+    // Créer l'observer
+    this.observer = new IntersectionObserver(callback, options);
+
+    // Observer toutes les sections
+    this.sections.forEach((section) => {
+      this.observer.observe(section);
+    });
+  }
+
+  setActiveSection(sectionId) {
+    // Trouver le lien correspondant à cette section
+    const targetLink = document.querySelector(`a[href="#${sectionId}"]`);
+
+    if (targetLink && targetLink !== this.currentActiveLink) {
+      // Retirer l'ancienne classe active
+      if (this.currentActiveLink) {
+        this.currentActiveLink.classList.remove("active", "toc__link--active");
+      }
+
+      // Ajouter la nouvelle classe active
+      targetLink.classList.add("active", "toc__link--active");
+      this.currentActiveLink = targetLink;
+
+      // Scroll TOC si nécessaire
+      this.scrollTocToActiveLink(targetLink);
+
+      console.log("Active section:", sectionId);
+    }
+  }
+
+  handleTocClick(e) {
+    e.preventDefault();
+    const href = e.target.getAttribute("href");
+
+    if (href && href.startsWith("#")) {
+      const targetElement = document.querySelector(href);
+      if (targetElement) {
+        // Calculer la position avec offset pour le header fixe
+        const headerOffset = 120;
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }
+  }
+
+  scrollTocToActiveLink(activeLink) {
+    if (!this.toc || this.toc.scrollHeight <= this.toc.clientHeight) return;
+
+    const tocRect = this.toc.getBoundingClientRect();
+    const linkRect = activeLink.getBoundingClientRect();
+    const relativeTop = linkRect.top - tocRect.top;
+
+    // Scroll si le lien est en dehors de la zone visible
+    if (relativeTop < 50 || relativeTop > tocRect.height - 100) {
+      this.toc.scrollTo({
+        top: this.toc.scrollTop + relativeTop - tocRect.height / 2,
+        behavior: "smooth",
+      });
+    }
+  }
+
+  // Méthode de nettoyage
+  destroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+}

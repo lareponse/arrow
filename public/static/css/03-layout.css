@@ -6,7 +6,7 @@
 /* Container */
 .container {
   max-width: var(--container-width);
-  margin: 0 auto;
+  margin: var(--space-xl) auto 0 auto; /* Changé pour centrer */
   padding: 0 var(--space-md);
 }
 

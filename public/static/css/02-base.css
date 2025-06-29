@@ -48,7 +48,7 @@ h4,
 h5,
 h6 {
   color: var(--color-primary);
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
 }
 
 p {
@@ -58,7 +58,8 @@ p {
 
 /* Links */
 a {
-  color: var(--color-primary);
+  color: var(--color-white);
+
   transition: color var(--transition-fast);
 }
 
