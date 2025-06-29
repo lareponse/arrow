@@ -45,7 +45,7 @@ DROP TABLE IF EXISTS operator;
 CREATE TABLE operator (
     id              INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     label           VARCHAR(255) NOT NULL,
-    email           VARCHAR(255) NOT NULL,
+    username        VARCHAR(255) NOT NULL,
     password_hash   VARCHAR(255) NOT NULL,
     status          TINYINT NULL DEFAULT NULL, -- null inactive, 1: active, 0: suspended
     -- status          ENUM('active','inactive','suspended') NOT NULL DEFAULT 'active',
@@ -94,7 +94,7 @@ CREATE TABLE event (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     slug VARCHAR(205) NOT NULL,
     label VARCHAR(200) NOT NULL,
-    description TEXT NOT NULL,
+    content TEXT NOT NULL,
     category_id INT UNSIGNED NOT NULL,
     event_date DATETIME NOT NULL,
     duration_minutes SMALLINT UNSIGNED NOT NULL,
@@ -112,7 +112,7 @@ CREATE TABLE training (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     slug VARCHAR(205) NOT NULL,
     label VARCHAR(200) NOT NULL,
-    description TEXT NOT NULL,
+    content TEXT NOT NULL,
     level_id INT UNSIGNED NOT NULL,
     duration_days SMALLINT UNSIGNED NOT NULL,
     duration_hours SMALLINT UNSIGNED NOT NULL,
@@ -132,11 +132,11 @@ CREATE TABLE training_program (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     slug VARCHAR(155) NOT NULL,
     label VARCHAR(150) NOT NULL,
+    content TEXT NULL,
     training_id INT UNSIGNED NOT NULL,
     day_number SMALLINT UNSIGNED NOT NULL,
     time_start TIME NOT NULL,
     time_end TIME NOT NULL,
-    description TEXT NULL,
     objectives TEXT NULL
 ) ENGINE=InnoDB;
 
@@ -145,11 +145,11 @@ DROP TABLE IF EXISTS contact_request;
 CREATE TABLE contact_request (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     label VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL,
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NULL,
     company VARCHAR(100) NULL,
     subject_id INT UNSIGNED NOT NULL,
-    message TEXT NOT NULL,
     consent BOOLEAN NOT NULL,
     status_id INT UNSIGNED NOT NULL
 ) ENGINE=InnoDB;
@@ -250,8 +250,8 @@ ALTER TABLE operator_session
 -- 3. DATA CONSTRAINTS
 -- ===============================================
 ALTER TABLE operator
-    ADD CONSTRAINT operator_uk_email
-        UNIQUE (email);
+    ADD CONSTRAINT operator_uk_username
+        UNIQUE (username);
 
 ALTER TABLE taxonomy
     ADD CONSTRAINT taxonomy_uk_slug_per_parent
