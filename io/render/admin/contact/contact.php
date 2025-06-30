@@ -15,7 +15,7 @@
     </nav>
 </section>
 
-<?php if (empty($contacts)): ?>
+<?php if (empty($contact_requests)): ?>
     <div class="panel empty-state">
         <p>Aucune demande de contact trouvée.</p>
     </div>
@@ -32,7 +32,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($contacts as $contact): ?>
+                <?php foreach ($contact_requests as $contact): ?>
                     <tr>
                         <td>
                             <strong><?= htmlspecialchars($contact['label']) ?></strong><br>
