@@ -1,10 +1,10 @@
 <!-- Hero Section avec Carousel -->
 <section class="hero wide" aria-label="Présentation principale">
-    <img src="/static/assets/collegues-de-taille-moyenne-apprenant.jpg" class="hero__image hero__image--active"
+    <img src="/static/assets/collegues-de-taille-moyenne-apprenant.webp" class="hero__image hero__image--active"
         alt="Formation en gestion de copropriété" loading="eager">
-    <img src="/static/assets/agent-immobilier-masculin-faisant-des-affaires-et-montrant-la-maison-a-un-couple-d-acheteurs-potentiels.jpg"
+    <img src="/static/assets/agent-immobilier-masculin-faisant-des-affaires-et-montrant-la-maison-a-un-couple-d-acheteurs-potentiels.webp"
         class="hero__image" alt="Agent immobilier" loading="lazy">
-    <img src="/static/assets/tenir-la-cle-a-la-main-a-l-exterieur.jpg" class="hero__image" alt="Clés de propriété"
+    <img src="/static/assets/tenir-la-cle-a-la-main-a-l-exterieur.webp" class="hero__image" alt="Clés de propriété"
         loading="lazy">
 
     <div class="hero__overlay" aria-hidden="true"></div>
@@ -30,7 +30,7 @@
     <div class="grid grid-cols-auto gap-xl">
         <?php foreach ($service as $item) : ?>
             <article class="card">
-                <img src="<?= $item['image'] ?? '/static/assets/hero.jpeg' ?>" alt="<?= $item['label'] ?? 'Service' ?>"
+                <img src="<?= $item['image'] ?? '/static/assets/hero.webp' ?>" alt="<?= $item['label'] ?? 'Service' ?>"
                     loading="lazy" class="card__image">
                 <div class="card__body">
                     <h3 class="card__title"><?= $item['label'] ?? 'Service' ?></h3>
@@ -53,7 +53,7 @@
                     <div class="badge badge--error" style="position: absolute; top: 1rem; right: 1rem; z-index: 1;">À la
                         une</div>
                 <?php endif; ?>
-                <img src="<?= $article['avatar'] ?: '/static/assets/hero.jpeg' ?>" alt="Nouvelle réglementation copropriété 2025" loading="lazy"
+                <img src="<?= $article['avatar'] ?: '/static/assets/hero.webp' ?>" alt="Nouvelle réglementation copropriété 2025" loading="lazy"
                     class="card__image">
                 <div class="card__body">
                     <div class="article-meta">

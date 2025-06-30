@@ -39,7 +39,7 @@
 
     <!-- Image principale -->
     <figure class="article-hero-image">
-        <img src="/static/assets/hero.jpeg" alt="Assemblée générale de copropriété discutant des nouvelles charges"
+        <img src="/static/assets/hero.webp" alt="Assemblée générale de copropriété discutant des nouvelles charges"
             width="800" height="400">
         <figcaption>Réunion d'information sur les nouvelles modalités de répartition des charges</figcaption>
     </figure>
@@ -278,7 +278,7 @@
         <h2 id="related-title">Articles similaires</h2>
         <div class="related-grid">
             <article class="related-card">
-                <img src="/static/assets/hero.jpeg" alt="Guide assemblée générale" width="200" height="120">
+                <img src="/static/assets/hero.webp" alt="Guide assemblée générale" width="200" height="120">
                 <div class="related-content">
                     <h3>Guide pratique : Organiser une assemblée générale</h3>
                     <p>Méthodologie complète pour une AG réussie</p>
@@ -287,7 +287,7 @@
             </article>
 
             <article class="related-card">
-                <img src="/static/assets/hero.jpeg" alt="Digitalisation copropriété" width="200" height="120">
+                <img src="/static/assets/hero.webp" alt="Digitalisation copropriété" width="200" height="120">
                 <div class="related-content">
                     <h3>La digitalisation au service de la copropriété</h3>
                     <p>Outils numériques et automatisation</p>
@@ -296,7 +296,7 @@
             </article>
 
             <article class="related-card">
-                <img src="/static/assets/hero.jpeg" alt="Responsabilité syndic" width="200" height="120">
+                <img src="/static/assets/hero.webp" alt="Responsabilité syndic" width="200" height="120">
                 <div class="related-content">
                     <h3>Responsabilité du syndic : cadre légal</h3>
                     <p>Obligations et bonnes pratiques</p>

@@ -38,7 +38,7 @@ $level_to_class = function ($slug) {
         <?php foreach ($formation as $item): ?>
             <!-- Formation 1 -->
             <article class="card formation-card" data-type="<?= $item['level_slug'] ?? '' ?>" data-level="<?= $item['level_label'] ?? '' ?>">
-                <img src="<?= $item['avatar'] ?? '/static/assets/hero.jpeg' ?>" alt="Formation introduction à la gestion de copropriété" loading="lazy"
+                <img src="<?= $item['avatar'] ?? '/static/assets/hero.webp' ?>" alt="Formation introduction à la gestion de copropriété" loading="lazy"
                     class="card__image">
                 <div class="card__body">
 

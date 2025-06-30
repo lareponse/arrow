@@ -48,7 +48,7 @@
 
     <!-- Image principale -->
     <figure class="formation-hero-image">
-        <img src="/static/assets/hero.jpeg" alt="Formation en gestion de copropriété" width="1200" height="400">
+        <img src="/static/assets/hero.webp" alt="Formation en gestion de copropriété" width="1200" height="400">
         <figcaption><?= $training['label'] ?? 'Titre de formation'; ?></figcaption>
     </figure>
 

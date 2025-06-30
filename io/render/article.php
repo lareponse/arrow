@@ -48,7 +48,7 @@
                         <div class="article-badge webinar-badge">Webinaire</div>
                     <?php endif; ?>
 
-                    <img src="<?= $item['avatar'] ?? '/static/assets/hero.jpeg' ?>" alt="<?= e($item, 'title') ?>" loading="lazy">
+                    <img src="<?= $item['avatar'] ?? '/static/assets/hero.webp' ?>" alt="<?= e($item, 'title') ?>" loading="lazy">
                     <div class="card-content">
                         <div class="article-meta">
                             <span class="article-category"><?= e($item, 'category_label') ?></span>
