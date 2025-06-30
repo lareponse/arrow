@@ -11,12 +11,15 @@ require 'add/bad/auth.php';
 require 'app/morph/html.php';
 
 
-// dbq(db(),"INSERT INTO operator (label, email, password_hash, status) VALUES (?, ?, ?, 1)",['jp', 'admin@domain.com', password_hash('jp', PASSWORD_DEFAULT)]);
+// vd(dbq(db(),"INSERT INTO operator (label, username, password_hash, status) VALUES (?, ?, ?, 1)",['jp', 'jp', password_hash('jp', PASSWORD_DEFAULT)]));die;
 try {
     auth(AUTH_SETUP, 'operator.username', "SELECT `password_hash` FROM `operator` WHERE `username` = ?");
 
     $io         = realpath(__DIR__ . '/../io');
     $re_quest   = http_in(4096, 9);
+
+    if(strpos($re_quest, '/admin') === 0)
+        auth(AUTH_GUARD);
 
     // coding: find the route and invoke it
     $in_route   = io_route("$io/route", $re_quest, 'index');
