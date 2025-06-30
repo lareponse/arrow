@@ -161,6 +161,30 @@
    MASONRY LAYOUT - CSS ONLY
    =================================== */
 
+.masonry {
+  column-count: 1;
+  column-gap: 1.3rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) { .masonry { column-count: 2; } }
+@media (min-width: 1024px) { .masonry { column-count: 3; } }
+
+.card {
+  break-inside: avoid;
+  margin-bottom: 20px;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Height variations for visual interest */
+.card:nth-child(5n+1) .card img { height: 120px; }
+.card:nth-child(5n+2) .card img { height: 180px; }
+.card:nth-child(5n+3) .card img { height: 150px; }
+.card:nth-child(5n+4) .card img { height: 200px; }
+.card:nth-child(5n+5) .card img { height: 160px; }
+
+/*
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -173,7 +197,7 @@
 }
 
 /* Hauteurs automatiques basées sur les classes existantes du HTML */
-.grid-container .card {
+/*.grid-container .card {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -186,7 +210,7 @@
 }
 
 /* Gestion des tailles avec les classes du HTML */
-.grid-container .card-small {
+/*.grid-container .card-small {
   grid-row: span 45;
 }
 
@@ -203,12 +227,10 @@
   grid-row: span 35;
 }
 
-/* Pour les cartes avec badge featured */
 .grid-container .card.featured {
   grid-row: span 45;
 }
 
-/* Ajustements automatiques pour le contenu */
 .grid-container .card img {
   width: 100%;
   height: 180px;
@@ -253,8 +275,30 @@
 /* ===================================
      VUE LISTE - CSS ONLY
      =================================== */
+/* List View */
+.masonry.list-view {
+  grid-template-columns: 1fr;
+  column-count: 1;
+  grid-auto-rows: auto;
+}
 
-.grid-container.list-view {
+.masonry.list-view .card {
+  flex-direction: row;
+  grid-row: span 1;
+  grid-column: span 1;
+}
+
+.masonry.list-view .card img {
+  width: 200px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.masonry.list-view .card-content {
+  padding: 15px 20px;
+}
+
+.masonry.list-view {
   display: block;
   grid-template-columns: none;
   grid-template-rows: none;
@@ -263,7 +307,7 @@
   padding: 0 var(--space-xl);
 }
 
-.grid-container.list-view .card {
+.masonry.list-view .card {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -274,48 +318,50 @@
   grid-row: auto;
 }
 
-.grid-container.list-view .card img {
+.masonry.list-view .card img {
   width: 250px;
-  height: 100%;
+  height: auto;
   flex-shrink: 0;
   object-fit: cover;
+  border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
 }
 
-.grid-container.list-view .card-content {
+.masonry.list-view .card-content {
   flex: 1;
   padding: 1rem;
   justify-content: flex-start;
 }
 
-.grid-container.list-view .article-meta {
+.masonry.list-view .article-meta {
   flex-direction: column !important;
   align-items: flex-start !important;
   gap: 0.25rem;
   margin-bottom: 0.5rem;
 }
 
-.grid-container.list-view .article-meta .article-category {
+.masonry.list-view .article-meta .article-category {
   font-size: 0.75rem;
   padding: 0.15rem 0.5rem;
 }
 
-.grid-container.list-view .article-meta time {
+.masonry.list-view .article-meta time {
   font-size: 0.8rem;
   color: var(--color-gray-500);
 }
 
-.grid-container.list-view .article-tags,
-.grid-container.list-view .event-details,
-.grid-container.list-view .article-summary {
+.masonry.list-view .article-tags,
+.masonry.list-view .event-details,
+.masonry.list-view .article-summary {
   display: none;
 }
 
-.grid-container.list-view .card-content h3 {
+.masonry.list-view .card-content h3 {
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
-.grid-container.list-view .card-content p {
+.masonry.list-view .card-content p {
   font-size: 0.85rem;
   line-height: 1.4;
   margin-bottom: 0.5rem;
@@ -362,19 +408,29 @@
   }
 
   /* Vue liste sur mobile */
-  .grid-container.list-view .card {
+  .masonry.list-view .card {
     flex-direction: column;
     max-height: none;
     min-height: auto;
   }
 
-  .grid-container.list-view .card img {
+  .masonry.list-view .card img {
     width: 100%;
     height: 180px;
   }
 
-  .grid-container.list-view .card-content {
+  .masonry.list-view .card-content {
     padding: 1rem;
+  }
+
+
+  .masonry.list-view .card {
+    flex-direction: column;
+  }
+
+  .masonry.list-view .card img {
+    width: 100%;
+    height: 150px;
   }
 }
 
@@ -470,7 +526,7 @@
 }
 
 .articles-section {
-  padding: 0 var(--space-xl);
+  /* padding: 0 var(--space-xl); */
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
@@ -1337,12 +1393,12 @@
     gap: 10px;
   }
 
-  .grid-container.list-view .card {
+  .masonry.list-view .card {
     flex-direction: column;
     max-height: none;
   }
 
-  .grid-container.list-view .card img {
+  .masonry.list-view .card img {
     width: 100%;
     height: 180px;
   }

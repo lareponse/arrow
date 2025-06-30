@@ -246,12 +246,12 @@
   transition: all var(--transition-fast);
 }
 
-.checkbox__input:checked + .checkbox__mark {
+.checkbox__input:checked+.checkbox__mark {
   background: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-.checkbox__input:checked + .checkbox__mark::after {
+.checkbox__input:checked+.checkbox__mark::after {
   content: "✓";
   position: absolute;
   color: var(--color-white);
@@ -282,18 +282,22 @@
   background: var(--color-primary);
   color: var(--color-white);
 }
+
 .badge--success {
   background: var(--color-success);
   color: var(--color-white);
 }
+
 .badge--warning {
   background: var(--color-warning);
   color: var(--color-white);
 }
+
 .badge--error {
   background: var(--color-error);
   color: var(--color-white);
 }
+
 .badge--purple {
   background: var(--color-purple);
   color: var(--color-white);
@@ -403,11 +407,9 @@
 
 /* Footer */
 .footer {
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-primary-light)
-  );
+  background: linear-gradient(135deg,
+      var(--color-primary),
+      var(--color-primary-light));
   color: var(--color-white);
   padding: var(--space-3xl) var(--space-lg) var(--space-md);
   margin-top: var(--space-3xl);
@@ -534,6 +536,7 @@
     opacity: 0;
     transform: translateY(-5px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -610,6 +613,8 @@
   height: 150px;
   object-fit: cover;
   border-bottom: 1px solid #eee;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .card-content {
@@ -701,27 +706,6 @@
   border-color: var(--color-primary, #2563eb);
 }
 
-/* List View */
-.grid-container.list-view {
-  grid-template-columns: 1fr;
-  grid-auto-rows: auto;
-}
-
-.grid-container.list-view .card {
-  flex-direction: row;
-  grid-row: span 1;
-  grid-column: span 1;
-}
-
-.grid-container.list-view .card img {
-  width: 200px;
-  height: 120px;
-  flex-shrink: 0;
-}
-
-.grid-container.list-view .card-content {
-  padding: 15px 20px;
-}
 
 /* Load More Button */
 .load-more {
@@ -751,6 +735,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -771,6 +756,7 @@
     grid-row: span 1;
   }
 
+  /* 
   .grid-container.list-view .card {
     flex-direction: column;
   }
@@ -778,7 +764,7 @@
   .grid-container.list-view .card img {
     width: 100%;
     height: 150px;
-  }
+  } */
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -800,9 +786,11 @@
     grid-column: span 2;
   }
 }
+
 .full-width-section {
   width: 100%;
-  padding: 4rem 0; /* ajuster si besoin */
+  padding: 4rem 0;
+  /* ajuster si besoin */
 }
 
 .formation-benefits-content,
