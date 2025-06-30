@@ -76,7 +76,8 @@
     </div>
 </section>
 
-<?php include __DIR__ . '/_program_schedule.php'; ?>
+<?php
+include __DIR__ . '/_program_schedule.php'; ?>
 
 <?php
 return function ($this_html, $args = []) {

@@ -4,8 +4,7 @@ require_once 'add/bad/dad/arrow.php';
 return function ($args = null) {
     [$training_slug, $session_id] = $args;
     $training = row(db(), 'training');
-    $training = $training(ROW_LOAD, ['slug' => $training_slug, 'revoked_at' => null]);
-
+    $training = $training(ROW_LOAD | ROW_GET, ['slug' => $training_slug, 'revoked_at' => null]);
     if (!$training) {
         http_out(302, '', ['Location' => '/admin/training', 'X-Message' => 'Training not found']);
     }
@@ -19,7 +18,7 @@ return function ($args = null) {
     }
 
     $session = $session(ROW_GET);
-
+    
     $training_id = $training['id'];
     // Get all sessions grouped by day
     $sessions = dbq(db(), "
@@ -47,7 +46,7 @@ return function ($args = null) {
     }
     return [
         'title' => "Programme - {$training['label']}",
-        'training' => $training,
+        'training' => ($training),
         'program_by_day' => $all_days,
         'sessions' => $sessions,
         'total_duration' => round($total_duration / 60, 1), // hours

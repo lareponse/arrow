@@ -2,7 +2,7 @@
 require_once 'add/bad/dad/arrow.php';
 
 return function ($args = []) {
-    $training = row(db(), 'training')(ROW_LOAD, ['slug' => $args[0], 'revoked_at' => null]);
+    $training = row(db(), 'training')(ROW_LOAD|ROW_GET, ['slug' => $args[0], 'revoked_at' => null]);
     $training_id = $training['id'];
     if (!$training_id) {
         http_out(404, 'Training ID required');

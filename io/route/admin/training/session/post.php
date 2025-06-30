@@ -7,7 +7,6 @@ return function (array $training, callable $session) {
     // Handle form submission (create/update session)
     $session = row(db(), 'training_program');
     $is_edit = !empty($_POST['id']);
-    vd(1,$is_edit, $_POST);die;
     if ($is_edit) {
         $session(ROW_LOAD, ['id' => (int)$_POST['id']]);
         if (!$session(ROW_GET) || $session(ROW_GET, ['training_id']) != $training['id']) {
