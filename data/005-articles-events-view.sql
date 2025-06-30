@@ -6,6 +6,7 @@ CREATE OR REPLACE VIEW articles_events AS
     id,
     slug,
     label,
+    enabled_at,
 
     -- shared fields
     category_id,
@@ -35,7 +36,7 @@ UNION ALL
     id,
     slug,
     label,
-
+    enabled_at,
     -- shared fields
     category_id,
     avatar,
