@@ -34,7 +34,7 @@ $user = auth();
             </nav>
         </div>
         <div class="admin-user">
-            <span><?= htmlspecialchars($user) ?></span>
+            <span><?= htmlspecialchars(auth()) ?></span>
             <a href="/logout">Déconnexion</a>
         </div>
     </header>

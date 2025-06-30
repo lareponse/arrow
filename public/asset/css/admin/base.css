@@ -14,3 +14,9 @@ body {
     color: var(--text-dark);
     background: var(--background-light);
 }
+
+a {
+    color: var(--primary-blue);
+    margin-block-end: var(--space-xs);
+    text-decoration: none;
+}

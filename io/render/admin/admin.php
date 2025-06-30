@@ -54,8 +54,8 @@ $statTypes = [
                         <th>Contact</th>
                         <th>Statut</th>
                         <th>Sujet</th>
-                        <th>Date</th>
                         <th>Email</th>
+                        <th>Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,8 +64,8 @@ $statTypes = [
                             <td><a href="/admin/contact/view/<?= $contact['id'] ?>"><?= htmlspecialchars($contact['label'] ?? '') ?></a></td>
                             <td><span class="status <?= $contact['status'] ?>"><?= htmlspecialchars($contact['status_label'] ?? '') ?></span></td>
                             <td><?= htmlspecialchars($contact['subject_label'] ?? '') ?></td>
-                            <td><time datetime="<?= $contact['created_at'] ?>"><?= $contact['created_at'] ?></time></td>
                             <td><?= htmlspecialchars($contact['email'] ?? '') ?></td>
+                            <td><time datetime="<?= $contact['created_at'] ?>"><?= $contact['created_at'] ?></time></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -82,24 +82,30 @@ $statTypes = [
         <?php if (empty($recent['events'])): ?>
             <p class="panel empty-state">Aucun événement programmé</p>
         <?php else: ?>
-            <ol class="panel events-list">
-                <?php foreach ($recent['events'] as $event): ?>
-                    <li class="dashboard-item">
-                        <h3>
-                            <a href="/admin/event/alter/<?= $event['id'] ?>">
-                                <?= htmlspecialchars($event['label']) ?>
-                            </a>
-                            <span class="event-category"><?= ucfirst($event['category']) ?></span>
-                        </h3>
-                        <time datetime="<?= $event['event_date'] ?>"><?= $event['event_date'] ?></time>
-                        <?php if ($event['places_max']): ?>
-                            <span class="places"><?= $event['bookings_count'] ?>/<?= $event['places_max'] ?> places</span>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ol>
+            <table class="panel table events-list">
+                <thead>
+                    <tr>
+                        <th>Événement</th>
+                        <th>Catégorie</th>
+                        <th>Places</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($recent['events'] as $e): ?>
+                        <tr class="dashboard-item">
+                            <td><a href="/admin/event/alter/<?= $e['id'] ?>"><?= htmlspecialchars($e['label']) ?></a></td>
+                            <td><span class="event-category"><?= ucfirst(htmlspecialchars($e['category_label'])) ?></span></td>
+                            <td><?= $e['places_max'] ? "{$e['bookings_count']}/{$e['places_max']} places" : '&mdash;' ?></td>
+                            <td><time datetime="<?= $e['event_date'] ?>"><?= $e['event_date'] ?></time></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
         <?php endif; ?>
     </section>
+
 </section>
 
 <section class="quick-actions" aria-labelledby="actions-heading">
