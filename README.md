@@ -14,7 +14,7 @@ The system follows a multi-tiered architecture with distinct separation between 
 - Frontend components are SSR, with interactive non obstrusive improvements in vanilla JS
 
 ### 2.2. Tech stack
-- Using BADDAD framework
+- Using BADHAT framework
 
 ## 3. Component Breakdown
 

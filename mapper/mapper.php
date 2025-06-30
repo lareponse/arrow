@@ -6,7 +6,7 @@ require_once 'add/bad/db.php';
 require_once 'add/bad/dad/qb.php';
 
 /**
- * Schema-aware CRUD mapper for BADDAD
+ * Schema-aware CRUD mapper for BADHAT
  * Expect success, let database handle constraints
  */
 

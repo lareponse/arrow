@@ -114,7 +114,7 @@
             <div class="flex justify-center gap-lg flex-wrap mt-sm">
                 <span>Email : <a href="mailto:CoproAcademy@contact.be">CoproAcademy@contact.be</a></span>
                 <span>Téléphone : <a href="tel:+32510080001">+32 510 08 00 01</a></span>
-                <span>Adresse :<?= $coproacademy['adresse'] ?? 'Cette information est indisponible' ?></span>
+                <span>Adresse : <?= $coproacademy['adresse'] ?? 'Cette information est indisponible' ?></span>
 
             </div>
             <p>&copy; 2025 Copro Academy - Tous droits réservés</p>
