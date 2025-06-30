@@ -116,11 +116,7 @@ function map_delete(string $table, mixed $id, bool $soft = true): int
 
 function map_list(string $table, array $conditions = [], array $options = []): array
 {
-    $options += ['limit' => null, 'offset' => 0, 'order' => 'created_at DESC', 'include_revoked' => false];
-
-    if (!$options['include_revoked']) {
-        $conditions['revoked_at'] = null;
-    }
+    $options += ['limit' => null, 'offset' => 0, 'order' => 'created_at DESC'];
 
     [$where_sql, $where_binds] = qb_where($conditions);
 
@@ -128,7 +124,7 @@ function map_list(string $table, array $conditions = [], array $options = []): a
     if ($options['order']) $sql .= " ORDER BY {$options['order']}";
     if ($options['limit']) $sql .= " LIMIT {$options['limit']} OFFSET {$options['offset']}";
 
-    return dbq(db(), $sql, $where_binds)->fetchAll();
+    return dbq(db(), ($sql), $where_binds)->fetchAll();
 }
 
 function map_publish(string $table, mixed $id, ?string $when = null): int
