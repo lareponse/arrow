@@ -17,7 +17,7 @@
     <link rel="icon" type="image/png" href="/static/assets/base/icon/base_icon_transparent_background.png">
 
     <!-- Modular CSS -->
-    <?= $prepend_css ?: '' ?>
+    <?= $prepend_css ?? '' ?>
     <link rel="stylesheet" href="/static/css/00-reset.css">
     <link rel="stylesheet" href="/static/css/01-variables.css">
     <link rel="stylesheet" href="/static/css/02-base.css">
@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="/static/css/04-components.css">
     <link rel="stylesheet" href="/static/css/05-utilities.css">
     <link rel="stylesheet" href="/static/css/06-pages.css">
-    <?= $append_css ?: '' ?>
+    <?= $append_css ?? '' ?>
 </head>
 
 <body>
@@ -121,9 +121,9 @@
         </div>
     </footer>
 
-    <?= $prepend_js ?: '' ?>
+    <?= $prepend_js ?? '' ?>
     <script src="/static/script.js"></script>
-    <?= $append_js ?: '' ?>
+    <?= $append_js ?? '' ?>
 </body>
 
 </html>
