@@ -26,7 +26,7 @@ CREATE OR REPLACE VIEW articles_events AS
     NULL          AS speaker,
     NULL          AS location,
     NULL          AS online
-  FROM article_with_cateogry
+  FROM article_plus
 
 UNION ALL
 

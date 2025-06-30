@@ -9,7 +9,7 @@ return function ($args = null) {
     $queries = [
         'faq'              => "SELECT label, content FROM faq ORDER BY sort_order",
         'service'          => "SELECT * FROM service ORDER BY sort_order",
-        'recent_articles'   => "SELECT * FROM article_with_cateogry WHERE enabled_at<=NOW() ORDER BY featured DESC, enabled_at DESC LIMIT 3",
+        'recent_articles'   => "SELECT * FROM article_plus WHERE enabled_at<=NOW() ORDER BY featured DESC, enabled_at DESC LIMIT 3",
 
         'hero_slides'       => "SELECT * FROM hero_slide WHERE is_active=1 ORDER BY sort_order",
         'featured_articles' => "SELECT * FROM article WHERE featured=1 AND enabled_at<=NOW() ORDER BY enabled_at DESC LIMIT 3",

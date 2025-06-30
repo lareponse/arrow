@@ -15,8 +15,8 @@ CREATE VIEW taxonomy_with_parent AS
   JOIN taxonomy AS p ON c.parent_id = p.id
 WHERE c.revoked_at IS NULL;
 
-DROP VIEW IF EXISTS article_with_cateogry;
-CREATE VIEW article_with_cateogry AS
+DROP VIEW IF EXISTS article_plus;
+CREATE VIEW article_plus AS
   SELECT
     a.*,
     c.slug      AS category_slug,
