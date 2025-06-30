@@ -368,6 +368,11 @@
 }
 
 /* FAQ */
+section.faq{
+  background: var(--color-gray-50);
+}
+
+
 .faq-item {
   background: var(--color-white);
   border-radius: var(--radius-base);
