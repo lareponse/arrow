@@ -6,10 +6,9 @@ CREATE OR REPLACE VIEW articles_events AS
     id,
     slug,
     label,
-    enabled_at,
-
     -- shared fields
     category_id,
+    category_label,
     avatar,
 
     -- unified date + type
@@ -27,7 +26,7 @@ CREATE OR REPLACE VIEW articles_events AS
     NULL          AS speaker,
     NULL          AS location,
     NULL          AS online
-  FROM article
+  FROM article_with_cateogry
 
 UNION ALL
 
@@ -36,9 +35,9 @@ UNION ALL
     id,
     slug,
     label,
-    enabled_at,
     -- shared fields
     category_id,
+    category_label,
     avatar,
 
     -- unified date + type
@@ -57,4 +56,4 @@ UNION ALL
     speaker,
     location,
     online
-FROM event;
+FROM event_plus;
