@@ -1,10 +1,10 @@
-<main class="formation-detail" id="main-content">
+<div class="page-detail">
     <!-- Breadcrumb -->
     <nav class="breadcrumb" aria-label="Fil d'Ariane">
         <ol>
-            <li><a href="index.html">Accueil</a></li>
-            <li><a href="formation.html">Formations</a></li>
-            <li><span aria-current="page">Introduction à la gestion de copropriété</span></li>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/article">Formations</a></li>
+            <li><span aria-current="page"><?= $training['label'] ?? '' ?></span></li>
         </ol>
     </nav>
 
@@ -173,51 +173,51 @@
             </section>
 
             <!-- Public cible 
-            <section class="formation-audience">
-                <h2>Public cible</h2>
-                <div class="audience-grid">
-                    <div class="audience-item">
-                        <span class="audience-icon">🏢</span>
-                        <h3>Syndics débutants</h3>
-                        <p>Nouveaux professionnels souhaitant maîtriser les fondamentaux</p>
-                    </div>
-                    <div class="audience-item">
-                        <span class="audience-icon">👔</span>
-                        <h3>Gestionnaires immobiliers</h3>
-                        <p>Professionnels élargissant leur champ de compétences</p>
-                    </div>
-                    <div class="audience-item">
-                        <span class="audience-icon">⚖️</span>
-                        <h3>Juristes</h3>
-                        <p>Avocats et notaires spécialisés en droit immobilier</p>
-                    </div>
-                    <div class="audience-item">
-                        <span class="audience-icon">🎓</span>
-                        <h3>Étudiants</h3>
-                        <p>Formation initiale ou continue dans l'immobilier</p>
-                    </div>
+        <section class="formation-audience">
+            <h2>Public cible</h2>
+            <div class="audience-grid">
+                <div class="audience-item">
+                    <span class="audience-icon">🏢</span>
+                    <h3>Syndics débutants</h3>
+                    <p>Nouveaux professionnels souhaitant maîtriser les fondamentaux</p>
                 </div>
-            </section>
+                <div class="audience-item">
+                    <span class="audience-icon">👔</span>
+                    <h3>Gestionnaires immobiliers</h3>
+                    <p>Professionnels élargissant leur champ de compétences</p>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-icon">⚖️</span>
+                    <h3>Juristes</h3>
+                    <p>Avocats et notaires spécialisés en droit immobilier</p>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-icon">🎓</span>
+                    <h3>Étudiants</h3>
+                    <p>Formation initiale ou continue dans l'immobilier</p>
+                </div>
+            </div>
+        </section>
 -->
             <!-- Prérequis 
-            <section class="formation-prerequisites">
-                <h2>Prérequis</h2>
-                <div class="prerequisites-content">
-                    <div class="prerequisite-item">
-                        <span class="icon">✅</span>
-                        <p><strong>Aucun prérequis technique</strong> - Formation accessible à tous</p>
-                    </div>
-                    <div class="prerequisite-item">
-                        <span class="icon">📚</span>
-                        <p><strong>Connaissances de base</strong> en droit ou immobilier recommandées</p>
-                    </div>
-                    <div class="prerequisite-item">
-                        <span class="icon">💻</span>
-                        <p><strong>Matériel fourni</strong> - Support de cours et documentation</p>
-                    </div>
+        <section class="formation-prerequisites">
+            <h2>Prérequis</h2>
+            <div class="prerequisites-content">
+                <div class="prerequisite-item">
+                    <span class="icon">✅</span>
+                    <p><strong>Aucun prérequis technique</strong> - Formation accessible à tous</p>
                 </div>
-            </section>
-            -->
+                <div class="prerequisite-item">
+                    <span class="icon">📚</span>
+                    <p><strong>Connaissances de base</strong> en droit ou immobilier recommandées</p>
+                </div>
+                <div class="prerequisite-item">
+                    <span class="icon">💻</span>
+                    <p><strong>Matériel fourni</strong> - Support de cours et documentation</p>
+                </div>
+            </div>
+        </section>
+        -->
         </div>
 
         <!-- Sidebar -->
@@ -291,9 +291,8 @@
             </div>
         </aside>
     </div>
-
-
-    <?php
-    return function ($this_html, $args = []) {
-        return ob_ret_get('app/io/render/layout.php', ($args ?? []) + ['main' => $this_html])[1];
-    };
+</div>
+<?php
+return function ($this_html, $args = []) {
+    return ob_ret_get('app/io/render/layout.php', ($args ?? []) + ['main' => $this_html])[1];
+};
