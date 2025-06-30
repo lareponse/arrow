@@ -12,6 +12,10 @@ body>main>h1 {
   text-align: center;
 }
 
+/*** ---- LOGIN PAGE ---- ***/
+body>main>section.login {
+  max-width: 30rem;
+}
 /* Skip links - hidden by default */
 .skip-links {
   position: absolute;

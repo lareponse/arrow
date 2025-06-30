@@ -10,22 +10,22 @@
         <form action="/login<?= !empty($redirect) ? '?redirect=' . htmlspecialchars($redirect) : '' ?>" method="post" class="auth-form">
             <?= csrf_field() ?>
             <div class="form-group">
-                <label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label">E-mail :</label>
                 <input type="text" id="username" name="username" class="form-control" required autofocus>
             </div>
 
-            <div class=" form-group">
-                <label for="password" class="form-label">Password</label>
+            <div class="form-group">
+                <label for="password" class="form-label">Mot de passe :</label>
                 <input type="password" id="password" name="password" class="form-control" required>
             </div>
 
             <div class="form-check">
                 <input type="checkbox" id="remember" name="remember" class="form-check-input">
-                <label for="remember" class="form-check-label">Remember me</label>
+                <label for="remember" class="form-check-label">Se souvenir de moi</label>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <button type="submit" class="cta">Se connecter</button>
             </div>
         </form>
     </section>

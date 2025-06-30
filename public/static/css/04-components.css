@@ -188,6 +188,19 @@
 }
 
 /* Form components */
+.form-check{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+.form-check input{
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
 .form-group {
   margin-bottom: var(--space-lg);
 }
