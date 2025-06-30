@@ -10,7 +10,7 @@
 
     <!-- En-tête de formation -->
     <header class="formation-header">
-        <div class="formation-badge">Débutant</div>
+        <div class="formation-badge"><?= $training['level_label'] ?? 'Titre de formation'; ?></div>
         <h1><?= $training['label'] ?? 'Titre de formation'; ?></h1>
         <p class="formation-subtitle"><?= $training['subtitle'] ?? 'Titre de formation'; ?></p>
 
@@ -49,7 +49,7 @@
     <!-- Image principale -->
     <figure class="formation-hero-image">
         <img src="/static/assets/hero.jpeg" alt="Formation en gestion de copropriété" width="1200" height="400">
-        <figcaption>Formation pratique en gestion de copropriété</figcaption>
+        <figcaption><?= $training['label'] ?? 'Titre de formation'; ?></figcaption>
     </figure>
 
     <!-- Contenu de la formation -->
