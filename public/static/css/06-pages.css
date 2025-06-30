@@ -537,7 +537,7 @@
    ARTICLE DETAIL PAGE
    =================================== */
 
-.article-detail {
+.page-detail {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
@@ -747,7 +747,7 @@
    FORMATION DETAIL PAGE
    =================================== */
 
-.formation-detail {
+.page-detail {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-xl);
@@ -1421,8 +1421,8 @@
     font-size: var(--text-xs);
   }
 
-  .article-detail,
-  .formation-detail {
+  .page-detail,
+  .page-detail {
     padding: var(--space-md);
   }
 
@@ -1507,8 +1507,8 @@
     display: none;
   }
 
-  .article-detail,
-  .formation-detail {
+  .page-detail,
+  .page-detail {
     max-width: none;
     padding: 0;
   }

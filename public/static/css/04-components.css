@@ -344,6 +344,10 @@
   font-size: var(--text-sm);
   margin-bottom: var(--space-lg);
 }
+.breadcrumb a{
+  color: var(--color-primary);
+  text-decoration: none;
+}
 
 .breadcrumb__item::after {
   content: "/";
