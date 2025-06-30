@@ -1,3 +1,13 @@
+<?php
+$level_to_class = function ($slug) {
+    return [
+        'niveau-debutant' => 'success',
+        'niveau-intermediaire' => 'primary',
+        'niveau-avance' => 'warning',
+        'niveau-expert' => 'error',
+    ][$slug] ?? 'primary';
+}
+?>
 <h1 class="text-center mt-xl mb-lg text-4xl font-bold">Nos Formations</h1>
 
 <!-- Section Introduction -->
@@ -19,30 +29,34 @@
     <!-- Filtres de formations -->
     <div class="filters mb-xl" role="group" aria-label="Filtres des formations">
         <button class="filter-btn active" data-type="all">Toutes les formations</button>
-        <button class="filter-btn" data-type="beginner">Débutant</button>
-        <button class="filter-btn" data-type="intermediate">Intermédiaire</button>
-        <button class="filter-btn" data-type="advanced">Avancé</button>
+        <?php foreach ($formation_niveau as $slug => $label): ?>
+            <button class="filter-btn" data-type="<?= htmlspecialchars($slug) ?>"><?= htmlspecialchars($label) ?></button>
+        <?php endforeach; ?>
     </div>
 
     <div class="grid grid-cols-auto gap-xl" id="formationsContainer">
         <?php foreach ($formation as $item): ?>
             <!-- Formation 1 -->
-            <article class="card formation-card" data-type="beginner" data-level="Débutant">
-                <img src="/static/assets/hero.jpeg" alt="Formation introduction à la gestion de copropriété" loading="lazy"
+            <article class="card formation-card" data-type="<?= $item['level_slug'] ?? '' ?>" data-level="<?= $item['level_label'] ?? '' ?>">
+                <img src="<?= $item['avatar'] ?? '/static/assets/hero.jpeg' ?>" alt="Formation introduction à la gestion de copropriété" loading="lazy"
                     class="card__image">
                 <div class="card__body">
-                    <div class="badge badge--primary mb-md">Débutant</div>
+
+                    <?php if (isset($item['level_label'])): ?>
+                        <div class="badge badge--<?= $level_to_class($item['level_slug']) ?> mb-md"><?= $item['level_label'] ?></div>
+                    <?php endif; ?>
+
                     <h3 class="card__title"><?= $item['label'] ?? 'Pas de titre' ?></h3>
 
                     <div class="bg-gray-50 p-md rounded mb-md">
                         <?php if (isset($item['duration_days']) && isset($item['duration_hours'])): ?>
-                            <p class="text-sm mb-xs"><strong>Durée :</strong> <?= $item['duration_days'] ?> jours (<?= $item['duration_hours'] ?>h)</p>
+                            <p class="text-sm mb-xs"><strong>Durée :</strong> <?= $item['duration_days'] ?? '?' ?> jours (<?= $item['duration_hours'] ?? '?' ?>h)</p>
                         <?php endif; ?>
                         <?php if (isset($item['start_date'])): ?>
-                            <p class="text-sm mb-xs"><strong>Date :</strong> <?= $item['start_date'] ?></p>
+                            <p class="text-sm mb-xs"><strong>Date :</strong> <?= $item['start_date'] ?? '?' ?></p>
                         <?php endif; ?>
                         <?php if (isset($item['price_ht'])): ?>
-                            <p class="text-sm mb-0"><strong>Prix :</strong> <?= $item['price_ht'] ?>€ HT</p>
+                            <p class="text-sm mb-0"><strong>Prix :</strong> <?= $item['price_ht'] ?? '?' ?>€ HT</p>
                         <?php endif; ?>
                     </div>
 
@@ -62,129 +76,6 @@
                 </div>
             </article>
         <?php endforeach; ?>
-        <!-- Formation 1 -->
-        <article class="card formation-card" data-type="beginner" data-level="Débutant">
-            <img src="/static/assets/hero.jpeg" alt="Formation introduction à la gestion de copropriété" loading="lazy"
-                class="card__image">
-            <div class="card__body">
-                <div class="badge badge--primary mb-md">Débutant</div>
-                <h3 class="card__title">Introduction à la gestion de copropriété</h3>
-
-                <div class="bg-gray-50 p-md rounded mb-md">
-                    <p class="text-sm mb-xs"><strong>Durée :</strong> 2 jours (14h)</p>
-                    <p class="text-sm mb-xs"><strong>Date :</strong> 15 septembre 2025</p>
-                    <p class="text-sm mb-0"><strong>Prix :</strong> 450€ HT</p>
-                </div>
-
-                <p class="card__content">Formation de base pour comprendre les enjeux de la gestion collective
-                    et acquérir les
-                    fondamentaux juridiques et pratiques.</p>
-
-                <div class="formation-objectives mb-lg">
-                    <h4 class="text-primary mb-sm">Objectifs :</h4>
-                    <ul class="text-sm">
-                        <li>Maîtriser le cadre légal belge</li>
-                        <li>Comprendre les rôles et responsabilités</li>
-                        <li>Gérer les assemblées générales</li>
-                    </ul>
-                </div>
-
-                <a href="formation.detail.html?id=1" class="btn btn--primary w-full">Voir les détails</a>
-            </div>
-        </article>
-
-        <!-- Formation 2 -->
-        <article class="card formation-card" data-type="intermediate" data-level="Intermédiaire">
-            <img src="/static/assets/hero.jpeg" alt="Formation gestion financière de copropriété" loading="lazy"
-                class="card__image">
-            <div class="card__body">
-                <div class="badge badge--warning mb-md">Intermédiaire</div>
-                <h3 class="card__title">Gestion financière de copropriété</h3>
-
-                <div class="bg-gray-50 p-md rounded mb-md">
-                    <p class="text-sm mb-xs"><strong>Durée :</strong> 3 jours (21h)</p>
-                    <p class="text-sm mb-xs"><strong>Date :</strong> 22 octobre 2025</p>
-                    <p class="text-sm mb-0"><strong>Prix :</strong> 650€ HT</p>
-                </div>
-
-                <p class="card__content">Approfondissement des aspects financiers : budgets, comptes,
-                    provisions, et gestion des
-                    impayés.</p>
-
-                <div class="formation-objectives mb-lg">
-                    <h4 class="text-primary mb-sm">Objectifs :</h4>
-                    <ul class="text-sm">
-                        <li>Élaborer et suivre un budget</li>
-                        <li>Gérer les provisions et fonds</li>
-                        <li>Traiter les impayés efficacement</li>
-                    </ul>
-                </div>
-
-                <a href="formation.detail.html?id=2" class="btn btn--primary w-full">Voir les détails</a>
-            </div>
-        </article>
-
-        <!-- Formation 3 -->
-        <article class="card formation-card" data-type="advanced" data-level="Avancé">
-            <img src="/static/assets/hero.jpeg" alt="Formation contentieux et médiation" loading="lazy"
-                class="card__image">
-            <div class="card__body">
-                <div class="badge badge--error mb-md">Avancé</div>
-                <h3 class="card__title">Contentieux et médiation en copropriété</h3>
-
-                <div class="bg-gray-50 p-md rounded mb-md">
-                    <p class="text-sm mb-xs"><strong>Durée :</strong> 2 jours (14h)</p>
-                    <p class="text-sm mb-xs"><strong>Date :</strong> 18 novembre 2025</p>
-                    <p class="text-sm mb-0"><strong>Prix :</strong> 550€ HT</p>
-                </div>
-
-                <p class="card__content">Gestion des conflits, procédures contentieuses et techniques de
-                    médiation adaptées aux
-                    copropriétés.</p>
-
-                <div class="formation-objectives mb-lg">
-                    <h4 class="text-primary mb-sm">Objectifs :</h4>
-                    <ul class="text-sm">
-                        <li>Prévenir et gérer les conflits</li>
-                        <li>Maîtriser les procédures judiciaires</li>
-                        <li>Utiliser la médiation efficacement</li>
-                    </ul>
-                </div>
-
-                <a href="formation.detail.html?id=3" class="btn btn--primary w-full">Voir les détails</a>
-            </div>
-        </article>
-
-        <!-- Formation 4 -->
-        <article class="card formation-card" data-type="beginner" data-level="Débutant">
-            <img src="/static/assets/hero.jpeg" alt="Formation réglementation énergétique" loading="lazy"
-                class="card__image">
-            <div class="card__body">
-                <div class="badge badge--primary mb-md">Débutant</div>
-                <h3 class="card__title">Réglementation énergétique et travaux</h3>
-
-                <div class="bg-gray-50 p-md rounded mb-md">
-                    <p class="text-sm mb-xs"><strong>Durée :</strong> 1 jour (7h)</p>
-                    <p class="text-sm mb-xs"><strong>Date :</strong> 12 décembre 2025</p>
-                    <p class="text-sm mb-0"><strong>Prix :</strong> 320€ HT</p>
-                </div>
-
-                <p class="card__content">Comprendre les obligations énergétiques et la gestion des travaux
-                    d'amélioration dans les
-                    copropriétés.</p>
-
-                <div class="formation-objectives mb-lg">
-                    <h4 class="text-primary mb-sm">Objectifs :</h4>
-                    <ul class="text-sm">
-                        <li>Connaître la réglementation PEB</li>
-                        <li>Organiser les travaux énergétiques</li>
-                        <li>Optimiser les aides et subventions</li>
-                    </ul>
-                </div>
-
-                <a href="formation.detail.html?id=4" class="btn btn--primary w-full">Voir les détails</a>
-            </div>
-        </article>
     </div>
 </section>
 
