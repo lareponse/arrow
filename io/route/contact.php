@@ -1,5 +1,5 @@
 <?php
-require_once 'add/bad/dad/qb.php';
+require_once 'app/mapper/taxonomy.php';
 
 return function ($args = null) {
 
@@ -22,6 +22,8 @@ return function ($args = null) {
 
     $sql = "SELECT * FROM `faq` ORDER BY `sort_order`;";
     ($_ = dbq($db, $sql)) && ($_ = $_->fetchAll(PDO::FETCH_ASSOC))      && $data['faq'] = $_;
+
+    $data['subjects'] = tag_by_parent('contact_demande-sujet');
 
     return $data;
 };

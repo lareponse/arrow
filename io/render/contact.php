@@ -38,7 +38,7 @@
 
     <!-- Formulaire de contact -->
     <section class="mb-xl" aria-labelledby="form-title">
-        <div class="card p-xl" style="max-width: 800px; margin: 0 auto;">
+        <form class="card p-xl" style="max-width: 800px; margin: 0 auto;">
             <h2 id="form-title" class="text-center mb-xl">Envoyez-nous un message</h2>
 
 
@@ -99,11 +99,10 @@
                     <select id="sujet" name="sujet" required class="form-input"
                         aria-describedby="sujet-error">
                         <option value="">Sélectionnez un type de demande</option>
-                        <option value="formation">Inscription à une formation</option>
-                        <option value="evenement">Inscription à un événement</option>
-                        <option value="conseil">Demande de conseil/accompagnement</option>
-                        <option value="partenariat">Partenariat professionnel</option>
-                        <option value="general">Demande générale</option>
+                        <?php foreach ($subjects as $slug => $label) : ?>
+                            <option value="<?= htmlspecialchars($slug) ?>"><?= htmlspecialchars($label) ?></option>
+                        <?php endforeach; ?>
+                    
                     </select>
                     <span class="form-error" id="sujet-error" role="alert" aria-live="polite"></span>
                 </div>
@@ -152,8 +151,7 @@
                     Tous les champs marqués d'un * sont obligatoires
                 </span>
             </div>
-            </form>
-        </div>
+        </form>
     </section>
 </div>
 
