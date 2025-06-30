@@ -79,7 +79,7 @@ $level_to_class = function ($slug) {
     </div>
 </section>
 
-<section class="formation-benefits full-width-section" aria-labelledby="benefits-title">
+<section class="formation-benefits wide" aria-labelledby="benefits-title">
     <div class="formation-benefits-content">
         <h2 id="benefits-title" class="section-title">Pourquoi choisir Copro Academy&nbsp;?</h2>
 
@@ -113,7 +113,7 @@ $level_to_class = function ($slug) {
 
 
 <!-- Section CTA -->
-<section class="newsletter">
+<section class="newsletter wide">
     <div class="container text-center">
         <h2 class="newsletter__title">Prêt à vous former ?</h2>
         <p class="newsletter__description">Rejoignez nos formations et développez votre expertise en gestion de
