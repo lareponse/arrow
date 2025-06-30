@@ -1,4 +1,4 @@
-    <h1 class="text-center mt-xl mb-lg">Articles & Événements</h1>
+    <h1>Articles & Événements</h1>
 
     <!-- Section intro -->
     <section>

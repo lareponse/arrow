@@ -2,10 +2,13 @@
  * COPRO ACADEMY - Layout System
  * Grid, containers, and positioning
  */
-body>main>*:not(.wide){
+body>main>*:not(.wide),
+:is(.wide) .tight{
   max-width: var(--container-width);
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 /* Container */
 .container {
   max-width: var(--container-width);
