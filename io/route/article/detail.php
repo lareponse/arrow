@@ -10,5 +10,11 @@ return function ($args = null) {
 
     $data['title'] = $data['training']['label'];
     $data['description'] = 'Formation certifiée en gestion de copropriétés. Conformité à la législation belge.';
+
+    $data['related_articles'] = dbq(
+        $db,
+        "SELECT * FROM article_plus WHERE category_id = :category_id AND slug != :slug ORDER BY enabled_at DESC LIMIT 3",
+        ['category_id' => $data['article']['category_id'], 'slug' => $data['article']['slug']]
+    )->fetchAll();
     return $data;
 };

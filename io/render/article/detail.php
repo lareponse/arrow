@@ -234,13 +234,13 @@
                         <div class="resource-item">
                             <h4>🎓 Formation Copro Academy</h4>
                             <p>Programme spécialisé sur la nouvelle réglementation</p>
-                            <a href="formation.html" class="resource-link">S'inscrire</a>
+                            <a href="/formation" class="resource-link">S'inscrire</a>
                         </div>
 
                         <div class="resource-item">
                             <h4>💬 Support technique</h4>
                             <p>Assistance personnalisée pour votre transition</p>
-                            <a href="contact.html" class="resource-link">Nous contacter</a>
+                            <a href="/contact" class="resource-link">Nous contacter</a>
                         </div>
                     </div>
                 </section>
@@ -266,7 +266,7 @@
                             Copro Academy propose des formations spécialisées et un accompagnement personnalisé
                             pour vous aider dans cette transition.
                         </p>
-                        <a href="contact.html?sujet=conseil" class="cta">Demander un accompagnement</a>
+                        <a href="/contact/conseil" class="cta">Demander un accompagnement</a>
                     </div>
                 </section>
             </div>
@@ -277,32 +277,16 @@
     <section class="related-articles" aria-labelledby="related-title">
         <h2 id="related-title">Articles similaires</h2>
         <div class="related-grid">
-            <article class="related-card">
-                <img src="/static/assets/hero.webp" alt="Guide assemblée générale" width="200" height="120">
-                <div class="related-content">
-                    <h3>Guide pratique : Organiser une assemblée générale</h3>
-                    <p>Méthodologie complète pour une AG réussie</p>
-                    <a href="article.detail.html?id=2">Lire →</a>
-                </div>
-            </article>
-
-            <article class="related-card">
-                <img src="/static/assets/hero.webp" alt="Digitalisation copropriété" width="200" height="120">
-                <div class="related-content">
-                    <h3>La digitalisation au service de la copropriété</h3>
-                    <p>Outils numériques et automatisation</p>
-                    <a href="article.detail.html?id=3">Lire →</a>
-                </div>
-            </article>
-
-            <article class="related-card">
-                <img src="/static/assets/hero.webp" alt="Responsabilité syndic" width="200" height="120">
-                <div class="related-content">
-                    <h3>Responsabilité du syndic : cadre légal</h3>
-                    <p>Obligations et bonnes pratiques</p>
-                    <a href="article.detail.html?id=4">Lire →</a>
-                </div>
-            </article>
+            <?php foreach ($related_articles as $related): ?>
+                <article class="related-card">
+                    <img src="/static/assets/hero.webp" alt="Guide assemblée générale" width="200" height="120">
+                    <div class="related-content">
+                        <h3><?= e($related, 'label'); ?></h3>
+                        <p><?= e($related, 'summary'); ?></p>
+                        <a href="/article/detail/<?= e($related, 'slug'); ?>">Lire →</a>
+                    </div>
+                </article>
+            <?php endforeach; ?>
         </div>
     </section>
 </div>
