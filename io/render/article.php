@@ -96,7 +96,7 @@
     </button>
 
     <!-- Newsletter -->
-    <section class="newsletter">
+    <section class="newsletter wide">
         <div class="container">
             <h2 class="newsletter__title">Restez informé</h2>
             <p class="newsletter__description">Recevez nos dernières actualités et annonces d'événements

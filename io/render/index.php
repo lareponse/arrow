@@ -1,5 +1,5 @@
 <!-- Hero Section avec Carousel -->
-<section class="hero" aria-label="Présentation principale">
+<section class="hero wide" aria-label="Présentation principale">
     <img src="/static/assets/collegues-de-taille-moyenne-apprenant.jpg" class="hero__image hero__image--active"
         alt="Formation en gestion de copropriété" loading="eager">
     <img src="/static/assets/agent-immobilier-masculin-faisant-des-affaires-et-montrant-la-maison-a-un-couple-d-acheteurs-potentiels.jpg"
@@ -75,7 +75,7 @@
 </section>
 
 <!-- FAQ rapide -->
-<section class="full-width bg-gray-50 py-3xl" aria-labelledby="faq-title">
+<section class="bg-gray-50 py-3xl" aria-labelledby="faq-title">
     <div class="container">
         <h2 id="faq-title" class="text-center mb-2xl">Questions fréquentes</h2>
 
@@ -125,7 +125,7 @@
 </section>
 
 <!-- Newsletter -->
-<section class="newsletter">
+<section class="newsletter wide">
     <div class="container">
         <h2 class="newsletter__title">Restez informé</h2>
         <p class="newsletter__description">Recevez nos dernières actualités et annonces d'événements directement
