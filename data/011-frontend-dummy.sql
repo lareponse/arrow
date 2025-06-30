@@ -218,3 +218,7 @@ INSERT INTO training_program (
 ('reglementation-energetique-travaux-day1-free','Espace libre (Q&R)',NULL,@t_reg,1,'16:35:00','17:05:00',NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+UPDATE `article` SET `avatar`=null;
+UPDATE `event` SET `avatar`=null;
