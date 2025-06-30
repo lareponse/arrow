@@ -52,7 +52,10 @@
                                         alt="<?= htmlspecialchars($trainer['label']) ?>"
                                         class="trainer-avatar">
                                 <?php else: ?>
-                                    <div class="trainer-avatar-placeholder">
+                                    <img src="https://xsgames.co/randomusers/avatar.php?g=male"
+                                        alt="<?= htmlspecialchars($trainer['label']) ?>"
+                                        class="trainer-avatar">
+                                    <div class=" trainer-avatar-placeholder">
                                         <?= strtoupper(substr($trainer['label'], 0, 2)) ?>
                                     </div>
                                 <?php endif; ?>

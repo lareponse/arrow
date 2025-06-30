@@ -70,7 +70,7 @@
 
             <div class="form-actions">
                 <button type="submit" class="btn"><?= $edit_session ? 'Modifier' : 'Créer' ?> la session</button>
-                <a href="/admin/training/program/<?= $training['slug'] ?>" class="btn secondary">Annuler</a>
+                <a href="/admin/training/program/<?= $training['slug'] ?>" class="btn secondary">Retour</a>
             </div>
         </form>
     </div>

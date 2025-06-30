@@ -152,7 +152,7 @@ $is_edit = !empty($trainer['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer le formateur' ?>
         </button>
-        <a href="/admin/trainer/list" class="btn secondary">Annuler</a>
+        <a href="/admin/trainer/list" class="btn secondary">Retour</a>
 
         <?php if ($is_edit): ?>
             <button type="submit" name="action" value="delete" class="btn danger"

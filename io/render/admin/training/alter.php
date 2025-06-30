@@ -321,7 +321,7 @@ $is_edit = !empty($training['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer la formation' ?>
         </button>
-        <a href="/admin/training/list" class="btn secondary">Annuler</a>
+        <a href="/admin/training/list" class="btn secondary">Retour</a>
 
         <?php if ($is_edit): ?>
             <button type="submit" name="action" value="delete" class="btn danger"

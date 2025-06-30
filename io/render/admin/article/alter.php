@@ -227,7 +227,7 @@ $is_edit = !empty($article['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer l\'article' ?>
         </button>
-        <a href="/admin/article/list" class="btn secondary">Annuler</a>
+        <a href="/admin/article/list" class="btn secondary">Retour</a>
 
         <?php if ($is_edit): ?>
             <button

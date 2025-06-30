@@ -258,7 +258,7 @@ $is_edit = !empty($event['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer l\'événement' ?>
         </button>
-        <a href="/admin/event/list" class="btn secondary">Annuler</a>
+        <a href="/admin/event/list" class="btn secondary">Retour</a>
 
         <?php if ($is_edit): ?>
             <button
