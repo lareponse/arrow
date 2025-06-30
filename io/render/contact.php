@@ -16,21 +16,21 @@
             <div class="contact-card">
                 <div class="contact-card__icon">📧</div>
                 <h3 class="contact-card__title">Email</h3>
-                <p><a href="mailto:CoProAcademy@contact.be"><?= $coproacademy['email'] ?></a></p>
-                <p class="mb-0"><?= $coproacademy['email-response-time'] ?? 'Réponse sous 24h ouvrées' ?></p>
+                <p><a href="mailto:<?= e($coproacademy, 'email')?>"><?= e($coproacademy, 'email') ?></a></p>
+                <p class="mb-0"><?= e($coproacademy, 'email-response-time') ?: 'Réponse sous 24h ouvrées' ?></p>
             </div>
 
             <div class="contact-card">
                 <div class="contact-card__icon">📞</div>
                 <h3 class="contact-card__title">Téléphone</h3>
-                <p><a href="tel:+32510080001"><?= $coproacademy['telephone'] ?? 'Cette information est indisponible' ?></a></p>
-                <p class="mb-0"><?= $coproacademy['telephone-hours'] ?? 'Cette information est indisponible' ?></p>
+                <p><a href="tel:<?= e($coproacademy, 'telephone')?>"><?= e($coproacademy, 'telephone') ?: 'Cette information est indisponible' ?></a></p>
+                <p class="mb-0"><?= e($coproacademy, 'telephone-hours') ?: 'Cette information est indisponible' ?></p>
             </div>
 
             <div class="contact-card">
                 <div class="contact-card__icon">📍</div>
                 <h3 class="contact-card__title">Adresse</h3>
-                <p><?= nl2br($coproacademy['adresse'] ?? 'Cette information est indisponible') ?></p>
+                <p><?= nl2br(e($coproacademy, 'adresse') ?: 'Cette information est indisponible') ?></p>
                 <p class="mb-0">Sur rendez-vous uniquement</p>
             </div>
         </div>
@@ -100,7 +100,7 @@
                         aria-describedby="sujet-error">
                         <option value="">Sélectionnez un type de demande</option>
                         <?php foreach ($subjects as $slug => $label) : ?>
-                            <option value="<?= htmlspecialchars($slug) ?>"><?= htmlspecialchars($label) ?></option>
+                            <option value="<?= e($slug) ?>"><?= e($label) ?></option>
                         <?php endforeach; ?>
                     
                     </select>
@@ -163,9 +163,9 @@
         <div style="max-width: 800px; margin: 0 auto;">
             <?php foreach ($faq as $item) : ?>
                 <details class="faq-item">
-                    <summary class="faq-summary"><?= $item['label'] ?? 'Question vide' ?></summary>
+                    <summary class="faq-summary"><?= e($item,'label') ?: 'Question vide' ?></summary>
                     <div class="faq-content">
-                        <p><?= $item['content'] ?? 'Reponse vide' ?></p>
+                        <p><?= e($item, 'content') ?: 'Reponse vide' ?></p>
                     </div>
                 </details>
             <?php endforeach; ?>
@@ -179,8 +179,8 @@
         <h2 class="newsletter__title">Prêt à commencer ?</h2>
         <p class="newsletter__description">Contactez-nous dès maintenant pour discuter de vos besoins</p>
         <div class="flex gap-lg justify-center flex-wrap">
-            <a href="tel:+32510080001" class="btn btn--primary btn--lg">Appeler maintenant</a>
-            <a href="mailto:CoProAcademy@contact.be" class="btn btn--secondary btn--lg">Envoyer un email</a>
+            <a href="tel:<?= e($coproacademy, 'telephone')?>" class="btn btn--primary btn--lg">Appeler maintenant</a>
+            <a href="mailto:<?= e($coproacademy, 'email')?>" class="btn btn--secondary btn--lg">Envoyer un email</a>
         </div>
     </div>
 </section>
