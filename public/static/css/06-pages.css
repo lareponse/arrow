@@ -190,7 +190,7 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-auto-rows: 0;
   gap: 12px;
-  max-width: 1200px;
+  max-width: var(--container-width);
   margin: 0 auto;
   align-items: start;
   padding: 0 var(--space-xl);
@@ -463,7 +463,7 @@
   padding: 0 var(--space-xl);
   flex-wrap: wrap;
   gap: var(--space-md);
-  max-width: 1200px;
+  max-width: var(--container-width);
   margin-left: auto;
   margin-right: auto;
 }
@@ -527,7 +527,7 @@
 
 .articles-section {
   /* padding: 0 var(--space-xl); */
-  max-width: 1200px;
+  max-width: var(--container-width);
   margin: 0 auto;
   position: relative;
   min-height: 400px;
@@ -538,7 +538,7 @@
    =================================== */
 
 .page-detail {
-  max-width: 1200px;
+  max-width: var(--container-width);
   margin: 0 auto;
   padding: 2rem;
 }
@@ -748,7 +748,7 @@
    =================================== */
 
 .page-detail {
-  max-width: 1200px;
+  max-width: var(--container-width);
   margin: 0 auto;
   padding: var(--space-xl);
 }
@@ -1131,7 +1131,7 @@
 .formation-key-info,
 .formation-info {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  max-width: 1200px;
+  max-width: var(--container-width);
   margin: 0 auto;
 }
 

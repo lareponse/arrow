@@ -579,7 +579,7 @@
   grid-auto-rows: 200px;
   gap: 20px;
   padding: 20px;
-  max-width: 1200px;
+  max-width: var(--container-width);
   margin: 0 auto;
 }
 
@@ -799,7 +799,7 @@
 
 .formation-benefits-content,
 .newsletter-content {
-  max-width: 1200px;
+  max-width: var(--container-width);
   margin: 0 auto;
   padding: 0 1rem;
 }
