@@ -35,7 +35,7 @@
                 <div class="card__body">
                     <h3 class="card__title"><?= $item['label'] ?? 'Service' ?></h3>
                     <p class="card__content"><?= $item['content'] ?? 'Description du service' ?></p>
-                    <a href="<?= $item['link'] ?? 'contact.html' ?>" class="btn btn--primary">En savoir plus</a>
+                    <a href="<?= $item['link'] ?? '/contact' ?>" class="btn btn--primary">En savoir plus</a>
                 </div>
             </article>
         <?php endforeach; ?>

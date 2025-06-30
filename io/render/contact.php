@@ -140,7 +140,7 @@
                         </label>
                         <span class="form-help" id="consent-help">
                             Vos données sont traitées conformément à notre
-                            <a href="politique-confidentialite.html">politique de confidentialité</a>
+                            <a href="/page/politique-confidentialite">politique de confidentialité</a>
                         </span>
                         <span class="form-error" id="consent-error" role="alert" aria-live="polite"></span>
                     </div>

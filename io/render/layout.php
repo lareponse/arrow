@@ -37,7 +37,7 @@
     <!-- Navigation Header -->
     <header class="navbar" role="banner">
         <div class="navbar__container">
-            <a href="index.html" class="navbar__logo-link" aria-label="Retour à l'accueil">
+            <a href="/" class="navbar__logo-link" aria-label="Retour à l'accueil">
                 <img src="/static/assets/base/full/base_logo_transparent_background.png" alt="Copro Academy Logo"
                     class="navbar__logo">
             </a>
@@ -70,19 +70,19 @@
             <div class="footer__section">
                 <h3>Navigation</h3>
                 <ul class="footer__links">
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="articles.html">Articles & Événements</a></li>
-                    <li><a href="formation.html">Formation</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="/article">Articles & Événements</a></li>
+                    <li><a href="/formation">Formation</a></li>
+                    <li><a href="/contact">Contact</a></li>
                 </ul>
             </div>
 
             <div class="footer__section">
                 <h3>Informations légales</h3>
                 <ul class="footer__links">
-                    <li><a href="condition.generale.html">Conditions générales</a></li>
-                    <li><a href="politique.confidentialite.html">Politique de confidentialité</a></li>
-                    <li><a href="politique.confidentialite.html">Mentions légales</a></li>
+                    <li><a href="/page/conditions-generales">Conditions générales</a></li>
+                    <li><a href="/page/politique-confidentialite">Politique de confidentialité</a></li>
+                    <li><a href="/page/mentions-legales">Mentions légales</a></li>
                 </ul>
             </div>
 
