@@ -17,7 +17,7 @@ return function ($slug = null) {
             // Soft delete
             $trainer(ROW_SET, ['revoked_at' => date('Y-m-d H:i:s')]);
             $trainer(ROW_SAVE);
-            http_out(302, '', ['Location' => '/admin/trainer/list']);
+            http_out(302, '', ['Location' => '/admin/trainer']);
         }
 
         $clean = $_POST;

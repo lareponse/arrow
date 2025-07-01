@@ -97,7 +97,7 @@
                         <td>
                             <strong><?= $trainer['training_count'] ?></strong>
                             <?php if ($trainer['training_count'] > 0): ?>
-                                <br><a href="/admin/training/list?trainer_id=<?= $trainer['id'] ?>" class="text-link">
+                                <br><a href="/admin/training?trainer_id=<?= $trainer['id'] ?>" class="text-link">
                                     Voir les formations
                                 </a>
                             <?php endif; ?>

@@ -26,11 +26,11 @@ $user = auth();
         <div class="admin-nav">
             <a href="/admin" class="logo">Copro Academy</a>
             <nav>
-                <a href="/admin/article/list">Articles</a>
-                <a href="/admin/event/list">Événements</a>
-                <a href="/admin/training/list">Formations</a>
-                <a href="/admin/trainer/list">Formateurs</a>
-                <a href="/admin/contact/list">Contact</a>
+                <a href="/admin/article">Articles</a>
+                <a href="/admin/event">Événements</a>
+                <a href="/admin/training">Formations</a>
+                <a href="/admin/trainer">Formateurs</a>
+                <a href="/admin/contact">Contact</a>
             </nav>
         </div>
         <div class="admin-user">

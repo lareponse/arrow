@@ -263,7 +263,7 @@ $is_edit = !empty($training['id']);
                     <?php
                     $bookings_count = dbq(db(), "SELECT COUNT(*) FROM booking WHERE training_id = ? AND revoked_at IS NULL", [$training['id']])->fetchColumn();
                     ?>
-                    <a href="/admin/booking/list?training_id=<?= $training['id'] ?>" class="action-link">
+                    <a href="/admin/booking?training_id=<?= $training['id'] ?>" class="action-link">
                         <strong>Inscriptions (<?= $bookings_count ?>)</strong>
                         <span>Gérer les participants</span>
                     </a>

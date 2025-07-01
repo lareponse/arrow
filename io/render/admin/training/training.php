@@ -7,15 +7,15 @@
 
 <section class="content-filters">
     <nav class="filter-tabs">
-        <a href="/admin/training/list"
+        <a href="/admin/training"
             class="<?= empty($current_status) ? 'active' : '' ?>">Toutes</a>
-        <a href="/admin/training/list?status=upcoming"
+        <a href="/admin/training?status=upcoming"
             class="<?= $current_status === 'upcoming' ? 'active' : '' ?>">À venir</a>
-        <a href="/admin/training/list?status=past"
+        <a href="/admin/training?status=past"
             class="<?= $current_status === 'past' ? 'active' : '' ?>">Terminées</a>
-        <a href="/admin/training/list?status=published"
+        <a href="/admin/training?status=published"
             class="<?= $current_status === 'published' ? 'active' : '' ?>">Publiées</a>
-        <a href="/admin/training/list?status=draft"
+        <a href="/admin/training?status=draft"
             class="<?= $current_status === 'draft' ? 'active' : '' ?>">Brouillons</a>
     </nav>
 
@@ -29,7 +29,7 @@
             placeholder="Rechercher formations...">
         <button type="submit">Rechercher</button>
         <?php if ($search): ?>
-            <a href="/admin/training/list<?= $current_status ? '?status=' . urlencode($current_status) : '' ?>" class="btn secondary">Effacer</a>
+            <a href="/admin/training<?= $current_status ? '?status=' . urlencode($current_status) : '' ?>" class="btn secondary">Effacer</a>
         <?php endif; ?>
     </form>
 </section>
@@ -131,7 +131,7 @@
                                 <a href="/training/<?= $training['slug'] ?>" class="btn small secondary" target="_blank">Voir</a>
                             <?php endif; ?>
                             <?php if (($training['bookings_count'] ?? 0) > 0): ?>
-                                <a href="/admin/booking/list?training_id=<?= $training['id'] ?>" class="btn small tertiary">Inscrits</a>
+                                <a href="/admin/booking?training_id=<?= $training['id'] ?>" class="btn small tertiary">Inscrits</a>
                             <?php endif; ?>
                             <a href="/admin/training/program/<?= $training['id'] ?>" class="btn small quaternary">Programme</a>
                         </td>

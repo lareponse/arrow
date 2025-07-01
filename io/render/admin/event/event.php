@@ -7,15 +7,15 @@
 
 <section class="content-filters">
     <nav class="filter-tabs">
-        <a href="/admin/event/list"
+        <a href="/admin/event"
             class="<?= empty($current_status) ? 'active' : '' ?>">Tous</a>
-        <a href="/admin/event/list?status=upcoming"
+        <a href="/admin/event?status=upcoming"
             class="<?= $current_status === 'upcoming' ? 'active' : '' ?>">À venir</a>
-        <a href="/admin/event/list?status=past"
+        <a href="/admin/event?status=past"
             class="<?= $current_status === 'past' ? 'active' : '' ?>">Passés</a>
-        <a href="/admin/event/list?status=published"
+        <a href="/admin/event?status=published"
             class="<?= $current_status === 'published' ? 'active' : '' ?>">Publiés</a>
-        <a href="/admin/event/list?status=draft"
+        <a href="/admin/event?status=draft"
             class="<?= $current_status === 'draft' ? 'active' : '' ?>">Brouillons</a>
     </nav>
 
@@ -29,7 +29,7 @@
             placeholder="Rechercher événements...">
         <button type="submit">Rechercher</button>
         <?php if ($search): ?>
-            <a href="/admin/event/list<?= $current_status ? '?status=' . urlencode($current_status) : '' ?>" class="btn secondary">Effacer</a>
+            <a href="/admin/event<?= $current_status ? '?status=' . urlencode($current_status) : '' ?>" class="btn secondary">Effacer</a>
         <?php endif; ?>
     </form>
 </section>
@@ -115,7 +115,7 @@
                                 <a href="/event/<?= $event['slug'] ?>" class="btn small secondary" target="_blank">Voir</a>
                             <?php endif; ?>
                             <?php if ($event['bookings_count'] > 0): ?>
-                                <a href="/admin/booking/list?event_id=<?= $event['id'] ?>" class="btn small tertiary">Inscrits</a>
+                                <a href="/admin/booking?event_id=<?= $event['id'] ?>" class="btn small tertiary">Inscrits</a>
                             <?php endif; ?>
                         </td>
                     </tr>

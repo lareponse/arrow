@@ -4,10 +4,10 @@
 
 <section class="content-filters">
     <nav class="filter-tabs">
-        <a href="/admin/contact/list"
+        <a href="/admin/contact"
             class="<?= empty($current_status) ? 'active' : '' ?>">Tous</a>
         <?php foreach ($statuses as $slug => $label): ?>
-            <a href="/admin/contact/list?status=<?= $slug ?>"
+            <a href="/admin/contact?status=<?= $slug ?>"
                 class="<?= $current_status === $slug ? 'active' : '' ?>">
                 <?= htmlspecialchars($label) ?>
             </a>
