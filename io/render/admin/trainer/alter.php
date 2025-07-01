@@ -117,10 +117,11 @@ $is_edit = !empty($trainer['id']);
 
         <?php if ($is_edit): ?>
 
-            <div class="panel  drop-zone" data-upload="/admin/upload/trainer/avatar">
+            <div class="panel  drop-zone" data-upload="/admin/upload/trainer/avatar/<?= $trainer['slug'] ?>">
                 <h2>Photo de profil</h2>
                 <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
                 <label for="avatar" class="drop-label">
+                    <span></span>
                     <small>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</small>
                 </label>
             </div>
