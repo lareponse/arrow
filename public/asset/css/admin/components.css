@@ -472,20 +472,23 @@ ol h3 a {
 }
 
 
-
-/* File Upload */
-.file-drop {
-    border: 2px dashed #d1d5db;
-    border-radius: 8px;
-    padding: var(--space-lg);
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 2rem;
     text-align: center;
-    background: #fafafa;
     cursor: pointer;
     transition: border-color 0.2s;
 }
 
-.file-drop:hover {
-    border-color: #3b82f6;
+.drop-zone.drag-over {
+    border-color: #007cba;
+    background: #f9f9f9;
+}
+
+.drop-label {
+    display: block;
+    cursor: pointer;
 }
 
 .current-image {
@@ -496,16 +499,6 @@ ol h3 a {
     display: block;
     margin-left: auto;
     margin-right: auto;
-}
-
-.drop-text {
-    color: #6b7280;
-}
-
-.drop-text small {
-    display: block;
-    font-size: 0.75rem;
-    margin-top: var(--space-xs);
 }
 
 /* Alter Form Components */

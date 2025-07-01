@@ -64,24 +64,56 @@ $user = auth();
             });
 
 
-            // file upload drag-and-drop
-            document.querySelectorAll('.file-drop').forEach(drop => {
-                const input = drop.querySelector('input[type="file"]');
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                const input = zone.querySelector('input[type="file"]');
+                const label = zone.querySelector('.drop-label span');
 
-                drop.addEventListener('dragover', e => {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => {
+                    zone.addEventListener(e, prevent);
+                });
+
+                ['dragenter', 'dragover'].forEach(e => {
+                    zone.addEventListener(e, () => zone.classList.add('drag-over'));
+                });
+
+                ['dragleave', 'drop'].forEach(e => {
+                    zone.addEventListener(e, () => zone.classList.remove('drag-over'));
+                });
+
+                zone.addEventListener('drop', handleDrop);
+                input.addEventListener('change', e => upload(e.target.files[0]));
+
+                function prevent(e) {
                     e.preventDefault();
-                    drop.style.borderColor = '#3b82f6';
-                });
+                    e.stopPropagation();
+                }
 
-                drop.addEventListener('dragleave', () => {
-                    drop.style.borderColor = '#d1d5db';
-                });
+                function handleDrop(e) {
+                    upload(e.dataTransfer.files[0]);
+                }
 
-                drop.addEventListener('drop', e => {
-                    e.preventDefault();
-                    drop.style.borderColor = '#d1d5db';
-                    input.files = e.dataTransfer.files;
-                });
+                function upload(file) {
+                    if (!file) return;
+
+                    const formData = new FormData();
+                    formData.append('avatar', file);
+
+                    label.textContent = 'Uploading...';
+
+                    fetch(zone.dataset.upload, {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) {
+                                label.innerHTML = `<img src="${data.url}" alt="Uploaded" style="max-width:100px">`;
+                            } else {
+                                label.textContent = 'Upload failed';
+                            }
+                        })
+                        .catch(() => label.textContent = 'Upload failed');
+                }
             });
         });
     </script>

@@ -109,6 +109,14 @@ $is_edit = !empty($trainer['id']);
         </section>
 
         <?php if ($is_edit): ?>
+
+            <div class="panel  drop-zone" data-upload="/admin/upload/trainer/avatar">
+                <input type="file" name="avatar" id="avatar" accept="image/*" hidden>
+                <label for="avatar" class="drop-label">
+                    <span>Drop image or click to select</span>
+                </label>
+            </div>
+
             <section class="panel stats-box">
                 <header>
                     <h2>Statistiques</h2>
@@ -208,5 +216,5 @@ $is_edit = !empty($trainer['id']);
 
 <?php
 return function ($this_html, $args = []) {
-    return ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $this_html, 'css' => '/asset/css/alter.css'])[1];
+    return ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $this_html])[1];
 };
