@@ -4,8 +4,16 @@
 
 return function($args=null){
     $upload_to = implode(DIRECTORY_SEPARATOR, $args);
-    $result = upload_image($_FILES['avatar'], $_SERVER['DOCUMENT_ROOT'] . "/asset/image/$upload_to/");
+    $base_folder = $_SERVER['DOCUMENT_ROOT'] . "/asset/image/$upload_to/";
+    $result = upload_image($_FILES['avatar'], $base_folder);
+    if (!$result) 
+        http_out(400, json_encode(['success' => false, 'error' => 'Invalid file upload']), ['Content-Type' => 'application/json']);
+    
     header('Content-Type: application/json');
+
+    // remove $_SERVER['DOCUMENT_ROOT'] from the result path
+    $result = str_replace($_SERVER['DOCUMENT_ROOT'], '', $result);
+
     echo json_encode(['success' => !!$result, 'url' => $result]);
     die;
 };
@@ -33,7 +41,7 @@ function upload_image(array $file, string $folder, int $max_kb = 2048, ?array $m
     // Generate filename from original name
     $base = preg_replace('/[^\w-]/', '', pathinfo($file['name'], PATHINFO_FILENAME)) ?: 'upload';
     $filename = "$base.$ext";
-    $target = "$folder/$filename";
+    $target = preg_replace('#\/\/+#', '/', "$folder/$filename");
 
     // Rename existing file if it exists
     if (file_exists($target)) {

@@ -108,6 +108,13 @@ $user = auth();
                         .then(data => {
                             if (data.success) {
                                 label.innerHTML = `<img src="${data.url}" alt="Uploaded" style="max-width:100px">`;
+                                label.parentElement.appendChild(
+                                    Object.assign(document.createElement('input'), {
+                                        type: 'hidden',
+                                        name: labelInput.name,
+                                        value: data.url
+                                    })
+                                );
                             } else {
                                 label.textContent = 'Upload failed';
                             }
