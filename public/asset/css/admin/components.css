@@ -471,12 +471,7 @@ ol h3 a {
     border-bottom-color: #3b82f6;
 }
 
-.pagination {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-md);
-    margin-top: var(--space-xl);
-}
+
 
 /* File Upload */
 .file-drop {
@@ -641,15 +636,6 @@ ol h3 a {
     }
 }
 
-/* Event & Training */
-.event-past {
-    opacity: 0.7;
-}
-
-.event-upcoming {
-    background-color: #fefce8;
-}
-
 .search-form {
     display: flex;
     gap: var(--space-sm);
@@ -664,16 +650,9 @@ ol h3 a {
     min-width: 250px;
 }
 
-.training-past {
+tr.past{
     opacity: 0.7;
 }
-
-.training-upcoming {
-    background-color: #fefce8;
-}
-
-
-
 /**** prpgrams **/
 
 /* Program Schedule */
