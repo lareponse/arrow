@@ -61,19 +61,6 @@
         </table>
     </div>
 
-    <?php if ($pagination['total_pages'] > 1): ?>
-        <nav class="pagination">
-            <?php if ($pagination['page'] > 1): ?>
-                <a href="?page=<?= $pagination['page'] - 1 ?><?= $current_status ? '&status=' . urlencode($current_status) : '' ?>">« Précédent</a>
-            <?php endif; ?>
-
-            <span>Page <?= $pagination['page'] ?> sur <?= $pagination['total_pages'] ?></span>
-
-            <?php if ($pagination['page'] < $pagination['total_pages']): ?>
-                <a href="?page=<?= $pagination['page'] + 1 ?><?= $current_status ? '&status=' . urlencode($current_status) : '' ?>">Suivant »</a>
-            <?php endif; ?>
-        </nav>
-    <?php endif; ?>
 <?php endif; ?>
 
 <?php

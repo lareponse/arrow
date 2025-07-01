@@ -3,18 +3,19 @@ require_once 'app/mapper/mapper.php';
 require_once 'app/mapper/taxonomy.php';
 
 return function ($args) {
-    vd($args);
-    $conditions = [];
+    
+    $sql = "SELECT * FROM `contact_request_plus`";
+    
     if ($status = $_GET['status'] ?? '') {
-        $status_id = tag_id_by_slug($status, 'contact_demande-statut');
-        if ($status_id) $conditions['status_id'] = $status_id;
+        $status_id = (int)tag_id_by_slug($status, 'contact_demande-statut');
+        if ($status_id) 
+            $sql .= " WHERE `status_id` = $status_id";
     }
-
     $statuses = tag_by_parent('contact_demande-statut');
 
     return [
         'title' => 'Demandes de contact',
-        'contact_requests' => map_list('contact_request_plus'),
+        'contact_requests' => dbq(db(), $sql)->fetchAll(),
         'statuses' => $statuses,
         'current_status' => $status
     ];
