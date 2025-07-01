@@ -19,19 +19,6 @@
             class="<?= $current_status === 'draft' ? 'active' : '' ?>">Brouillons</a>
     </nav>
 
-    <form method="get" class="search-form">
-        <?php if ($current_status): ?>
-            <input type="hidden" name="status" value="<?= htmlspecialchars($current_status) ?>">
-        <?php endif; ?>
-        <input type="search"
-            name="q"
-            value="<?= htmlspecialchars($search ?? '') ?>"
-            placeholder="Rechercher événements...">
-        <button type="submit">Rechercher</button>
-        <?php if ($search): ?>
-            <a href="/admin/event<?= $current_status ? '?status=' . urlencode($current_status) : '' ?>" class="btn secondary">Effacer</a>
-        <?php endif; ?>
-    </form>
 </section>
 
 <?php if (empty($events)): ?>
@@ -59,7 +46,7 @@
                     $is_past = strtotime($event['event_date']) < time();
                     $is_upcoming = strtotime($event['event_date']) > time();
                     ?>
-                    <tr class="<?= $is_past ? 'event-past' : ($is_upcoming ? 'event-upcoming' : '') ?>">
+                    <tr <?= $is_past ? ' class="past"' : '' ?>>
                         <td>
                             <strong><?= htmlspecialchars($event['label']) ?></strong>
                             <?php if ($event['online']): ?>
@@ -124,26 +111,6 @@
         </table>
     </div>
 
-    <?php if ($pagination['total_pages'] > 1): ?>
-        <nav class="pagination">
-            <?php
-            $query_params = [];
-            if ($search) $query_params['q'] = $search;
-            if ($current_status) $query_params['status'] = $current_status;
-            $query_string = $query_params ? '&' . http_build_query($query_params) : '';
-            ?>
-
-            <?php if ($pagination['page'] > 1): ?>
-                <a href="?page=<?= $pagination['page'] - 1 ?><?= $query_string ?>">« Précédent</a>
-            <?php endif; ?>
-
-            <span>Page <?= $pagination['page'] ?> sur <?= $pagination['total_pages'] ?></span>
-
-            <?php if ($pagination['page'] < $pagination['total_pages']): ?>
-                <a href="?page=<?= $pagination['page'] + 1 ?><?= $query_string ?>">Suivant »</a>
-            <?php endif; ?>
-        </nav>
-    <?php endif; ?>
 <?php endif; ?>
 
 

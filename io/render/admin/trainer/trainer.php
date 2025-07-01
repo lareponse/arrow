@@ -11,16 +11,6 @@
         <button type="button" class="filter-tab" data-status="inactive">Inactifs</button>
     </nav>
 
-    <form method="get" class="search-form">
-        <input type="search"
-            name="q"
-            value="<?= htmlspecialchars($search ?? '') ?>"
-            placeholder="Rechercher formateurs...">
-        <button type="submit">Rechercher</button>
-        <?php if ($search): ?>
-            <a href="/admin/trainer" class="btn secondary">Effacer</a>
-        <?php endif; ?>
-    </form>
 </section>
 
 <?php if (empty($trainers)): ?>
@@ -118,27 +108,7 @@
             </tbody>
         </table>
     </div>
-    <?php if ($pagination['total_pages'] > 1): ?>
-        <nav class="pagination">
-            <?php
-            $query_params = [];
-            if ($search) $query_params['q'] = $search;
-            if ($current_status) $query_params['status'] = $current_status;
-            $query_string = $query_params ? '&' . http_build_query($query_params) : '';
-            ?>
-
-            <?php if ($pagination['page'] > 1): ?>
-                <a href="?page=<?= $pagination['page'] - 1 ?><?= $query_string ?>">« Précédent</a>
-            <?php endif; ?>
-
-            <span>Page <?= $pagination['page'] ?> sur <?= $pagination['total_pages'] ?></span>
-
-            <?php if ($pagination['page'] < $pagination['total_pages']): ?>
-                <a href="?page=<?= $pagination['page'] + 1 ?><?= $query_string ?>">Suivant »</a>
-            <?php endif; ?>
-        </nav>
-    <?php endif; ?>
-    <!-- pagination stays the same -->
+    
 <?php endif; ?>
 
 <style>

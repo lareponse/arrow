@@ -43,6 +43,5 @@ return function ($args) {
         'trainers' => $trainers,
         'search' => $search,
         'current_status' => $status,
-        'pagination' => compact('page', 'total_pages'),
     ];
 };

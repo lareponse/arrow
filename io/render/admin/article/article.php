@@ -6,16 +6,6 @@
 </header>
 
 <section class="content-filters">
-    <form method="get" class="search-form">
-        <input type="search"
-            name="q"
-            value="<?= htmlspecialchars($search ?? '') ?>"
-            placeholder="Rechercher articles...">
-        <button type="submit">Rechercher</button>
-        <?php if ($search): ?>
-            <a href="/admin/article" class="btn secondary">Effacer</a>
-        <?php endif; ?>
-    </form>
 </section>
 
 <?php if (empty($articles)): ?>
@@ -37,7 +27,12 @@
             </thead>
             <tbody>
                 <?php foreach ($articles as $article): ?>
-                    <tr>
+
+                    <?php
+                    $is_past = strtotime($event['enabled_at']) < time();
+                    $is_upcoming = strtotime($event['enabled_at']) > time();
+                    ?>
+                    <tr <?= $is_past ? ' class="past"' : '' ?>>
                         <td>
                             <strong><?= htmlspecialchars($article['label']) ?></strong>
                             <?php if ($article['featured']): ?>
@@ -58,7 +53,7 @@
                         <td class="actions">
                             <a href="/admin/article/alter/<?= $article['slug'] ?>" class="btn small">Modifier</a>
                             <?php if ($article['enabled_at']): ?>
-                                <a href="/article/<?= $article['slug'] ?>" class="btn small secondary" target="_blank">Voir</a>
+                                <a href="/article/detail/<?= $article['slug'] ?>" class="btn small secondary" target="_blank">Voir</a>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -67,19 +62,7 @@
         </table>
     </div>
 
-    <?php if ($pagination['total_pages'] > 1): ?>
-        <nav class="pagination">
-            <?php if ($pagination['page'] > 1): ?>
-                <a href="?page=<?= $pagination['page'] - 1 ?><?= $search ? '&q=' . urlencode($search) : '' ?>">« Précédent</a>
-            <?php endif; ?>
 
-            <span>Page <?= $pagination['page'] ?> sur <?= $pagination['total_pages'] ?></span>
-
-            <?php if ($pagination['page'] < $pagination['total_pages']): ?>
-                <a href="?page=<?= $pagination['page'] + 1 ?><?= $search ? '&q=' . urlencode($search) : '' ?>">Suivant »</a>
-            <?php endif; ?>
-        </nav>
-    <?php endif; ?>
 <?php endif; ?>
 
 <?php
