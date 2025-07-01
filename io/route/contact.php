@@ -4,6 +4,10 @@ require_once 'app/mapper/taxonomy.php';
 return function ($args = null) {
 
     $db = db();
+    if (!empty($_POST)) {
+        $res = (require_once __DIR__.'/contact_post.php')();
+    }
+
     // Initialize variables
     $data = [
         'nom'        => '',
@@ -11,7 +15,7 @@ return function ($args = null) {
         'telephone'  => '',
         'entreprise' => '',
         'sujet'      => '',
-        'message'    => '',
+        'content'    => '',
         'consent'    => ''
     ];
 

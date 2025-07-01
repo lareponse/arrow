@@ -42,7 +42,9 @@
     <section aria-labelledby="form-title">
         <div class="card">
 
-            <form class="p-xl" style="width:100%; max-width: 800px; margin: 0 auto;">
+            <form method="POST" class="p-xl" style="width:100%; max-width: 800px; margin: 0 auto;">
+                <?= csrf_field(3600) ?>
+
                 <h2 id="form-title" class="text-center mb-xl">Envoyez-nous un message</h2>
 
 
@@ -112,11 +114,11 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="message" class="form-label">
+                        <label for="content" class="form-label">
                             Message
                             <span class="required-indicator" aria-label="obligatoire">*</span>
                         </label>
-                        <textarea id="message" name="message" rows="6" required class="form-input"
+                        <textarea id="content" name="content" rows="6" required class="form-input"
                             aria-describedby="message-error message-help"
                             placeholder="Décrivez votre demande en détail..."></textarea>
                         <span class="form-help" id="message-help">Minimum 20 caractères</span>
@@ -162,17 +164,17 @@
 
     <!-- FAQ rapide -->
     <section class="faq bg-gray-50 wide" aria-labelledby="faq-title">
-            <h2 id="faq-title" class="text-center mb-2xl">Questions fréquentes</h2>
-            <div class="tight">
-                <?php foreach ($faq as $item) : ?>
-                    <details class="faq-item">
-                        <summary class="faq-summary"><?= e($item, 'label') ?: 'Question vide' ?></summary>
-                        <div class="faq-content">
-                            <p><?= e($item, 'content') ?: 'Reponse vide' ?></p>
-                        </div>
-                    </details>
-                <?php endforeach; ?>
-            </div>
+        <h2 id="faq-title" class="text-center mb-2xl">Questions fréquentes</h2>
+        <div class="tight">
+            <?php foreach ($faq as $item) : ?>
+                <details class="faq-item">
+                    <summary class="faq-summary"><?= e($item, 'label') ?: 'Question vide' ?></summary>
+                    <div class="faq-content">
+                        <p><?= e($item, 'content') ?: 'Reponse vide' ?></p>
+                    </div>
+                </details>
+            <?php endforeach; ?>
+        </div>
     </section>
 
     <!-- CTA final -->

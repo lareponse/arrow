@@ -346,7 +346,7 @@ const contactForm = {
       !/^[^@]+@[^@]+\.[^@]+$/.test(val)
     ) {
       msg = "Email invalide";
-    } else if (field.name === "message" && val.length && val.length < 20) {
+    } else if (field.name === "content" && val.length && val.length < 20) {
       msg = "Au moins 20 caractères";
     }
 
