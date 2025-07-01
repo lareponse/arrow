@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Accueil' ?> - Copro Academy | Formations en gestion de copropriétés</title>
     <meta name="description"
-        content="Copro Academy - Expert en formations et accompagnement pour la gestion de copropriétés. Formations certifiées, actualités juridiques et support professionnel.">
+        content="<?= $description ?? "Copro Academy - Expert en formations et accompagnement pour la gestion de copropriétés. Formations certifiées, actualités juridiques et support professionnel."  ?>">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
