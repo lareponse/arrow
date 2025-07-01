@@ -9,14 +9,14 @@ return function ($args = null) {
     }
 
     // Initialize variables
-    $data = [
+    $data = ($_POST ?? []) + [
         'nom'        => '',
         'email'      => '',
         'telephone'  => '',
         'entreprise' => '',
         'sujet'      => '',
         'content'    => '',
-        'consent'    => ''
+        'consent'    => 0
     ];
 
     $data = ['title' => 'Contactez-nous', 'description' => 'Contactez-nous pour toute question sur nos formations, événements ou services. Notre équipe est là pour vous aider.'];

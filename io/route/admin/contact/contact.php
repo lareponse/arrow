@@ -1,5 +1,4 @@
 <?php
-require_once 'app/mapper/mapper.php';
 require_once 'app/mapper/taxonomy.php';
 
 return function ($args) {

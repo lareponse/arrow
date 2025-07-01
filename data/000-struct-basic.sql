@@ -144,19 +144,20 @@ CREATE TABLE event (
 ) ENGINE=InnoDB;
 
 
-
-
 DROP TABLE IF EXISTS contact_request;
 CREATE TABLE contact_request (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    label VARCHAR(100) NOT NULL,
-    content TEXT NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NULL,
-    company VARCHAR(100) NULL,
-    subject_id INT UNSIGNED NOT NULL,
-    consent BOOLEAN NOT NULL,
-    status_id INT UNSIGNED NOT NULL
+    id              INT UNSIGNED     NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    label           VARCHAR(200) NOT NULL,
+    content         TEXT             NOT NULL,
+    email           VARCHAR(255)     NOT NULL,
+    phone           VARCHAR(33)      NULL,
+    company         VARCHAR(100)     NULL,
+    subject_id      INT UNSIGNED     NOT NULL,
+    consented_at    TIMESTAMP        NULL DEFAULT NULL,
+    status_id       INT UNSIGNED     NULL DEFAULT NULL,
+    ip_address      VARCHAR(45)      NULL DEFAULT NULL,
+    user_agent      TEXT             NULL DEFAULT NULL,
+    session_id      VARCHAR(128)     NULL DEFAULT NULL
 ) ENGINE=InnoDB;
 
 

@@ -54,11 +54,11 @@
 
                     <div class="grid grid-cols-2 gap-lg mobile:grid-cols-1">
                         <div class="form-group">
-                            <label for="nom" class="form-label">
+                            <label for="label" class="form-label">
                                 Nom complet
                                 <span class="required-indicator" aria-label="obligatoire">*</span>
                             </label>
-                            <input type="text" id="nom" name="nom" required class="form-input"
+                            <input type="text" id="label" name="label" required class="form-input"
                                 aria-describedby="nom-error nom-help" autocomplete="name">
                             <span class="form-help" id="nom-help">Votre nom et prénom</span>
                             <span class="form-error" id="nom-error" role="alert" aria-live="polite"></span>
