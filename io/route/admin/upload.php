@@ -18,15 +18,16 @@ return function ($args = null) {
     die;
 };
 
-
-function upload_image(array $http_post_file, string $abolute_file_path_no_ext, int $max_kb = 2048): ?string
+function upload_image(array $http_post_file, string $absolute_file_path_no_ext, int $max_kb = 2048, int $quality = 90): ?string
 {
-    $map ??= [
-        'image/jpeg' => 'jpg',
-        'image/png' => 'png',
-        'image/webp' => 'webp'
+    // Allowed MIME types
+    $allowed = [
+        'image/jpeg',
+        'image/png',
+        'image/webp'
     ];
 
+    // Basic upload checks
     if (empty($http_post_file['tmp_name'])
         || !empty($http_post_file['error'])
         || !isset($http_post_file['type'])
@@ -34,29 +35,57 @@ function upload_image(array $http_post_file, string $abolute_file_path_no_ext, i
         || !is_uploaded_file($http_post_file['tmp_name'])
         || $http_post_file['size'] === 0
         || $http_post_file['size'] > $max_kb * 1024
-    ) return null;
-
-    // Verify actual file type
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    if (finfo_file($finfo, $http_post_file['tmp_name']) !== $http_post_file['type']) return null;
-
-    // Unsupported file type
-    $ext = $map[$http_post_file['type']] ?? null;
-    if (!$ext) return null;
-
-    // get the folder from the absolute file path
-    $folder = dirname($abolute_file_path_no_ext);
-    is_dir($folder) || mkdir($folder, 0755, true);
-
-    // Generate filename from original name
-
-    $target = preg_replace('#\/\/+#', '/', "{$abolute_file_path_no_ext}");
-    $candidate = "{$target}.{$ext}";
-    // Rename existing file if it exists
-    if (file_exists($candidate)) {
-        $timestamp = (int)(microtime(true) * 1000000);
-        if(!rename($candidate, "{$target}-{$timestamp}.{$ext}"))
-            return null; // Failed to rename existing file
+    ) {
+        return null;
     }
-    return move_uploaded_file($http_post_file['tmp_name'], $candidate) ? $candidate : null;
+
+    $mime = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $http_post_file['tmp_name']);
+    if ($mime !== $http_post_file['type'] || !in_array($mime, $allowed, true)) {
+        return null;
+    }
+
+    // Load source image
+    switch ($mime) {
+        case 'image/jpeg':
+            $src = imagecreatefromjpeg($http_post_file['tmp_name']);
+            break;
+        case 'image/png':
+            $src = imagecreatefrompng($http_post_file['tmp_name']);
+            // Preserve transparency
+            imagealphablending($src, true);
+            imagesavealpha($src, true);
+            break;
+        case 'image/webp':
+            $src = imagecreatefromwebp($http_post_file['tmp_name']);
+            break;
+        default:
+            return null;
+    }
+
+    if (!$src) {
+        return null;
+    }
+
+    // Prepare target path
+    $folder = dirname($absolute_file_path_no_ext);
+    if (!is_dir($folder) && !mkdir($folder, 0755, true)) {
+        return null;
+    }
+
+    $target = rtrim($absolute_file_path_no_ext, '/\\');
+    $candidate = "{$target}.webp";
+
+    // Rename existing file if present
+    if (file_exists($candidate)) {
+        $timestamp = (int) (microtime(true) * 1000000);
+        if (!rename($candidate, "{$target}-{$timestamp}.webp")) {
+            return null;
+        }
+    }
+
+    // Save as WebP
+    $result = imagewebp($src, $candidate, $quality);
+    imagedestroy($src);
+
+    return $result ? $candidate : null;
 }
