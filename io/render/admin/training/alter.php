@@ -6,9 +6,9 @@ $is_edit = !empty($training['id']);
     <h1><?= $is_edit ? 'Modifier la formation' : 'Nouvelle formation' ?></h1>
     <?php if ($is_edit): ?>
         <nav class="page-actions">
-            <a href="/admin/training/list" class="btn secondary">Retour à la liste</a>
+            <a href="/admin/training" class="btn secondary">Retour à la liste</a>
             <?php if ($training['enabled_at']): ?>
-                <a href="/training/<?= $training['slug'] ?>" class="btn secondary" target="_blank">Voir sur le site</a>
+                <a href="/training/detail/<?= $training['slug'] ?>" class="btn secondary" target="_blank">Voir sur le site</a>
             <?php endif; ?>
         </nav>
     <?php endif; ?>
@@ -254,7 +254,7 @@ $is_edit = !empty($training['id']);
                 <nav class="quick-actions">
 
                     <?php if ($training['enabled_at']): ?>
-                        <a href="/training/<?= $training['slug'] ?>" class="action-link" target="_blank">
+                        <a href="/training/detail/<?= $training['slug'] ?>" class="action-link" target="_blank">
                             <strong>Voir sur le site</strong>
                             <span>Page publique de la formation</span>
                         </a>
@@ -321,7 +321,7 @@ $is_edit = !empty($training['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer la formation' ?>
         </button>
-        <a href="/admin/training/list" class="btn secondary">Retour</a>
+        <a href="/admin/training" class="btn secondary">Retour</a>
 
         <?php if ($is_edit): ?>
             <button type="submit" name="action" value="delete" class="btn danger"

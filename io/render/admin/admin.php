@@ -42,7 +42,7 @@ $statTypes = [
     <section class="recent-activity" aria-labelledby="activity-heading">
         <header class="section-header">
             <h2 id="activity-heading">Activité récente</h2>
-            <a href="/admin/contact/list" class="btn secondary small">Voir tout</a>
+            <a href="/admin/contact" class="btn secondary small">Voir tout</a>
         </header>
 
         <?php if (empty($recent['contacts'])): ?>
@@ -76,7 +76,7 @@ $statTypes = [
     <section class="upcoming-events" aria-labelledby="events-heading">
         <header class="section-header">
             <h2 id="events-heading">Événements à venir</h2>
-            <a href="/admin/event/list" class="btn secondary small">Voir tout</a>
+            <a href="/admin/event" class="btn secondary small">Voir tout</a>
         </header>
 
         <?php if (empty($recent['events'])): ?>

@@ -13,7 +13,7 @@
             placeholder="Rechercher articles...">
         <button type="submit">Rechercher</button>
         <?php if ($search): ?>
-            <a href="/admin/article/list" class="btn secondary">Effacer</a>
+            <a href="/admin/article" class="btn secondary">Effacer</a>
         <?php endif; ?>
     </form>
 </section>

@@ -7,9 +7,9 @@ $is_edit = !empty($article['id']);
     <h1><?= $is_edit ? 'Modifier l\'article' : 'Nouvel article' ?></h1>
     <?php if ($is_edit): ?>
         <nav class="page-actions">
-            <a href="/admin/article/list" class="btn secondary">Retour à la liste</a>
+            <a href="/admin/article" class="btn secondary">Retour à la liste</a>
             <?php if ($article['enabled_at']): ?>
-                <a href="/article/<?= $article['slug'] ?>" class="btn secondary" target="_blank">
+                <a href="/article/detail/<?= $article['slug'] ?>" class="btn secondary" target="_blank">
                     Voir sur le site
                 </a>
             <?php endif; ?>
@@ -227,7 +227,7 @@ $is_edit = !empty($article['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer l\'article' ?>
         </button>
-        <a href="/admin/article/list" class="btn secondary">Retour</a>
+        <a href="/admin/article" class="btn secondary">Retour</a>
 
         <?php if ($is_edit): ?>
             <button

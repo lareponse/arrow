@@ -1,7 +1,7 @@
 <header class="page-header">
     <h1>Programme - <?= htmlspecialchars($training['label']) ?></h1>
     <nav class="page-actions">
-        <a href="/admin/training/list" class="btn secondary">Retour aux formations</a>
+        <a href="/admin/training" class="btn secondary">Retour aux formations</a>
         <a href="/admin/training/alter/<?= $training['slug'] ?>" class="btn secondary">Modifier formation</a>
         <a href="#add-session" class="btn" onclick="toggleSessionForm()">Nouvelle session</a>
     </nav>

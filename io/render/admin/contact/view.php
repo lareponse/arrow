@@ -1,7 +1,7 @@
 <header class="page-header">
     <h1>Demande de contact #<?= $contact['id'] ?></h1>
     <div class="page-actions">
-        <a href="/admin/contact/list" class="btn secondary">← Retour à la liste</a>
+        <a href="/admin/contact" class="btn secondary">← Retour à la liste</a>
     </div>
 </header>
 

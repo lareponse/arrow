@@ -18,7 +18,7 @@
             placeholder="Rechercher formateurs...">
         <button type="submit">Rechercher</button>
         <?php if ($search): ?>
-            <a href="/admin/trainer/list" class="btn secondary">Effacer</a>
+            <a href="/admin/trainer" class="btn secondary">Effacer</a>
         <?php endif; ?>
     </form>
 </section>

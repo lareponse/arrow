@@ -4,14 +4,6 @@
  * Register route
  */
 return function ($quest) {
-    $errors = [];
-
-    // Check if already logged in
-    if (!auth()) {
-        // Redirect to home
-        header('Location: /');
-        exit;
-    }
 
     // Process registration form
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

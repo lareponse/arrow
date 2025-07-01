@@ -6,9 +6,9 @@ $is_edit = !empty($event['id']);
     <h1><?= $is_edit ? 'Modifier l\'événement' : 'Nouvel événement' ?></h1>
     <?php if ($is_edit): ?>
         <nav class="page-actions">
-            <a href="/admin/event/list" class="btn secondary">Retour à la liste</a>
+            <a href="/admin/event" class="btn secondary">Retour à la liste</a>
             <?php if (!empty($event['enabled_at'])): ?>
-                <a href="/event/<?= $event['slug'] ?>" class="btn secondary" target="_blank">
+                <a href="/event/detail/<?= $event['slug'] ?>" class="btn secondary" target="_blank">
                     Voir sur le site
                 </a>
             <?php endif; ?>
@@ -258,7 +258,7 @@ $is_edit = !empty($event['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer l\'événement' ?>
         </button>
-        <a href="/admin/event/list" class="btn secondary">Retour</a>
+        <a href="/admin/event" class="btn secondary">Retour</a>
 
         <?php if ($is_edit): ?>
             <button

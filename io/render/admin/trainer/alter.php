@@ -6,7 +6,7 @@ $is_edit = !empty($trainer['id']);
     <h1><?= $is_edit ? 'Modifier le formateur' : 'Nouveau formateur' ?></h1>
     <?php if ($is_edit): ?>
         <nav class="page-actions">
-            <a href="/admin/trainer/list" class="btn secondary">Retour à la liste</a>
+            <a href="/admin/trainer" class="btn secondary">Retour à la liste</a>
             <?php if ($trainer['enabled_at']): ?>
                 <a href="/trainer/<?= $trainer['slug'] ?>" class="btn secondary" target="_blank">
                     Voir le profil
@@ -152,7 +152,7 @@ $is_edit = !empty($trainer['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer le formateur' ?>
         </button>
-        <a href="/admin/trainer/list" class="btn secondary">Retour</a>
+        <a href="/admin/trainer" class="btn secondary">Retour</a>
 
         <?php if ($is_edit): ?>
             <button type="submit" name="action" value="delete" class="btn danger"
