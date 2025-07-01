@@ -1,20 +1,16 @@
 <?php
-// io/route/event/alter.php
 
 require_once 'app/mapper/taxonomy.php';
 require_once 'add/bad/dad/arrow.php';
 require_once 'app/upload.php';
-
 
 return function ($args) {
     $slug = $args[0] ?? null;
     $event = row(db(), 'event');
 
     if ($slug) {
-        $event(ROW_LOAD, ['slug' => $slug]);
-        if (!$event(ROW_GET)) {
-            http_out(301, 'Event not found', ['Location' => "/admin/event"]);
-        }
+        $res = $event(ROW_LOAD|ROW_GET, ['slug' => $slug]);
+        $res || http_out(301, 'Event not found', ['Location' => "/admin/event"]);
     }
 
     // Handle POST submission
@@ -29,17 +25,12 @@ return function ($args) {
         $clean['speaker']           = trim($_POST['speaker'] ?? '') ?: null;
         $clean['location']          = trim($_POST['location'] ?? '') ?: null;
 
-        if (!empty($_POST['published']) && empty($event(ROW_GET, ['enabled_at'])))
-            $clean['enabled_at'] = date('Y-m-d H:i:s');
+        empty($_POST['published']) 
+            ? ($clean['enabled_at'] = null)
+            : ($clean['enabled_at'] = date('Y-m-d H:i:s'));
 
-        if (!empty($_FILES))
-            foreach ($_FILES as $name => $file)
-                $clean[$name] = upload($file, $_SERVER['DOCUMENT_ROOT'] . '/asset/image/event/' . $name);
-
-        $event(ROW_SCHEMA);
         $event(ROW_SET, $clean);
         $event(ROW_SAVE);
-        $event(ROW_LOAD);
         http_out(302, '', ['Location' => "/admin/event/alter/" . $event(ROW_GET, ['slug'])]);
     }
 
