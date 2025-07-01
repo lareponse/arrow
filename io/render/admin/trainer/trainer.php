@@ -38,7 +38,7 @@
                         <td>
                             <div class="trainer-info">
                                 <?php if ($trainer['avatar']): ?>
-                                    <img src="<?= htmlspecialchars($trainer['avatar']) ?>"
+                                    <img src="/asset/image/trainer/avatar/<?= $trainer['slug'] ?>.webp"
                                         alt="<?= htmlspecialchars($trainer['label']) ?>"
                                         class="trainer-avatar">
                                 <?php else: ?>
@@ -108,7 +108,7 @@
             </tbody>
         </table>
     </div>
-    
+
 <?php endif; ?>
 
 <style>

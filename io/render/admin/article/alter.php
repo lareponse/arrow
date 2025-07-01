@@ -164,33 +164,17 @@ $is_edit = !empty($article['id']);
 
         </section>
 
-        <section class="panel media-box">
-            <header>
-                <h2>Image</h2>
-            </header>
-
-            <?php if (!empty($article['avatar'])): ?>
-                <figure class="current-image">
-                    <img
-                        src="<?= htmlspecialchars($article['avatar']) ?>"
-                        alt="Image actuelle"
-                        loading="lazy">
-                    <figcaption>Image actuelle</figcaption>
-                </figure>
-            <?php endif; ?>
-
-            <fieldset class="form-group">
-                <label for="avatar">
-                    <?= !empty($article['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
-                </label>
-                <input
-                    type="file"
-                    id="avatar"
-                    name="avatar"
-                    accept="image/jpeg,image/png,image/webp"
-                    aria-describedby="avatar-help">
-                <small id="avatar-help">JPEG, PNG ou WebP. Max 2MB.</small>
-            </fieldset>
+     
+        <section class="media-box panel drop-zone" data-upload="/admin/upload/article/avatar/<?= $article['slug'] ?>">
+            <figure>
+                <img src="/asset/image/article/avatar/<?= $article['slug'] ?>.webp" class="drop-preview" alt=" - Photo manquante - " loading="lazy" />
+                <figcaption>Photo principale</figcaption>
+            </figure>
+            <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
+            <label for="avatar" class="drop-label">
+                <span></span>
+                <strong>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</strong>
+            </label>
         </section>
 
         <?php if ($is_edit): ?>
@@ -221,6 +205,22 @@ $is_edit = !empty($article['id']);
                 </dl>
             </section>
         <?php endif; ?>
+
+        <div id="picker" class="panel emoji-picker"></div>
+        <div class="output">
+            Selected: <span id="selected">None</span><br>
+            Unicode: <span id="unicode">-</span><br>
+            Hex: <span id="hex">-</span>
+        </div>
+
+
+        <script type="module">
+            import createPicker from '/asset/js/emojis-unicode.js';
+            // only show “education” & “achievements” for instance:
+            createPicker('#picker');
+            // optional global callback:
+            window.onEmojiSelect = info => console.log('picked:', info);
+        </script>
     </aside>
 
     <footer class="form-actions">

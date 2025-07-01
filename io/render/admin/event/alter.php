@@ -186,33 +186,16 @@ $is_edit = !empty($event['id']);
             </fieldset>
         </section>
 
-        <section class="panel media-box">
-            <header>
-                <h2>Image</h2>
-            </header>
-
-            <?php if (!empty($event['avatar'])): ?>
-                <figure class="current-image">
-                    <img
-                        src="<?= htmlspecialchars($event['avatar']) ?>"
-                        alt="Image actuelle"
-                        loading="lazy">
-                    <figcaption>Image actuelle</figcaption>
-                </figure>
-            <?php endif; ?>
-
-            <fieldset class="form-group">
-                <label for="avatar">
-                    <?= !empty($event['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
-                </label>
-                <input
-                    type="file"
-                    id="avatar"
-                    name="avatar"
-                    accept="image/jpeg,image/png,image/webp"
-                    aria-describedby="avatar-help">
-                <small id="avatar-help">JPEG, PNG ou WebP. Max 2MB.</small>
-            </fieldset>
+        <section class="media-box panel drop-zone" data-upload="/admin/upload/event/avatar/<?= $event['slug'] ?>">
+            <figure>
+                <img src="/asset/image/event/avatar/<?= $event['slug'] ?>.webp" class="drop-preview" alt=" - Photo manquante - " loading="lazy" />
+                <figcaption>Photo principale</figcaption>
+            </figure>
+            <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
+            <label for="avatar" class="drop-label">
+                <span></span>
+                <strong>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</strong>
+            </label>
         </section>
 
         <?php if ($is_edit): ?>

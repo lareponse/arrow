@@ -490,6 +490,12 @@ ol h3 a {
     display: block;
     cursor: pointer;
 }
+.drop-zone .drop-preview{
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin-block-end: var(--space-sm);
+}
 
 .current-image {
     max-width: 120px;

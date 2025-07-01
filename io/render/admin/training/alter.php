@@ -173,29 +173,16 @@ $is_edit = !empty($training['id']);
         </section>
 
         <?php if ($is_edit && $training['id']): ?>
-
-            <section class="panel media-box">
-                <header>
-                    <h2>Image de la formation</h2>
-                </header>
-
-                <?php if (!empty($training['avatar'])): ?>
-                    <figure class="current-image">
-                        <img src="<?= htmlspecialchars($training['avatar']) ?>"
-                            alt="Image actuelle" loading="lazy">
-                        <figcaption>Image actuelle</figcaption>
-                    </figure>
-                <?php endif; ?>
-
-                <fieldset class="form-group">
-                    <label for="avatar">
-                        <?= !empty($training['avatar']) ? 'Changer l\'image' : 'Ajouter une image' ?>
-                    </label>
-                    <input type="file" name="avatar" id="avatar"
-                        accept="image/jpeg,image/png,image/webp">
-                    <small>JPEG, PNG ou WebP. Max 2MB.</small>
-                </fieldset>
-
+            <section class="media-box panel drop-zone" data-upload="/admin/upload/training/avatar/<?= $training['slug'] ?>">
+                <figure>
+                    <img src="/asset/image/training/avatar/<?= $training['slug'] ?>.webp" class="drop-preview" alt=" - Photo manquante - " loading="lazy" />
+                    <figcaption>Photo principale</figcaption>
+                </figure>
+                <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
+                <label for="avatar" class="drop-label">
+                    <span></span>
+                    <strong>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</strong>
+                </label>
             </section>
 
             <!-- Program Overview Panel -->

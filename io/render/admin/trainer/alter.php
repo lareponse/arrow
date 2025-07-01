@@ -84,47 +84,20 @@ $is_edit = !empty($trainer['id']);
             </fieldset>
         </section>
 
-        <section class="panel media-box">
-            <header>
-                <h2>Photo de profil</h2>
-            </header>
-
-            <?php if (!empty($trainer['avatar'])): ?>
-                <figure class="current-image">
-                    <img src="<?= htmlspecialchars($trainer['avatar']) ?>"
-                        alt="Photo actuelle" loading="lazy"
-                        class="trainer-photo">
-                    <figcaption>Photo actuelle</figcaption>
-                </figure>
-            <?php endif; ?>
+        <section class="media-box panel drop-zone" data-upload="/admin/upload/trainer/avatar/<?= $trainer['slug'] ?>">
+            <figure>
+                <img src="/asset/image/trainer/avatar/<?= $trainer['slug'] ?>.webp" class="drop-preview" alt=" - Photo manquante - " loading="lazy" />
+                <figcaption>Photo de profile</figcaption>
+            </figure>
+            <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
+            <label for="avatar" class="drop-label">
+                <span></span>
+                <strong>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</strong>
+            </label>
         </section>
-        
-        <div id="picker" class="emoji-picker"></div>
-        <div class="output">
-            Selected: <span id="selected">None</span><br>
-            Unicode: <span id="unicode">-</span><br>
-            Hex: <span id="hex">-</span>
-        </div>
 
-
-        <script type="module">
-            import createPicker from '/asset/js/emojis-unicode.js';
-            // only show “education” & “achievements” for instance:
-            createPicker('#picker');
-            // optional global callback:
-            window.onEmojiSelect = info => console.log('picked:', info);
-        </script>
 
         <?php if ($is_edit): ?>
-
-            <div class="panel  drop-zone" data-upload="/admin/upload/trainer/avatar/<?= $trainer['slug'] ?>">
-                <h2>Photo de profil</h2>
-                <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
-                <label for="avatar" class="drop-label">
-                    <span></span>
-                    <small>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</small>
-                </label>
-            </div>
 
             <section class="panel stats-box">
                 <header>

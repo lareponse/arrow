@@ -54,6 +54,8 @@ $user = auth();
 
     <script type="module">
         import slugify from '/asset/js/slug.js';
+        import dropzones from '/asset/js/dropzone.js';
+
         document.addEventListener('DOMContentLoaded', () => {
 
             // auto-generate slug from label input
@@ -63,65 +65,7 @@ $user = auth();
                 slugInput.value = slugify(labelInput.value);
             });
 
-
-            document.querySelectorAll('.drop-zone').forEach(zone => {
-                const input = zone.querySelector('input[type="file"]');
-                const label = zone.querySelector('.drop-label span');
-
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => {
-                    zone.addEventListener(e, prevent);
-                });
-
-                ['dragenter', 'dragover'].forEach(e => {
-                    zone.addEventListener(e, () => zone.classList.add('drag-over'));
-                });
-
-                ['dragleave', 'drop'].forEach(e => {
-                    zone.addEventListener(e, () => zone.classList.remove('drag-over'));
-                });
-
-                zone.addEventListener('drop', handleDrop);
-                input.addEventListener('change', e => upload(e.target.files[0]));
-
-                function prevent(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-
-                function handleDrop(e) {
-                    upload(e.dataTransfer.files[0]);
-                }
-
-                function upload(file) {
-                    if (!file) return;
-
-                    const formData = new FormData();
-                    formData.append('avatar', file);
-
-                    label.textContent = 'Uploading...';
-
-                    fetch(zone.dataset.upload, {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(r => r.json())
-                        .then(data => {
-                            if (data.success) {
-                                label.innerHTML = `<img src="${data.url}" alt="Uploaded" style="max-width:100px">`;
-                                label.parentElement.appendChild(
-                                    Object.assign(document.createElement('input'), {
-                                        type: 'hidden',
-                                        name: labelInput.name,
-                                        value: data.url
-                                    })
-                                );
-                            } else {
-                                label.textContent = 'Upload failed';
-                            }
-                        })
-                        .catch(() => label.textContent = 'Upload failed');
-                }
-            });
+            dropzones('.drop-zone');
         });
     </script>
 </body>
