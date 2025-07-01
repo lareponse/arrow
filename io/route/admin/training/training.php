@@ -1,32 +1,22 @@
 <?php
 require_once 'app/mapper/mapper.php';
+require_once 'app/mapper/taxonomy.php';
 
 return function ($args) {
-    $page = max(1, (int)($_GET['page'] ?? 1));
-    $limit = 20;
-    $offset = ($page - 1) * $limit;
 
-    $conditions = [];
-    if ($search = $_GET['q'] ?? '') {
-        $conditions = ['label LIKE' => "%$search%"];
+    $sql = 'SELECT * FROM `training_plus` ';
+    $current_filter = $_GET['filter'] ?? '';
+    switch($_GET['filter'] ?? ''){
+        case 'upcoming':    $sql .= " WHERE `start_date` >= NOW()";     break;
+        case 'past':        $sql .= " WHERE `start_date` < NOW()";      break;
+        case 'certified':   $sql .= " WHERE `certification` = 1";       break;
+        case 'published':   $sql .= " WHERE `enabled_at` IS NOT NULL";  break;
+        case 'draft':       $sql .= " WHERE `enabled_at` IS NULL";      break;
     }
-
-    $trainings = map_with_taxonomy('training', [
-        'level_id' => 'level',
-        'trainer_id' => 'trainer'
-    ], $conditions, [
-        'limit' => $limit,
-        'offset' => $offset,
-        'order' => 'start_date DESC'
-    ]);
-
-    $total = map_list('training', $conditions, ['limit' => null]);
-    $total_pages = ceil(count($total) / $limit);
-
+    $sql .= ' ORDER BY `start_date` DESC';
     return [
         'title' => 'Formations',
-        'trainings' => $trainings,
-        'search' => $search,
-        'pagination' => compact('page', 'total_pages'),
+        'current_filter' => $current_filter,
+        'trainings' => dbq(db(), $sql)->fetchAll(),
     ];
 };

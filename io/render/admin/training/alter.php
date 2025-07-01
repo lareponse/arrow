@@ -37,8 +37,8 @@ $is_edit = !empty($training['id']);
 
 
         <fieldset class="form-group">
-            <label for="description">Description *</label>
-            <textarea name="description" id="description" rows="6" required><?= htmlspecialchars($training['description'] ?? '') ?></textarea>
+            <label for="content">Description *</label>
+            <textarea name="content" id="description" rows="6" required><?= htmlspecialchars($training['content'] ?? '') ?></textarea>
         </fieldset>
 
         <div class="form-row">

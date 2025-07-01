@@ -8,20 +8,20 @@
 <section class="content-filters">
     <nav class="filter-tabs">
         <a href="/admin/training"
-            class="<?= empty($current_status) ? 'active' : '' ?>">Toutes</a>
-        <a href="/admin/training?status=upcoming"
-            class="<?= $current_status === 'upcoming' ? 'active' : '' ?>">À venir</a>
-        <a href="/admin/training?status=past"
-            class="<?= $current_status === 'past' ? 'active' : '' ?>">Terminées</a>
-        <a href="/admin/training?status=published"
-            class="<?= $current_status === 'published' ? 'active' : '' ?>">Publiées</a>
-        <a href="/admin/training?status=draft"
-            class="<?= $current_status === 'draft' ? 'active' : '' ?>">Brouillons</a>
+            class="<?= empty($current_filter) ? 'active' : '' ?>">Toutes</a>
+        <a href="/admin/training?filter=upcoming"
+            class="<?= $current_filter === 'upcoming' ? 'active' : '' ?>">À venir</a>
+        <a href="/admin/training?filter=past"
+            class="<?= $current_filter === 'past' ? 'active' : '' ?>">Terminées</a>
+        <a href="/admin/training?filter=published"
+            class="<?= $current_filter === 'published' ? 'active' : '' ?>">Publiées</a>
+        <a href="/admin/training?filter=draft"
+            class="<?= $current_filter === 'draft' ? 'active' : '' ?>">Brouillons</a>
     </nav>
 
     <form method="get" class="search-form">
-        <?php if ($current_status): ?>
-            <input type="hidden" name="status" value="<?= htmlspecialchars($current_status) ?>">
+        <?php if ($current_filter): ?>
+            <input type="hidden" name="status" value="<?= htmlspecialchars($current_filter) ?>">
         <?php endif; ?>
         <input type="search"
             name="q"
@@ -29,7 +29,7 @@
             placeholder="Rechercher formations...">
         <button type="submit">Rechercher</button>
         <?php if ($search): ?>
-            <a href="/admin/training<?= $current_status ? '?status=' . urlencode($current_status) : '' ?>" class="btn secondary">Effacer</a>
+            <a href="/admin/training<?= $current_filter ? '?filter=' . urlencode($current_filter) : '' ?>" class="btn secondary">Effacer</a>
         <?php endif; ?>
     </form>
 </section>
@@ -146,7 +146,7 @@
             <?php
             $query_params = [];
             if ($search) $query_params['q'] = $search;
-            if ($current_status) $query_params['status'] = $current_status;
+            if ($current_filter) $query_params['status'] = $current_filter;
             $query_string = $query_params ? '&' . http_build_query($query_params) : '';
             ?>
 

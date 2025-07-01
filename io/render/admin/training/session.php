@@ -59,8 +59,8 @@
             </fieldset>
 
             <fieldset class="form-group">
-                <label for="description">Description</label>
-                <textarea name="description" id="description" rows="4"><?= htmlspecialchars($edit_session['description'] ?? '') ?></textarea>
+                <label for="content">Description</label>
+                <textarea name="content" id="content" rows="4"><?= htmlspecialchars($edit_session['content'] ?? '') ?></textarea>
             </fieldset>
 
             <fieldset class="form-group">
