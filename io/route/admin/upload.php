@@ -3,89 +3,123 @@
 // /admin/upload/xxxx
 
 return function ($args = null) {
+    
     $upload_to = implode(DIRECTORY_SEPARATOR, $args);
-    $base_file = $_SERVER['DOCUMENT_ROOT'] . "/asset/image/$upload_to";
-    $result = upload_image($_FILES['avatar'], $base_file);
-    if (!$result)
-        http_out(400, json_encode(['success' => false, 'error' => 'Invalid file upload']), ['Content-Type' => 'application/json']);
+    $base_file = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\') . "/asset/image/$upload_to";
+    try {
+        $result = upload_image($_FILES['avatar'], $base_file);
+        // vd($result, 'upload_image result');die;
+        $result || http_out(400, json_encode(['success' => false, 'error' => 'Invalid file upload']), ['Content-Type' => 'application/json']);
 
-    header('Content-Type: application/json');
-
-    // remove $_SERVER['DOCUMENT_ROOT'] from the result path
-    $result = str_replace($_SERVER['DOCUMENT_ROOT'], '', $result);
-
-    echo json_encode(['success' => !!$result, 'url' => $result]);
-    die;
+        $result = str_replace($_SERVER['DOCUMENT_ROOT'], '', $result);
+        $payload = json_encode(['success' => !!$result, 'url' => $result]);
+        http_out(200, $payload, ['Content-Type' => 'application/json']);
+    } catch (Throwable $e) {
+        http_out(400, json_encode(['success' => false, 'error' => $e->getMessage()]), ['Content-Type' => 'application/json']);
+    }
 };
 
 function upload_image(array $http_post_file, string $absolute_file_path_no_ext, int $max_kb = 2048, int $quality = 90): ?string
 {
-    // Allowed MIME types
-    $allowed = [
-        'image/jpeg',
-        'image/png',
-        'image/webp'
-    ];
+    $_file = payload_guard($http_post_file, $max_kb);
+    $gd_image = gd_create($_file)                       ?? throw new BadMethodCallException('Unsupported image type or error creating image resource');
+    $gd_image = gd_max_size($gd_image, 1980, 108)       ?? throw new BadMethodCallException('Error resizing image');
+    return save_gd_image($gd_image, $absolute_file_path_no_ext, $quality);
+}
 
-    // Basic upload checks
-    if (empty($http_post_file['tmp_name'])
-        || !empty($http_post_file['error'])
-        || !isset($http_post_file['type'])
-        || !isset($http_post_file['size'])
-        || !is_uploaded_file($http_post_file['tmp_name'])
-        || $http_post_file['size'] === 0
-        || $http_post_file['size'] > $max_kb * 1024
-    ) {
-        return null;
-    }
+function payload_guard($_file, $max_kb = 2048)
+{
+    empty($_file['tmp_name'])              && throw new BadMethodCallException('No file uploaded');
+    is_uploaded_file($_file['tmp_name'])   || throw new BadMethodCallException('File is not uploaded via HTTP POST');
+    empty($_file['size'])                  && throw new BadMethodCallException('File size is missing');
+    empty($_file['type'])                  && throw new BadMethodCallException('File type is missing');
+    
+    $_file['size'] > $max_kb * 1024        && throw new BadMethodCallException('File size exceeds the limit');
 
-    $mime = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $http_post_file['tmp_name']);
-    if ($mime !== $http_post_file['type'] || !in_array($mime, $allowed, true)) {
-        return null;
-    }
+    empty($_file['error']) 
+    || $_file['error'] === UPLOAD_ERR_OK   || throw new BadMethodCallException('File upload error');
 
-    // Load source image
-    switch ($mime) {
+
+    $mime = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_file['tmp_name']);
+    $mime === $_file['type']               || throw new BadMethodCallException('Invalid file type');
+
+    return $_file;
+}
+
+function gd_create(array $_file): ?GdImage
+{
+    $src = null;
+    switch ($_file['type']) {
         case 'image/jpeg':
-            $src = imagecreatefromjpeg($http_post_file['tmp_name']);
+            $src = imagecreatefromjpeg($_file['tmp_name']);
             break;
         case 'image/png':
-            $src = imagecreatefrompng($http_post_file['tmp_name']);
-            // Preserve transparency
+            $src = imagecreatefrompng($_file['tmp_name']);
             imagealphablending($src, true);
             imagesavealpha($src, true);
             break;
         case 'image/webp':
-            $src = imagecreatefromwebp($http_post_file['tmp_name']);
+            $src = imagecreatefromwebp($_file['tmp_name']);
             break;
-        default:
-            return null;
+    }
+    return ($src instanceof GdImage) ? $src : null;
+}
+
+function gd_max_size(GdImage $src, int $max_width, int $max_height): ?GdImage
+{
+    $width = imagesx($src);
+    $height = imagesy($src);
+
+    if ($width <= $max_width && $height <= $max_height) {
+        return $src; // No resizing needed
     }
 
-    if (!$src) {
+    // Calculate new dimensions while maintaining aspect ratio
+    if ($width / $height > $max_width / $max_height) {
+        $new_width = $max_width;
+        $new_height = (int) (($max_width / $width) * $height);
+    } else {
+        $new_height = $max_height;
+        $new_width = (int) (($max_height / $height) * $width);
+    }
+
+    // Create a new true color image with the new dimensions
+    $dst = imagecreatetruecolor($new_width, $new_height);
+    imagealphablending($dst, false);
+    imagesavealpha($dst, true);
+
+    if (!imagecopyresampled($dst, $src, 0, 0, 0, 0, $new_width, $new_height, $width, $height)) {
+        imagedestroy($src);
+        imagedestroy($dst);
         return null;
     }
 
-    // Prepare target path
+    imagedestroy($src);
+
+    return $dst;
+}
+
+function save_gd_image(GdImage $gd_image, string $absolute_file_path_no_ext, int $quality = 90): string
+{
     $folder = dirname($absolute_file_path_no_ext);
     if (!is_dir($folder) && !mkdir($folder, 0755, true)) {
-        return null;
+        throw new RuntimeException("Failed to create directory: $folder");
     }
 
     $target = rtrim($absolute_file_path_no_ext, '/\\');
     $candidate = "{$target}.webp";
-
-    // Rename existing file if present
     if (file_exists($candidate)) {
         $timestamp = (int) (microtime(true) * 1000000);
         if (!rename($candidate, "{$target}-{$timestamp}.webp")) {
-            return null;
+            imagedestroy($gd_image);
+            throw new RuntimeException("Failed to backup existing file: $candidate");
         }
     }
+    // Save the image as WebP
+    if (!imagewebp($gd_image, $candidate, $quality)) {
+        imagedestroy($gd_image);
+        throw new RuntimeException("Failed to save image as WebP: $candidate");
+    }
 
-    // Save as WebP
-    $result = imagewebp($src, $candidate, $quality);
-    imagedestroy($src);
-
-    return $result ? $candidate : null;
+    return $candidate;
 }
