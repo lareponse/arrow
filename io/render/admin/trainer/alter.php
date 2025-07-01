@@ -97,23 +97,15 @@ $is_edit = !empty($trainer['id']);
                     <figcaption>Photo actuelle</figcaption>
                 </figure>
             <?php endif; ?>
-
-            <fieldset class="form-group">
-                <label for="avatar">
-                    <?= !empty($trainer['avatar']) ? 'Changer la photo' : 'Ajouter une photo' ?>
-                </label>
-                <input type="file" name="avatar" id="avatar"
-                    accept="image/jpeg,image/png,image/webp">
-                <small>JPEG, PNG ou WebP. Max 2MB. Format carré recommandé.</small>
-            </fieldset>
         </section>
 
         <?php if ($is_edit): ?>
 
             <div class="panel  drop-zone" data-upload="/admin/upload/trainer/avatar">
-                <input type="file" name="avatar" id="avatar" accept="image/*" hidden>
+                <h2>Photo de profil</h2>
+                <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
                 <label for="avatar" class="drop-label">
-                    <span>Drop image or click to select</span>
+                    <small>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</small>
                 </label>
             </div>
 
