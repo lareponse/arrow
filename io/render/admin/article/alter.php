@@ -164,7 +164,7 @@ $is_edit = !empty($article['id']);
 
         </section>
 
-     
+        
         <section class="media-box panel drop-zone" data-upload="/admin/upload/article/avatar/<?= $article['slug'] ?>">
             <figure>
                 <img src="/asset/image/article/avatar/<?= $article['slug'] ?>.webp" class="drop-preview" alt=" - Photo manquante - " loading="lazy" />
@@ -173,7 +173,7 @@ $is_edit = !empty($article['id']);
             <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
             <label for="avatar" class="drop-label">
                 <span></span>
-                <strong>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</strong>
+                <strong>JPEG, PNG ou WebP.<br>Max 2MB.</strong>
             </label>
         </section>
 

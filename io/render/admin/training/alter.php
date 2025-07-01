@@ -181,7 +181,7 @@ $is_edit = !empty($training['id']);
                 <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
                 <label for="avatar" class="drop-label">
                     <span></span>
-                    <strong>JPEG, PNG ou WebP.<br>Max 2MB.<br>Format carré recommandé.</strong>
+                    <strong>JPEG, PNG ou WebP.<br>Max 2MB</strong>
                 </label>
             </section>
 
