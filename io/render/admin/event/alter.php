@@ -43,13 +43,13 @@ $is_edit = !empty($event['id']);
         </fieldset>
 
         <fieldset class="form-group">
-            <label for="description">Description *</label>
+            <label for="content">Description *</label>
             <textarea
-                id="description"
-                name="description"
+                id="content"
+                name="content"
                 rows="10"
                 required
-                class="content-editor"><?= htmlspecialchars($event['description'] ?? '') ?></textarea>
+                class="content-editor"><?= htmlspecialchars($event['content'] ?? '') ?></textarea>
         </fieldset>
 
         <div class="form-row">

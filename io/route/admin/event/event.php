@@ -23,30 +23,11 @@ return function ($args) {
         }
     }
 
-    $events = map_with_taxonomy('event', ['category_id' => 'category'], $conditions, [
-        'limit' => $limit,
-        'offset' => $offset,
-        'order' => 'event_date DESC'
-    ]);
-
-    // Add booking counts
-    foreach ($events as &$event) {
-        $bookings = dbq(db(), "
-            SELECT COUNT(*) as count
-            FROM booking 
-            WHERE event_id = ? AND revoked_at IS NULL
-        ", [$event['id']])->fetch();
-        $event['bookings_count'] = $bookings['count'] ?? 0;
-    }
-
-    $total = map_list('event', $conditions, ['limit' => null]);
-    $total_pages = ceil(count($total) / $limit);
-
     return [
         'title' => 'Événements',
-        'events' => $events,
-        'search' => $search,
-        'current_status' => $status,
-        'pagination' => compact('page', 'total_pages'),
+        'events' => dbq(db(), 'SELECT * FROM event_plus ORDER BY event_date DESC')->fetchAll(),
+
+        // 'search' => $search,
+        'current_status' => $status
     ];
 };
