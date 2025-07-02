@@ -1,7 +1,7 @@
 <?php
 
 require_once 'app/mapper/taxonomy.php';
-require_once 'add/bad/dad/arrow.php';
+require_once 'add/bad/arrow.php';
 require_once 'app/upload.php';
 
 return function ($args) {

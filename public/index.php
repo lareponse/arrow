@@ -2,9 +2,9 @@
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../..');
 
-require 'add/bad/dad/dev.php';
+require 'add/bad/dev.php';
 require 'add/bad/error.php';
-require 'add/bad/io.php';
+require 'add/io.php';
 require 'add/bad/db.php';
 require 'add/bad/auth.php';
 
@@ -49,6 +49,7 @@ try {
     header('HTTP/1.1 500 Forbidden');
 } catch (Throwable $t) {
     vd(0, $t);
+    // out quest that fetch an error page within the layout, firsttests if error page has 200 
     die;
 }
 

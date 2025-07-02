@@ -1,5 +1,5 @@
 <?php
-require_once 'add/bad/dad/arrow.php';
+require_once 'add/bad/arrow.php';
 
 return function ($args = null) {
     [$training_slug, $session_id] = $args;

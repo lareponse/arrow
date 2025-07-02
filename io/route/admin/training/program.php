@@ -1,5 +1,5 @@
 <?php
-require_once 'add/bad/dad/arrow.php';
+require_once 'add/bad/arrow.php';
 
 return function ($args = []) {
     $training = row(db(), 'training')(ROW_LOAD|ROW_GET, ['slug' => $args[0], 'revoked_at' => null]);
