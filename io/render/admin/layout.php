@@ -55,14 +55,11 @@ $user = auth();
             }
         });
     </script>
-
     <script type="module">
         import slugify from '/asset/js/slug.js';
         import dropzones from '/asset/js/dropzone.js';
 
         document.addEventListener('DOMContentLoaded', () => {
-
-            // auto-generate slug from label input
             const labelInput = document.querySelector('main form input[name="label"]');
             const slugInput = document.querySelector('main form input[name="slug"]');
             if (labelInput && slugInput) {

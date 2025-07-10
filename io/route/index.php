@@ -24,7 +24,6 @@ return function ($args = null) {
 
     $sql = "SELECT slug, label FROM `coproacademy`;";
     ($_ = dbq($db, $sql)) && ($_ = $_->fetchAll(PDO::FETCH_KEY_PAIR))   && $data['coproacademy'] = $_;
-    // vd($data);
 
     return $data;
 };
