@@ -14,7 +14,7 @@
             value="<?= htmlspecialchars($search) ?>">
         <button type="submit" class="btn secondary">Rechercher</button>
         <?php if ($search): ?>
-            <a href="/admin/faq/list" class="btn secondary">Effacer</a>
+            <a href="/admin/faq" class="btn secondary">Effacer</a>
         <?php endif; ?>
     </form>
 </section>

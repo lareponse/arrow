@@ -7,7 +7,7 @@ $is_edit = !empty($service['id']);
     <h1><?= $is_edit ? 'Modifier le service' : 'Nouveau service' ?></h1>
     <?php if ($is_edit): ?>
         <nav class="page-actions">
-            <a href="/admin/service/list" class="btn secondary">Retour à la liste</a>
+            <a href="/admin/service" class="btn secondary">Retour à la liste</a>
         </nav>
     <?php endif; ?>
 </header>
@@ -61,7 +61,7 @@ $is_edit = !empty($service['id']);
                 <input type="text" name="link" id="link"
                     value="<?= htmlspecialchars($service['link'] ?? '') ?>"
                     maxlength="255"
-                    placeholder="https://exemple.com">
+                    placeholder="/contact">
             </fieldset>
 
             <fieldset class="form-group">
@@ -131,7 +131,7 @@ $is_edit = !empty($service['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer le service' ?>
         </button>
-        <a href="/admin/service/list" class="btn secondary">Annuler</a>
+        <a href="/admin/service" class="btn secondary">Annuler</a>
 
         <?php if ($is_edit): ?>
             <button type="submit" name="action" value="delete" class="btn danger"

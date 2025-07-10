@@ -7,7 +7,7 @@ $is_edit = !empty($faq['id']);
     <h1><?= $is_edit ? 'Modifier la FAQ' : 'Nouvelle FAQ' ?></h1>
     <?php if ($is_edit): ?>
         <nav class="page-actions">
-            <a href="/admin/faq/list" class="btn secondary">Retour à la liste</a>
+            <a href="/admin/faq" class="btn secondary">Retour à la liste</a>
         </nav>
     <?php endif; ?>
 </header>
@@ -79,7 +79,7 @@ $is_edit = !empty($faq['id']);
         <button type="submit" class="btn">
             <?= $is_edit ? 'Mettre à jour' : 'Créer la FAQ' ?>
         </button>
-        <a href="/admin/faq/list" class="btn secondary">Annuler</a>
+        <a href="/admin/faq" class="btn secondary">Annuler</a>
 
         <?php if ($is_edit): ?>
             <button type="submit" name="action" value="delete" class="btn danger"

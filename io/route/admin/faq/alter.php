@@ -54,7 +54,7 @@ return function ($args) {
 
         if ($_POST['action'] ?? '' === 'delete' && $id) {
             dbq(db(), "DELETE FROM faq WHERE id = ?", [$id]);
-            header('Location: /admin/faq/list');
+            header('Location: /admin/faq');
             exit;
         }
 
@@ -71,7 +71,7 @@ return function ($args) {
             ", [$label, $slug, $content]);
         }
 
-        header('Location: /admin/faq/list');
+        header('Location: /admin/faq');
         exit;
     }
 
