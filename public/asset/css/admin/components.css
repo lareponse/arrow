@@ -542,7 +542,8 @@ ol h3 a {
 
 .alter-form aside {
     grid-area: sidebar;
-    display: grid;
+    display:flex;
+    flex-direction: column;
     gap: var(--space-lg);
 }
 
