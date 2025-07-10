@@ -216,15 +216,14 @@ INSERT INTO contact_request (
   phone,
   company,
   subject_id,
-  consent,
+  consented_at,
   status_id
 ) VALUES
-('Demande d''infos général', 'Bonjour, je souhaiterais avoir des informations générales sur vos services.', 'maxime@example.com', '+32 475 12 34 56', 'MaxiCo SARL',    @sub_general,   TRUE, @status_waiting),
-('Inscription formation',   'Je suis intéressé par la formation gestion financière. Merci de me recontacter.',          'laura@example.org', NULL,              'Laura & Co',     @sub_formation, TRUE, @status_en_cours),
-('Problème technique site', 'Impossible de soumettre le formulaire, je reçois une erreur 500.',                      'thierry@example.net', '+32 473 98 76 54', NULL,             @sub_support,   TRUE, @status_resolu),
-('Demande partenariat',     'Bonjour, je souhaiterais discuter d’un partenariat pour un prochain événement.',            'contact@partenaire.com', NULL,         'Partenaires Ltd',@sub_partenariat,TRUE, @status_waiting),
-('Question facturation',    'Je n''ai pas reçu ma facture pour la formation du mois dernier, pouvez-vous m'' aider ?',   'client@example.com', '+32 460 11 22 33', NULL,             @sub_facturation,TRUE,@status_ferme);
-
+('Demande d\'infos général', 'Bonjour, je souhaiterais avoir des informations générales sur vos services.', 'maxime@example.com', '+32 475 12 34 56', 'MaxiCo SARL',    @sub_general,   NOW(),    @status_waiting),
+('Inscription formation',    'Je suis intéressé par la formation gestion financière. Merci de me recontacter.',           'laura@example.org', NULL,              'Laura & Co',   @sub_formation, NOW(),    @status_en_cours),
+('Problème technique site',  'Impossible de soumettre le formulaire, je reçois une erreur 500.',                         'thierry@example.net', '+32 473 98 76 54', NULL,           @sub_support,   NOW(),    @status_resolu),
+('Demande partenariat',      'Bonjour, je souhaiterais discuter d’un partenariat pour un prochain événement.',           'contact@partenaire.com', NULL,         'Partenaires Ltd', @sub_partenariat, NULL,    @status_waiting),
+('Question facturation',     'Je n\'ai pas reçu ma facture pour la formation du mois dernier, pouvez-vous m\'aider ?',   'client@example.com',   '+32 460 11 22 33', NULL,           @sub_facturation, NULL, @status_ferme);
 
 TRUNCATE TABLE training;
 SET @lvl_debutant      = (SELECT id FROM taxonomy WHERE slug = 'niveau-debutant');
