@@ -197,24 +197,24 @@ body>main>section.login {
 }
 
 /* Height variations for visual interest */
-.card:nth-child(5n+1) .card img {
+.masonry .card:nth-child(5n+1) img {
   height: 120px;
 }
 
-.card:nth-child(5n+2) .card img {
-  height: 180px;
+.masonry .card:nth-child(5n+2) img {
+  height: 220px;
 }
 
-.card:nth-child(5n+3) .card img {
-  height: 150px;
+.masonry .card:nth-child(5n+3) img {
+  height: 350px;
 }
 
-.card:nth-child(5n+4) .card img {
-  height: 200px;
+.masonry .card:nth-child(5n+4) img {
+  height: 220px;
 }
 
-.card:nth-child(5n+5) .card img {
-  height: 160px;
+.masonry .card:nth-child(5n+5) img {
+  height: 300px;
 }
 
 /*
