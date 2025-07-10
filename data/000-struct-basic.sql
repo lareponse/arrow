@@ -114,15 +114,25 @@ CREATE TABLE training_program (
 
 DROP TABLE IF EXISTS article;
 CREATE TABLE article (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    slug VARCHAR(205) NOT NULL,
-    label VARCHAR(200) NOT NULL,
-    summary TEXT NULL,
-    content LONGTEXT NOT NULL,
-    category_id INT UNSIGNED NOT NULL,
-    reading_time SMALLINT UNSIGNED NULL,
-    avatar VARCHAR(255) NULL,
-    featured BOOLEAN NOT NULL DEFAULT FALSE
+    id				    INT UNSIGNED		NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    slug			    VARCHAR(205)		NOT NULL,
+    label			    VARCHAR(200)		NOT NULL,
+    summary			    TEXT			    NULL,
+    content			    LONGTEXT		    NOT NULL,
+    category_id			INT UNSIGNED		NOT NULL,
+    reading_time		SMALLINT UNSIGNED	NULL,
+    avatar			    VARCHAR(255)		NULL,
+    featured		    BOOLEAN			    NOT NULL DEFAULT FALSE,
+    section1_label		VARCHAR(200)		NULL,
+    section1_content	LONGTEXT		    NULL,
+    section2_label		VARCHAR(200)		NULL,
+    section2_content	LONGTEXT		    NULL,
+    section3_label		VARCHAR(200)		NULL,
+    section3_content	LONGTEXT		    NULL,
+    section4_label		VARCHAR(200)		NULL,
+    section4_content	LONGTEXT		    NULL,
+    section5_label		VARCHAR(200)		NULL,
+    section5_content	LONGTEXT		    NULL
 ) ENGINE=InnoDB;
 
 

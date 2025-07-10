@@ -26,24 +26,26 @@ $is_edit = !empty($article['id']);
             <label for="label">Titre *</label>
             <input
                 type="text"
+                id="label"
                 name="label"
                 value="<?= htmlspecialchars($article['label'] ?? '') ?>"
                 required
                 maxlength="200"
                 aria-describedby="label-help">
+        </fieldset>
 
-            <label for="label">Slug *</label>
+        <fieldset class="form-group">
+            <label for="slug">Slug *</label>
             <input
                 type="text"
+                id="slug"
                 name="slug"
                 value="<?= htmlspecialchars($article['slug'] ?? '') ?>"
                 required
-                maxlength="200"
-                aria-describedby="label-help">
-            <small id="label-help">Le slug sera généré automatiquement</small>
+                maxlength="205"
+                aria-describedby="slug-help">
+            <small id="slug-help">Le slug sera généré automatiquement</small>
         </fieldset>
-
-
 
         <fieldset class="form-group">
             <label for="summary">Résumé</label>
@@ -57,178 +59,50 @@ $is_edit = !empty($article['id']);
         </fieldset>
 
         <fieldset class="form-group">
-            <label for="content">Contenu *</label>
+            <label for="content">Contenu</label>
             <textarea
                 id="content"
                 name="content"
-                rows="20"
-                required
-                class="content-editor"><?= htmlspecialchars($article['content'] ?? '') ?></textarea>
+                rows="10"
+                maxlength="500"
+                aria-describedby="content-help"><?= htmlspecialchars($article['content'] ?? '') ?></textarea>
+            <small id="content-help">Contenu principale, avant les sections</small>
         </fieldset>
+
+        <!-- render all 5 sections unconditionally -->
+        <?php for ($i = 1; $i <= 5; $i++): ?>
+            <div class="section-block" data-index="<?= $i ?>">
+                <fieldset class="form-group">
+                    <label for="section<?= $i ?>_label">Section <?= $i ?> – Titre</label>
+                    <input
+                        type="text"
+                        id="section<?= $i ?>_label"
+                        name="section<?= $i ?>_label"
+                        value="<?= htmlspecialchars($article['section' . $i . '_label'] ?? 'TEST LABEL ' . $i) ?>"
+                        maxlength="200"
+                        placeholder="Titre de la section <?= $i ?>">
+                </fieldset>
+
+                <fieldset class="form-group">
+                    <label for="section<?= $i ?>_content">Section <?= $i ?> – Contenu</label>
+                    <textarea
+                        id="section<?= $i ?>_content"
+                        name="section<?= $i ?>_content"
+                        rows="10"
+                        class="content-editor"
+                        placeholder="Contenu de la section <?= $i ?>"><?= htmlspecialchars($article['section' . $i . '_content'] ?? 'TEST _content ' . $i) ?></textarea>
+                </fieldset>
+            </div>
+        <?php endfor; ?>
+
+        <p><a href="#" id="add-section">Ajouter une section</a></p>
     </section>
 
-    <aside>
-        <section class="panel publish-box">
-            <header>
-                <h2>Publication</h2>
-            </header>
-
-            <fieldset class="form-group">
-                <legend class="sr-only">État de publication</legend>
-                <label class="checkbox-label">
-                    <input
-                        type="checkbox"
-                        name="published"
-                        value="1"
-                        <?= !empty($article['enabled_at']) ? 'checked' : '' ?>>
-                    <span class="checkbox-text">Publier l'article</span>
-                </label>
-                <?php if ($article['enabled_at']): ?>
-                    <small>
-                        Publié le
-                        <time datetime="<?= $article['enabled_at'] ?>">
-                            <?= strftime('%d %B %Y à %H:%M', strtotime($article['enabled_at'])) ?>
-                        </time>
-                    </small>
-                <?php endif; ?>
-            </fieldset>
-
-            <fieldset class="form-group">
-                <label class="checkbox-label">
-                    <input
-                        type="checkbox"
-                        name="featured"
-                        value="1"
-                        <?= !empty($article['featured']) ? 'checked' : '' ?>>
-                    <span class="checkbox-text">Article à la une</span>
-                </label>
-            </fieldset>
-        </section>
-
-        <section class="panel meta-box">
-            <header>
-                <h2>Métadonnées</h2>
-            </header>
-
-            <fieldset class="form-group">
-                <label for="category_slug">Catégorie</label>
-                <select name="category_slug">
-                    <?php foreach (($categories) as $slug => $label): ?>
-                        <option value="<?= $slug ?>"
-                            <?= ($article['category_slug'] ?? '') == $slug ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($label) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </fieldset>
-
-            <fieldset class="form-group">
-                <label for="reading_time">Temps de lecture (minutes)</label>
-                <input
-                    type="number"
-                    name="reading_time"
-                    id="reading_time"
-                    min="1"
-                    max="60"
-                    value="<?= $article['reading_time'] ?? '' ?>"
-                    aria-describedby="reading-help">
-                <small id="reading-help">Laissez vide pour calcul automatique</small>
-            </fieldset>
-
-            <script type="module">
-                import reading_time from '/asset/js/reading-time.js';
-
-                document.addEventListener('DOMContentLoaded', () => {
-                    const textArea = document.querySelector('textarea[name="content"]');
-                    const timeInput = document.querySelector('input[name="reading_time"]');
-
-                    if (!textArea || !timeInput) return;
-
-                    const updateReadingTime = () => {
-                        const content = textArea.value.trim();
-                        if (content === '') {
-                            timeInput.value = '';
-                        } else {
-                            // reading_time() returns a Number of whole minutes
-                            timeInput.value = reading_time(content);
-                        }
-                    };
-
-                    // Compute on load (in case the textarea is pre-filled)
-                    updateReadingTime();
-
-                    // Recompute on every edit
-                    textArea.addEventListener('input', updateReadingTime);
-                });
-            </script>
-
-        </section>
-
-        
-        <section class="media-box panel drop-zone" data-upload="/admin/upload/article/avatar/<?= $article['slug'] ?>">
-            <figure>
-                <img src="/asset/image/article/avatar/<?= $article['slug'] ?>.webp" class="drop-preview" alt=" - Photo manquante - " loading="lazy" />
-                <figcaption>Photo principale</figcaption>
-            </figure>
-            <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
-            <label for="avatar" class="drop-label">
-                <span></span>
-                <strong>JPEG, PNG ou WebP.<br>Max 2MB.</strong>
-            </label>
-        </section>
-
-        <?php if ($is_edit): ?>
-            <section class="panel stats-box">
-                <header>
-                    <h2>Statistiques</h2>
-                </header>
-
-                <dl class="stats-list">
-                    <dt>Créé le</dt>
-                    <dd>
-                        <time datetime="<?= $article['created_at'] ?>">
-                            <?= strftime('%d %B %Y', strtotime($article['created_at'])) ?>
-                        </time>
-                    </dd>
-
-                    <?php if ($article['updated_at']): ?>
-                        <dt>Modifié le</dt>
-                        <dd>
-                            <time datetime="<?= $article['updated_at'] ?>">
-                                <?= strftime('%d %B %Y à %H:%M', strtotime($article['updated_at'])) ?>
-                            </time>
-                        </dd>
-                    <?php endif; ?>
-
-                    <dt>Slug</dt>
-                    <dd><code><?= htmlspecialchars($article['slug'] ?? 'auto-généré') ?></code></dd>
-                </dl>
-            </section>
-        <?php endif; ?>
-
-        <div id="picker" class="panel emoji-picker"></div>
-        <div class="output">
-            Selected: <span id="selected">None</span><br>
-            Unicode: <span id="unicode">-</span><br>
-            Hex: <span id="hex">-</span>
-        </div>
-
-
-        <script type="module">
-            import createPicker from '/asset/js/emojis-unicode.js';
-            // only show “education” & “achievements” for instance:
-            createPicker('#picker');
-            // optional global callback:
-            window.onEmojiSelect = info => console.log('picked:', info);
-        </script>
-    </aside>
+    <aside><?php include 'alter-aside.php'; ?></aside>
 
     <footer class="form-actions">
-        <button type="submit" class="btn">
-            <?= $is_edit ? 'Mettre à jour' : 'Créer l\'article' ?>
-        </button>
+        <button type="submit" class="btn">Sauver</button>
         <a href="/admin/article" class="btn secondary">Retour</a>
-
         <?php if ($is_edit): ?>
             <button
                 type="submit"
@@ -242,6 +116,64 @@ $is_edit = !empty($article['id']);
     </footer>
 </form>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addLink = document.getElementById('add-section');
+        let nextIndex = 2;
+        let foundNonEmpty = false;
+
+        // Hide trailing empty sections (5 → 2) until you hit a non–empty one
+        for (let i = 5; i >= 2; i--) {
+            const lbl = document.getElementById(`section${i}_label`);
+            const cnt = document.getElementById(`section${i}_content`);
+            const block = document.querySelector(`.section-block[data-index="${i}"]`);
+            const hasText = (lbl.value || '').trim() !== '' || (cnt.value || '').trim() !== '';
+
+            if (!hasText) {
+                block.style.display = 'none';
+            } else {
+                nextIndex = i + 1;
+                foundNonEmpty = true;
+                break;
+            }
+        }
+
+        // If we never found any non-empty after 1, nextIndex stays at 2
+
+        function disableLink() {
+            addLink.textContent = 'Toutes les sections affichées';
+            addLink.classList.add('disabled');
+            addLink.removeAttribute('href');
+        }
+
+        // If there’s nothing to reveal, disable immediately
+        if (nextIndex > 5) {
+            disableLink();
+        }
+
+        addLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const block = document.querySelector(`.section-block[data-index="${nextIndex}"]`);
+            if (!block) return;
+
+            block.style.display = '';
+            // find the next hidden section after this one
+            let newNext = null;
+            for (let j = nextIndex + 1; j <= 5; j++) {
+                const b = document.querySelector(`.section-block[data-index="${j}"]`);
+                if (b && b.style.display === 'none') {
+                    newNext = j;
+                    break;
+                }
+            }
+            if (newNext) {
+                nextIndex = newNext;
+            } else {
+                disableLink();
+            }
+        });
+    });
+</script>
 <?php
 return function ($this_html, $args = []) {
     return ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $this_html])[1];
