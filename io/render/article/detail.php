@@ -104,7 +104,7 @@ for ($i = 1; $i <= 5; $i++) {
                 <?php foreach ($related_articles as $related): ?>
                     <article class="related-card">
                         <img
-                            src="<?= e($related, 'avatar') ?: '/static/assets/hero.webp' ?>"
+                            src="/asset/image/article/avatar/<?= e($related, 'slug'); ?>"
                             alt="<?= e($related, 'label') ?>"
                             width="200" height="120">
                         <div class="related-content">
