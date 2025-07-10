@@ -8,7 +8,7 @@ $is_edit = !empty($training['id']);
         <nav class="page-actions">
             <a href="/admin/training" class="btn secondary">Retour à la liste</a>
             <?php if ($training['enabled_at']): ?>
-                <a href="/training/detail/<?= $training['slug'] ?>" class="btn secondary" target="_blank">Voir sur le site</a>
+                <a href="/formation/detail/<?= $training['slug'] ?>" class="btn secondary" target="_blank">Voir sur le site</a>
             <?php endif; ?>
         </nav>
     <?php endif; ?>

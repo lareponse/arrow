@@ -41,15 +41,15 @@ return function ($slug = null) {
             $clean['enabled_at'] = null;
         }
 
-        // Handle file upload
-        if (!empty($_FILES['avatar']['name'])) {
-            $clean['avatar'] = upload($_FILES['avatar'], $_SERVER['DOCUMENT_ROOT'] . '/asset/image/training/');
-        }
 
-        $training(ROW_SCHEMA);
-        $training(ROW_SET, $clean);
-        $training(ROW_SAVE);
-        $training(ROW_LOAD);
+        $training(ROW_SET | ROW_SCHEMA);
+        $training(ROW_SET | ROW_SAVE, $clean);
+
+        if ($training(ROW_GET | ROW_ERROR)) {
+            vd($training(ROW_GET | ROW_EDIT));
+            vd($training(ROW_GET | ROW_ERROR));
+            die;
+        }
 
         http_out(302, '', ['Location' => "/admin/training/alter/" . $training(ROW_GET, ['slug'])]);
     }

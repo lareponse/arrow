@@ -15,7 +15,7 @@ return function ($args = null) {
 
     if ($target_day >= 1 && $target_day <= $training['duration_days']) {
         $clone = row(db(), 'training_program');
-        $clone(ROW_SCHEMA, $source(ROW_SCHEMA));
+        $clone(ROW_SET | ROW_SCHEMA, $source(ROW_GET | ROW_SCHEMA));
         $clone(ROW_SET, $source(ROW_GET));
         $clone(ROW_SET, [
             'slug' => $source(ROW_GET, ['slug']) . '-j' . $target_day,
