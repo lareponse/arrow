@@ -45,37 +45,128 @@ VALUES
 ('celine-francois','Céline François','Experte en fiscalité immobilière','Céline François est experte en fiscalité immobilière et accompagne les copropriétaires dans leurs déclarations fiscales.','/static/assets/trainers/celine-francois.jpg','celine.francois@example.com','2022-02-28'),
 ('ferhat-kaya','Ferhat Kaya','Ingénieur en efficacité énergétique','Ferhat Kaya est ingénieur en efficacité énergétique d’origine turque, intervenant à Anderlecht sur des projets de rénovation durable.','/static/assets/trainers/ferhat-kaya.jpg','ferhat.kaya@example.be','2019-09-23');
 
-
-
 TRUNCATE TABLE article;
-SET @cat_marche               = (SELECT id FROM taxonomy WHERE slug = 'categorie-marche');
-SET @cat_financement          = (SELECT id FROM taxonomy WHERE slug = 'categorie-financement');
-SET @cat_juridique            = (SELECT id FROM taxonomy WHERE slug = 'categorie-juridique');
-SET @cat_construction         = (SELECT id FROM taxonomy WHERE slug = 'categorie-construction');
-SET @cat_gestion_locative     = (SELECT id FROM taxonomy WHERE slug = 'categorie-gestion_locative');
+
+SET @cat_marche           = (SELECT id FROM taxonomy WHERE slug = 'categorie-marche');
+SET @cat_financement      = (SELECT id FROM taxonomy WHERE slug = 'categorie-financement');
+SET @cat_juridique        = (SELECT id FROM taxonomy WHERE slug = 'categorie-juridique');
+SET @cat_construction     = (SELECT id FROM taxonomy WHERE slug = 'categorie-construction');
+SET @cat_gestion_locative = (SELECT id FROM taxonomy WHERE slug = 'categorie-gestion_locative');
+
 INSERT INTO article (
   slug,
-  category_id,
   label,
   summary,
   content,
+  category_id,
   reading_time,
-  avatar,
-  featured
+  featured,
+  section1_label,
+  section1_content,
+  section2_label,
+  section2_content,
+  section3_label,
+  section3_content,
+  section4_label,
+  section4_content,
+  section5_label,
+  section5_content
 ) VALUES
-('investir-immobilier-locatif-2025', @cat_marche, 'Investir dans l\'immobilier locatif en 2025', 'Un guide complet pour optimiser vos investissements locatifs dans le contexte économique actuel.', 'Un guide complet pour optimiser vos investissements locatifs dans le contexte économique actuel. Nous passons en revue les zones à fort rendement, les stratégies de financement et les risques à surveiller.', 7, '/static/assets/immobilier-locatif.jpeg', FALSE),
-('analyse-marche-immobilier-post-pandemie', @cat_financement, 'Analyse du marché immobilier post-pandémie', 'Retour sur les évolutions du marché immobilier depuis la pandémie et perspectives pour les prochains mois.', 'Retour sur les évolutions du marché immobilier depuis la pandémie et perspectives pour les prochains mois. Les prix, la demande et les comportements des acheteurs sont passés au crible.', 6, '/static/assets/marche-post-pandemie.jpeg', FALSE),
-('solutions-financement-travaux-renovation', @cat_juridique, 'Solutions de financement pour travaux de rénovation', 'Panorama des options de financement pour financer vos travaux de rénovation de copropriété.', 'Panorama des options de financement pour financer vos travaux de rénovation de copropriété. Retrouvez un comparatif des prêts, subventions et aides fiscales disponibles.', 8, '/static/assets/financement-renovation.jpeg', TRUE),
-('nouvelles-deductions-fiscales-coproprietaires', @cat_construction, 'Les nouvelles déductions fiscales pour copropriétaires', 'Zoom sur les récents changements fiscaux et les déductions disponibles pour vos travaux.', 'Zoom sur les récents changements fiscaux et les déductions disponibles pour vos travaux. Les barèmes, conditions d\'éligibilité et démarches sont détaillés.', 5, '/static/assets/deductions-fiscales.jpeg', FALSE),
-('tendances-renovation-energetique-batiments', @cat_gestion_locative, 'Tendances de la rénovation énergétique des bâtiments', 'Étude des dernières tendances et innovations en rénovation énergétique.', 'Étude des dernières tendances et innovations en rénovation énergétique. Des matériaux aux technologies, tout savoir pour planifier vos projets.', 9, '/static/assets/renovation-energetique.jpeg', TRUE);
-
-
-INSERT INTO `article` (`slug`, `label`, `summary`, `content`, `category_id`, `reading_time`, `avatar`, `featured`, `created_at`, `updated_at`, `enabled_at`, `revoked_at`) VALUES
-('investissement-locatif-outre-mer-2025', 'Les opportunités d\'investissement locatif en Outre-mer en 2025', 'Tour d\'horizon des zones d\'Outre-mer offrant un rendement locatif attractif en 2025.', 'Tour d\'horizon des zones d\'Outre-mer offrant un rendement locatif attractif en 2025. Nous analysons les spécificités fiscales des DOM-TOM, les marchés porteurs et les conseils pratiques pour réussir votre projet.', 26, 7, NULL, 0, '2025-07-01 14:20:00', '2025-07-01 14:20:00', '2025-07-01 14:20:00', NULL),
-('taux-interet-impact-marche-immobilier', 'L\'impact de la hausse des taux d\'intérêt sur le marché immobilier', 'Analyse des conséquences de l\'évolution des taux de la Banque centrale sur les prix immobiliers.', 'Analyse des conséquences de l\'évolution des taux directeurs de la Banque centrale sur les prix immobiliers et le comportement des emprunteurs. Zoom sur les variations régionales et les stratégies d\'adaptation des investisseurs.', 26, 6, NULL, 0, '2025-07-01 14:20:00', '2025-07-01 14:20:00', '2025-07-01 14:20:00', NULL),
-('immobilier-commercial-vs-residentiel-2025', 'Immobilier commercial vs résidentiel en 2025', 'Comparaison des dynamiques d\'investissement entre secteur commercial et résidentiel.', 'Comparaison des dynamiques d\'investissement entre secteur commercial et résidentiel. Évaluation des risques, rendements et tendances post-pandémie pour orienter vos arbitrages.', 26, 8, NULL, 0, '2025-07-01 14:20:00', '2025-07-01 14:20:00', '2025-07-01 14:20:00', NULL),
-('optimisation-deductions-fiscales-travaux-2025', 'Optimisation des déductions fiscales pour travaux en 2025', 'Guide pour maximiser les déductions fiscales liées aux travaux de rénovation.', 'Guide pour maximiser les déductions fiscales liées aux travaux de rénovation : présentation des dispositifs éligibles (CITE, MaPrimeRénov’, etc.) et bonnes pratiques déclaratives.', 29, 5, NULL, 0, '2025-07-01 14:20:00', '2025-07-01 14:20:00', '2025-07-01 14:20:00', NULL),
-('nouvelles-mesures-fiscales-coproprietaires-2025', 'Nouvelles mesures fiscales pour copropriétaires en 2025', 'Point sur les dernières mesures fiscales affectant les copropriétaires.', 'Point sur les dernières mesures fiscales affectant les copropriétaires : aides financières, crédits d\'impôt et obligations déclaratives à connaître pour vos assemblées générales.', 29, 6, NULL, 0, '2025-07-01 14:20:00', '2025-07-01 14:20:00', '2025-07-01 14:20:00', NULL);
+(
+  'investir-immobilier-locatif-2025',
+  'Investir dans l''immobilier locatif en 2025',
+  'Un guide complet pour optimiser vos investissements locatifs dans le contexte économique actuel.',
+  'Dans ce guide, nous passons en revue les principaux leviers pour maximiser votre rendement locatif en 2025, de la sélection des zones à l''optimisation fiscale.',
+  @cat_marche,
+  7,
+  FALSE,
+  'Zones à fort rendement',
+  'Les villes universitaires et les métropoles secondaires offrent souvent des rendements supérieurs grâce à une forte demande locative. Analysez le prix au m², le taux d''occupation et la dynamique démographique pour cibler les secteurs porteurs.',
+  'Stratégies de financement',
+  'Comparez les prêts amortissables, le crédit in fine et les plateformes de financement participatif. Prenez en compte votre profil d''emprunteur, la durée du prêt et les garanties exigées pour réduire le coût global du crédit.',
+  'Optimisation fiscale',
+  'Explorez les dispositifs comme le régime LMNP, le déficit foncier ou le statut LMP pour alléger votre imposition. Vérifiez les conditions d’éligibilité, les plafonds et les délais de déclaration avant de vous engager.',
+  'Gestion locative',
+  'Décidez entre gestion directe et délégation à une agence. Comparez les honoraires, la qualité de service et les outils de suivi pour garantir un bon taux de recouvrement et limiter la vacance.',
+  'Risques et précautions',
+  'Anticipez la vacance locative, les impayés et la dégradation du bien. Mettez en place un garant solide, souscrivez une assurance loyers impayés et planifiez des états des lieux réguliers.'
+),
+(
+  'analyse-marche-immobilier-post-pandemie',
+  'Analyse du marché immobilier post-pandémie',
+  'Retour sur les évolutions du marché immobilier depuis la pandémie et perspectives pour les prochains mois.',
+  'Cette analyse détaille l''impact de la pandémie sur les prix, la demande et les comportements des acteurs, pour mieux comprendre les tendances actuelles.',
+  @cat_financement,
+  6,
+  FALSE,
+  'Évolution des prix',
+  'Depuis 2020, les prix ont fluctué selon les régions : forte hausse en périphérie, stagnation dans les centres-villes. Les taux bas ont soutenu la demande malgré un contexte économique incertain.',
+  'Comportement des acheteurs',
+  'Les acheteurs privilégient désormais les logements avec espaces extérieurs et un espace bureau. La digitalisation des visites a accéléré certaines transactions, mais nécessite une adaptation des méthodes de vente.',
+  'Demande locative',
+  'Le marché étudiant et le segment intermédiaire ont rebondi, tandis que la location de courtes durées reste volatile, dépendante des flux touristiques et des restrictions sanitaires.',
+  'Perspectives futures',
+  'Anticipation d’une remontée graduelle des taux directeurs en fin d’année 2025, ce qui pourrait freiner la croissance des prix et inciter les investisseurs à diversifier leurs portefeuilles.',
+  NULL,
+  NULL
+),
+(
+  'solutions-financement-travaux-renovation',
+  'Solutions de financement pour travaux de rénovation',
+  'Panorama des options de financement pour financer vos travaux de rénovation de copropriété.',
+  'Découvrez les principales solutions pour financer vos projets de rénovation, adaptées aux copropriétaires et aux petites structures.',
+  @cat_juridique,
+  8,
+  TRUE,
+  'Prêts bancaires',
+  'Les prêts travaux classiques, à taux fixe ou variable, restent une base fiable. Comparez les offres, négociez la durée et les frais de dossier pour optimiser le coût global de votre crédit.',
+  'Subventions publiques',
+  'Profitez des aides de l’ANAH, des collectivités locales et des Certificats d’Économies d’Énergie (CEE). Préparez un dossier complet pour maximiser le montant des aides accordées.',
+  'Aides fiscales',
+  'Le Crédit d’Impôt pour la Transition Énergétique (CITE), la TVA réduite à 5,5 % et les CEE peuvent réduire significativement votre facture. Vérifiez les conditions de cumul avant d’engager les travaux.',
+  NULL,
+  NULL,
+  NULL,
+  NULL
+),
+(
+  'nouvelles-deductions-fiscales-coproprietaires',
+  'Les nouvelles déductions fiscales pour copropriétaires',
+  'Zoom sur les récents changements fiscaux et les déductions disponibles pour vos travaux.',
+  'Cette synthèse présente les dernières mesures fiscales impactant les copropriétés et les opportunités de déductions pour optimiser vos charges.',
+  @cat_construction,
+  5,
+  FALSE,
+  'Barèmes actuels',
+  'Les taux applicables aux travaux d’isolation, de rénovation énergétique et de mise en sécurité ont été relevés. Consultez les nouveaux plafonds et pourcentages pour calculer votre réduction d’impôt.',
+  'Conditions d’éligibilité',
+  'Seuls les travaux votés en assemblée générale, réalisés par des professionnels et conformes aux normes en vigueur donnent droit à la déduction. Conservez tous les justificatifs.',
+  'Démarches administratives',
+  'Déclarez vos dépenses au centre des finances publiques dans les délais impartis et joignez les factures détaillées. Un suivi rigoureux évite tout risque de redressement fiscal.',
+  NULL,
+  NULL,
+  NULL,
+  NULL
+),
+(
+  'tendances-renovation-energetique-batiments',
+  'Tendances de la rénovation énergétique des bâtiments',
+  'Étude des dernières tendances et innovations en rénovation énergétique.',
+  'Nous explorons les innovations et les meilleures pratiques pour réduire la consommation d’énergie dans les bâtiments, du résidentiel au tertiaire.',
+  @cat_gestion_locative,
+  9,
+  TRUE,
+  'Matériaux innovants',
+  'Les isolants biosourcés (ouate de cellulose, fibre de bois) gagnent en popularité pour leurs performances thermiques et leur faible empreinte carbone. Idéal pour des projets éco-responsables.',
+  'Technologies émergentes',
+  'Ventilation double flux connectée, pompes à chaleur hybrides et régulation intelligente de la température permettent des économies d’énergie supérieures et un meilleur confort intérieur.',
+  'Retour sur investissement',
+  'Calculez le temps de retour en comparant le gain énergétique annuel et le coût des travaux : il se situe généralement entre 5 et 10 ans selon l’ampleur des travaux.',
+  'Normes et certifications',
+  'RT 2020, BREEAM et HQE définissent les standards de performance. Choisissez le label adapté pour valoriser votre patrimoine et sécuriser votre financement.',
+  NULL,
+  NULL
+);
 
 TRUNCATE TABLE event;
 SET @cat_atelier_pratique = (
@@ -226,7 +317,3 @@ INSERT INTO training_program (
 ('reglementation-energetique-travaux-day1-free','Espace libre (Q&R)',NULL,@t_reg,1,'16:35:00','17:05:00',NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
-
-
-UPDATE `article` SET `avatar`=null;
-UPDATE `event` SET `avatar`=null;

@@ -27,6 +27,9 @@ return function ($slug = null) {
         if (!empty($_POST['published']) && empty($article(ROW_GET, ['enabled_at'])))
             $clean['enabled_at'] = date('Y-m-d H:i:s');
 
+        if (!array_key_exists('published', $_POST))
+            $clean['enabled_at'] = null;
+
         if (!empty($_FILES))
             foreach ($_FILES as $name => $file)
                 $clean[$name] = upload($file, $_SERVER['DOCUMENT_ROOT'] . '/asset/image/article/' . $name);
@@ -34,9 +37,9 @@ return function ($slug = null) {
         $article(ROW_SET | ROW_SCHEMA);
         $article(ROW_SET | ROW_SAVE, $clean);
 
-        if($article(ROW_GET | ROW_ERROR)){
+        if ($article(ROW_GET | ROW_ERROR)) {
             vd($article(ROW_GET | ROW_EDIT));
-            vd($article(ROW_GET|ROW_ERROR));
+            vd($article(ROW_GET | ROW_ERROR));
             die;
         }
 

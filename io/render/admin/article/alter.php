@@ -66,7 +66,7 @@ $is_edit = !empty($article['id']);
                 rows="10"
                 maxlength="500"
                 aria-describedby="content-help"><?= htmlspecialchars($article['content'] ?? '') ?></textarea>
-            <small id="content-help">Contenu principale, avant les sections</small>
+            <small id="content-help">Contenu principal, avant les sections</small>
         </fieldset>
 
         <!-- render all 5 sections unconditionally -->
@@ -78,7 +78,7 @@ $is_edit = !empty($article['id']);
                         type="text"
                         id="section<?= $i ?>_label"
                         name="section<?= $i ?>_label"
-                        value="<?= htmlspecialchars($article['section' . $i . '_label'] ?? 'TEST LABEL ' . $i) ?>"
+                        value="<?= htmlspecialchars($article['section' . $i . '_label'] ?? '') ?>"
                         maxlength="200"
                         placeholder="Titre de la section <?= $i ?>">
                 </fieldset>
@@ -90,7 +90,7 @@ $is_edit = !empty($article['id']);
                         name="section<?= $i ?>_content"
                         rows="10"
                         class="content-editor"
-                        placeholder="Contenu de la section <?= $i ?>"><?= htmlspecialchars($article['section' . $i . '_content'] ?? 'TEST _content ' . $i) ?></textarea>
+                        placeholder="Contenu de la section <?= $i ?>"><?= htmlspecialchars($article['section' . $i . '_content'] ?? '') ?></textarea>
                 </fieldset>
             </div>
         <?php endfor; ?>

@@ -121,7 +121,6 @@ CREATE TABLE article (
     content			    LONGTEXT		    NOT NULL,
     category_id			INT UNSIGNED		NOT NULL,
     reading_time		SMALLINT UNSIGNED	NULL,
-    avatar			    VARCHAR(255)		NULL,
     featured		    BOOLEAN			    NOT NULL DEFAULT FALSE,
     section1_label		VARCHAR(200)		NULL,
     section1_content	LONGTEXT		    NULL,
