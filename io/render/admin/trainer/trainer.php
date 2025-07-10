@@ -37,18 +37,9 @@
                         <!-- existing row content stays the same -->
                         <td>
                             <div class="trainer-info">
-                                <?php if ($trainer['avatar']): ?>
-                                    <img src="/asset/image/trainer/avatar/<?= $trainer['slug'] ?>.webp"
-                                        alt="<?= htmlspecialchars($trainer['label']) ?>"
-                                        class="trainer-avatar">
-                                <?php else: ?>
-                                    <img src="https://xsgames.co/randomusers/avatar.php?g=male"
-                                        alt="<?= htmlspecialchars($trainer['label']) ?>"
-                                        class="trainer-avatar">
-                                    <div class=" trainer-avatar-placeholder">
-                                        <?= strtoupper(substr($trainer['label'], 0, 2)) ?>
-                                    </div>
-                                <?php endif; ?>
+                                <img src="/asset/image/trainer/avatar/<?= $trainer['slug'] ?>.webp"
+                                    alt="<?= htmlspecialchars($trainer['label']) ?>"
+                                    class="trainer-avatar">
                                 <div>
                                     <strong><?= htmlspecialchars($trainer['label']) ?></strong>
                                     <?php if ($trainer['bio']): ?>

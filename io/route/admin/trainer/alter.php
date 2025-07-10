@@ -41,16 +41,23 @@ return function ($slug = null) {
             $clean['enabled_at'] = null;
         }
 
-        // Handle file upload
-        if (!empty($_FILES['avatar']['name'])) {
-            $clean['avatar'] = upload($_FILES['avatar'], $_SERVER['DOCUMENT_ROOT'] . '/asset/image/trainer/');
-        }
-
-        $trainer(ROW_SCHEMA);
+        $trainer(ROW_SET | ROW_SCHEMA);
         $trainer(ROW_SET, $clean);
-        $trainer(ROW_SAVE);
-        $trainer(ROW_LOAD);
+        vd($trainer);
+        vd($trainer(ROW_GET));
 
+        $trainer(ROW_SAVE);
+        vd($trainer);
+        vd($trainer(ROW_GET));
+        // vd($trainer);
+
+        die;
+        if ($trainer(ROW_GET | ROW_ERROR)) {
+            vd($trainer(ROW_GET | ROW_EDIT));
+            vd($trainer(ROW_GET | ROW_ERROR));
+            die;
+        }
+    
         http_out(302, '', ['Location' => "/admin/trainer/alter/" . $trainer(ROW_GET, ['slug'])]);
     }
 
@@ -83,4 +90,3 @@ function slugify(string $text): string
 
     return $slug;
 }
-
