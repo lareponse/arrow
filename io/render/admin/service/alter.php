@@ -84,18 +84,10 @@ $is_edit = !empty($service['id']);
 
     <?php if ($is_edit): ?>
         <aside>
-            <section class="panel media-box">
-                <header>
-                    <h2>Aperçu</h2>
-                </header>
-                <?php if ($service['image_src']): ?>
-                    <div class="current-image">
-                        <img src="<?= htmlspecialchars($service['image_src']) ?>"
-                            alt="<?= htmlspecialchars($service['alt_text']) ?>"
-                            style="max-width:100%;height:auto;border-radius:8px;">
-                    </div>
-                <?php endif; ?>
-            </section>
+            <?php
+            $dropzone_relative_path = 'service/avatar/' . $service['slug'];
+            include('app/io/render/admin/dropzone.php')
+            ?>
 
             <section class="panel stats-box">
                 <header>

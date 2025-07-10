@@ -95,18 +95,11 @@
 </section>
 
 <?php if ($is_edit): ?>
-    <section class="media-box panel drop-zone" data-upload="/admin/upload/article/avatar/<?= $article['slug'] ?>">
-        <figure>
-            <img src="/asset/image/article/avatar/<?= $article['slug'] ?>.webp" class="drop-preview" alt=" - Photo manquante - " loading="lazy" />
-            <figcaption>Photo principale</figcaption>
-        </figure>
-        <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
-        <label for="avatar" class="drop-label">
-            <span></span>
-            <strong>JPEG, PNG ou WebP.<br>Max 2MB.</strong>
-        </label>
-    </section>
-
+    <?php
+    $dropzone_relative_path = 'article/avatar/' . $article['slug'];
+    include('app/io/render/admin/dropzone.php')
+    ?>
+    
     <section class="panel stats-box">
         <header>
             <h2>Statistiques</h2>

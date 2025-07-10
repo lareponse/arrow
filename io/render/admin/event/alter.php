@@ -185,18 +185,11 @@ $is_edit = !empty($event['id']);
                 <small id="price-help">Laissez vide pour gratuit</small>
             </fieldset>
         </section>
+        <?php
+        $dropzone_relative_path = 'event/avatar/' . $event['slug'];
+        include('app/io/render/admin/dropzone.php')
+        ?>
 
-        <section class="media-box panel drop-zone" data-upload="/admin/upload/event/avatar/<?= $event['slug'] ?>">
-            <figure>
-                <img src="/asset/image/event/avatar/<?= $event['slug'] ?>.webp" class="drop-preview" alt=" - Photo manquante - " loading="lazy" />
-                <figcaption>Photo principale</figcaption>
-            </figure>
-            <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/webp" hidden>
-            <label for="avatar" class="drop-label">
-                <span></span>
-                <strong>JPEG, PNG ou WebP.<br>Max 2MB</strong>
-            </label>
-        </section>
 
         <?php if ($is_edit): ?>
             <section class="panel stats-box">
