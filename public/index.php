@@ -24,6 +24,7 @@ try {
     // coding: find the route and invoke it
     $in_route   = io_route("$io/route", $re_quest, 'index');
     $in_quest   = io_quest($in_route, [], IO_INVOKE);
+
     // render: find the render file and absorb it
     $out_route  = io_route("$io/render/", $re_quest, 'index');
     $out_quest  = io_quest($out_route, $in_quest[IO_INVOKE], IO_ABSORB);
@@ -34,7 +35,6 @@ try {
     }
 
     error_log('404 Not Found for ' . $re_quest . ' in ' . $io);
-
     http_out(404, 'Not Found at all');
 } catch (LogicException | RuntimeException $t) {
     handle_badhat_exception($t);
@@ -42,10 +42,7 @@ try {
         vd(0, $t);
         exit;
     }
-    // otherwise we just log it
     error_log($t->getMessage() . ' in ' . $io . ' at ' . $re_quest);
-    // and return a generic error
-
     header('HTTP/1.1 500 Forbidden');
 } catch (Throwable $t) {
     vd(0, $t);
