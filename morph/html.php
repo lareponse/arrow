@@ -43,7 +43,9 @@ function xss(?callable $formatter, ?string $inner = null, ...$attributes): array
 
     return [$escape($inner), ...$attributes];
 }
-function e($row, ?string $field=null){
-    $e = (is_array($row) && $row[$field]) ? $row[$field] : (is_scalar($row) ? (string)$row : implode('', $row));
+function e($content, ?string $field=null){
+    $e = is_array($content) 
+            ? (array_key_exists($field, $content) ? $content[$field] : $field)
+            : $content;
     return htmlspecialchars((string)$e, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
