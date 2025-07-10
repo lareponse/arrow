@@ -85,7 +85,7 @@ $is_edit = !empty($service['id']);
     <?php if ($is_edit): ?>
         <aside>
             <?php
-            $dropzone_relative_path = 'service/avatar/' . $service['slug'];
+            $dropzone_relative_path = 'service/avatar/' . $service['id'];
             include('app/io/render/admin/dropzone.php')
             ?>
 

@@ -3,7 +3,6 @@
 
 require_once 'app/mapper/taxonomy.php';
 require_once 'add/bad/arrow.php';
-require_once 'app/upload.php';
 
 return function ($slug = null) {
     $slug = $slug[0] ?: null;
