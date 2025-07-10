@@ -1,5 +1,5 @@
 <?php
-require_once 'add/bad/db.php';
+require_once 'add/db.php';
 
 function tag_by_parent(string $slug): array
 {

@@ -1,5 +1,5 @@
 <?php
-require_once 'add/bad/db.php';
+require_once 'add/db.php';
 require_once 'add/bad/arrow.php';
 
 return function ($args = null) {

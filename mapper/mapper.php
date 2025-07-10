@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once 'add/bad/db.php';
+require_once 'add/db.php';
 
 function map_list(string $table, array $conditions = [], array $options = []): array
 {
