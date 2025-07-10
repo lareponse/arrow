@@ -1,13 +1,10 @@
 <?php
 // io/route/admin/service/reorder.php
 return function ($args) {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        header('HTTP/1.0 405 Method Not Allowed');
-        exit;
-    }
 
-    $order = $_POST['order'] ?? [];
 
+    $order = $_REQUEST['order'] ?? [];
+    vd($order);die;
     foreach ($order as $position => $id) {
         dbq(db(), "UPDATE service SET sort_order = ? WHERE id = ?", [$position, $id]);
     }
