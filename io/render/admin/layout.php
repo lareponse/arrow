@@ -32,9 +32,9 @@ $user = auth();
                 <a href="/admin/training">Formations</a>
                 <a href="/admin/trainer">Formateurs</a>
                 <a href="/admin/contact">Contact</a>
-                
+
                 <a href="/admin/faq">FAQ</a>
-                <a href="/admin/service/list">Services</a>
+                <a href="/admin/service">Services</a>
             </nav>
         </div>
         <div class="admin-user">
@@ -63,11 +63,13 @@ $user = auth();
         document.addEventListener('DOMContentLoaded', () => {
 
             // auto-generate slug from label input
-            const labelInput = document.querySelector('input[name="label"]');
-            const slugInput = document.querySelector('input[name="slug"]');
-            labelInput.addEventListener('input', () => {
-                slugInput.value = slugify(labelInput.value);
-            });
+            const labelInput = document.querySelector('main form input[name="label"]');
+            const slugInput = document.querySelector('main form input[name="slug"]');
+            if (labelInput && slugInput) {
+                labelInput.addEventListener('input', () => {
+                    slugInput.value = slugify(labelInput.value);
+                });
+            }
 
             dropzones('.drop-zone');
         });
