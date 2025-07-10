@@ -53,7 +53,7 @@
                     <div class="badge badge--error" style="position: absolute; top: 1rem; right: 1rem; z-index: 1;">À la
                         une</div>
                 <?php endif; ?>
-                <img src="<?= $article['avatar'] ?: '/static/assets/hero.webp' ?>" alt="Nouvelle réglementation copropriété 2025" loading="lazy"
+                <img src="/asset/image/article/avatar/<?= $article['slug'] ?>.webp" alt="Nouvelle réglementation copropriété 2025" loading="lazy"
                     class="card__image">
                 <div class="card__body">
                     <div class="article-meta">

@@ -39,9 +39,8 @@
 
     <!-- Image principale -->
     <figure class="article-hero-image">
-        <img src="/static/assets/hero.webp" alt="Assemblée générale de copropriété discutant des nouvelles charges"
-            width="800" height="400">
-        <figcaption>Réunion d'information sur les nouvelles modalités de répartition des charges</figcaption>
+        <img src="/asset/image/article/avatar/<?= e($article, 'slug') ?>.webp" alt="Assemblée générale de copropriété discutant des nouvelles charges">
+        <figcaption><?= $article['label'] ?? '' ?></figcaption>
     </figure>
 
     <!-- Contenu de l'article -->
@@ -274,12 +273,13 @@
     </article>
 
     <!-- Articles similaires -->
+    <?php if (!empty($related_articles)) :?>
     <section class="related-articles" aria-labelledby="related-title">
         <h2 id="related-title">Articles similaires</h2>
         <div class="related-grid">
             <?php foreach ($related_articles as $related): ?>
                 <article class="related-card">
-                    <img src="/static/assets/hero.webp" alt="Guide assemblée générale" width="200" height="120">
+                    <img src="/asset/image/article/avatar/<?= e($related, 'slug') ?>.webp" alt="Guide assemblée générale" width="200" height="120">
                     <div class="related-content">
                         <h3><?= e($related, 'label'); ?></h3>
                         <p><?= e($related, 'summary'); ?></p>
@@ -289,6 +289,7 @@
             <?php endforeach; ?>
         </div>
     </section>
+    <?php endif; ?>
 </div>
 
 

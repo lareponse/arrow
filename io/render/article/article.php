@@ -48,11 +48,11 @@
                         <div class="article-badge webinar-badge">Webinaire</div>
                     <?php endif; ?>
 
-                    <img src="<?= $item['avatar'] ?? '/static/assets/hero.webp' ?>" alt="<?= e($item, 'title') ?>" loading="lazy">
+                    <img src="/asset/image/<?= e($item, 'type') ?>/avatar/<?= e($item, 'slug') ?>.webp" alt="<?= e($item, 'title') ?>" loading="lazy">
                     <div class="card-content">
                         <div class="article-meta">
                             <span class="article-category"><?= e($item, 'category_label') ?></span>
-                            <time datetime="<?= e($item, 'date') ?>"><?= e($item, 'date') ?></time>
+                            <time datetime="<?= e($item, 'unified_date') ?>"><?= e($item, 'unified_date') ?></time>
                         </div>
                         <h3><?= e($item, 'label') ?></h3>
                         <p><?= e($item, 'content') ?></p>
