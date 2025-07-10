@@ -10,6 +10,7 @@
         <header>
             <h2>Informations</h2>
         </header>
+        <?php vd($contact, 'contact'); ?>
         <dl class="info-list">
             <dt>Nom</dt>
             <dd><?= htmlspecialchars($contact['label']) ?></dd>
@@ -29,6 +30,9 @@
 
             <dt>Sujet</dt>
             <dd><?= htmlspecialchars($contact['subject_label'] ?? 'Non classé') ?></dd>
+
+            <dt>Message</dt>
+            <dd><?= htmlspecialchars($contact['content'] ?? '') ?></dd>
 
             <dt>Statut</dt>
             <dd><span class="status <?= strtolower($contact['status_label'] ?? 'unknown') ?>"><?= htmlspecialchars($contact['status_label'] ?? 'Inconnu') ?></span></dd>

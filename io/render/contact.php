@@ -105,8 +105,10 @@
                         <select id="sujet" name="sujet" required class="form-input"
                             aria-describedby="sujet-error">
                             <option value="">Sélectionnez un type de demande</option>
-                            <?php foreach ($subjects as $slug => $label) : ?>
-                                <option value="<?= e($slug) ?>"><?= e($label) ?></option>
+                            <?php foreach ($subjects as $slug => $label) : 
+                                $selected = (isset($subject) && $subject === $slug) ? ' selected' : '';    
+                            ?>
+                                <option value="<?= e($slug) ?>" <?= $selected;?>><?= e($label) ?></option>
                             <?php endforeach; ?>
 
                         </select>

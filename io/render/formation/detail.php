@@ -232,7 +232,7 @@
                 <div class="total-price">
                     <strong>Total TTC : 544,50€</strong>
                 </div>
-                <a href="contact.html?sujet=formation" class="cta">S'inscrire maintenant</a>
+                <a href="/contact?sujet=sujet-formation" class="cta">S'inscrire maintenant</a>
 
                 <div class="inscription-info">
                     <h4>Informations pratiques</h4>
@@ -249,7 +249,7 @@
             <div class="trainer-card">
                 <h3>Votre formateur</h3>
                 <div class="trainer-info">
-                    <img src="/asset/image/trainer/avatar/<?= $trainer['slug']; ?>.webp" alt="Formateur expert" class="trainer-photo" >
+                    <img src="/asset/image/trainer/avatar/<?= $trainer['slug']; ?>.webp" alt="Formateur expert" class="trainer-photo">
                     <div class="trainer-details">
                         <h4><?= $trainer['label'] ?? ''; ?></h4>
                         <p class="trainer-title"><?= $trainer['title'] ?? ''; ?></p>

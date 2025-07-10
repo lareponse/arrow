@@ -40,7 +40,7 @@ CREATE VIEW training_plus AS
 
 DROP VIEW IF EXISTS contact_request_plus;
 CREATE VIEW contact_request_plus AS
-  SELECT cr.id, cr.label, cr.email, cr.subject_id, cr.status_id, cr.created_at, ts.label as subject_label, tst.label as status_label
+  SELECT cr.id, cr.label, cr.content, cr.email, cr.subject_id, cr.status_id, cr.created_at, ts.label as subject_label, tst.label as status_label
   FROM contact_request cr
   LEFT JOIN taxonomy ts ON cr.subject_id = ts.id
   LEFT JOIN taxonomy tst ON cr.status_id = tst.id
