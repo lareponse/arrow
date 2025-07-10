@@ -45,12 +45,11 @@
             <button class="navbar__burger" aria-label="Menu de navigation" aria-expanded="false">
                 &#9776;
             </button>
-
             <nav class="navbar__nav" role="navigation" aria-label="Navigation principale" id="main-nav">
-                <a href="/" class="navbar__link navbar__link--active">Accueil</a>
-                <a href="/article" class="navbar__link">Articles & Événements</a>
-                <a href="/formation" class="navbar__link">Formation</a>
-                <a href="/contact" class="navbar__link">Contact</a>
+                <a href="/" class="navbar__link <?= empty($navbar__link__active) ? 'navbar__link--active' : '' ?>">Accueil</a>
+                <a href="/article" class="navbar__link <?= $navbar__link__active === 'article' ? 'navbar__link--active' : '' ?>">Articles & Événements</a>
+                <a href="/formation" class="navbar__link <?= $navbar__link__active === 'formation' ? 'navbar__link--active' : '' ?>">Formation</a>
+                <a href="/contact" class="navbar__link <?= $navbar__link__active === 'contact' ? 'navbar__link--active' : '' ?>">Contact</a>
             </nav>
         </div>
     </header>

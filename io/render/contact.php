@@ -191,5 +191,6 @@
 
     <?php
     return function ($this_html, $args = []) {
-        return ob_ret_get('app/io/render/layout.php', ($args ?? []) + ['main' => $this_html])[1];
+        
+        return ob_ret_get('app/io/render/layout.php', ($args ?? []) + ['main' => $this_html, 'navbar__link__active' => 'contact'])[1];
     };
