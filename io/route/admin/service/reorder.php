@@ -1,12 +1,13 @@
 <?php
+require_once 'add/bad/arrow.php';
+
 // io/route/admin/service/reorder.php
 return function ($args) {
-
-
     $order = $_REQUEST['order'] ?? [];
-    vd($order);die;
+    $service = row(db(), 'service');
     foreach ($order as $position => $id) {
-        dbq(db(), "UPDATE service SET sort_order = ? WHERE id = ?", [$position, $id]);
+        $service(ROW_RESET|ROW_LOAD, ['id' => $id]);
+        $service(ROW_SET|ROW_SAVE, ['sort_order' => $position]);
     }
 
     header('Content-Type: application/json');
