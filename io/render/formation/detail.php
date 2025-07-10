@@ -249,11 +249,26 @@
             <div class="trainer-card">
                 <h3>Votre formateur</h3>
                 <div class="trainer-info">
-                    <img src="/static/assets/trainer/<?= $trainer['avatar']; ?>." alt="Formateur expert" class="trainer-photo" width="60" height="60">
+                    <img src="/asset/image/trainer/avatar/<?= $trainer['slug']; ?>.webp" alt="Formateur expert" class="trainer-photo" >
                     <div class="trainer-details">
                         <h4><?= $trainer['label'] ?? ''; ?></h4>
                         <p class="trainer-title"><?= $trainer['title'] ?? ''; ?></p>
-                        <p class="trainer-experience">15 ans d'expérience</p>
+                        <?php if (!empty($trainer['hire_date'])):
+                            // Create DateTime objects for hire date and today
+                            $hireDate = new DateTime($trainer['hire_date']);
+                            $today    = new DateTime();
+
+                            // Compute the difference
+                            $diff     = $today->diff($hireDate);
+                            $years    = $diff->y;
+
+                            // Pluralize “an(s)” in French
+                            $unit     = ($years > 1) ? 'ans' : 'an';
+                        ?>
+                            <p class="trainer-experience">
+                                <?= $years; ?> <?= $unit; ?> d'expérience
+                            </p>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <p><?= $trainer['bio']; ?></p>

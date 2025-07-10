@@ -29,10 +29,6 @@ return function ($slug = null) {
         if (!array_key_exists('published', $_POST))
             $clean['enabled_at'] = null;
 
-        if (!empty($_FILES))
-            foreach ($_FILES as $name => $file)
-                $clean[$name] = upload($file, $_SERVER['DOCUMENT_ROOT'] . '/asset/image/article/' . $name);
-
         $article(ROW_SET | ROW_SCHEMA);
         $article(ROW_SET | ROW_SAVE, $clean);
 

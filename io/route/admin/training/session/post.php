@@ -1,9 +1,9 @@
 <?php
 
 return function (array $training, callable $session) {
-    
+
     empty($_POST) && throw new BadMethodCallException('This route only handles POST requests', 400);
-    
+
     // Handle form submission (create/update session)
     $session = row(db(), 'training_program');
     $is_edit = !empty($_POST['id']);
@@ -65,9 +65,8 @@ return function (array $training, callable $session) {
     }
 
     // Save session
-    $session(ROW_SCHEMA);
-    $session(ROW_SET, $clean);
-    $session(ROW_SAVE);
+    $session(ROW_SET | ROW_SCHEMA);
+    $session(ROW_SET | ROW_SAVE, $clean);
 
-    http_out(302, '', ['Location' => "/admin/training/program/". $training['slug']]);
+    http_out(302, '', ['Location' => "/admin/training/program/" . $training['slug']]);
 };
