@@ -43,15 +43,7 @@ return function ($slug = null) {
 
         $trainer(ROW_SET | ROW_SCHEMA);
         $trainer(ROW_SET, $clean);
-        vd($trainer);
-        vd($trainer(ROW_GET));
-
         $trainer(ROW_SAVE);
-        vd($trainer);
-        vd($trainer(ROW_GET));
-        // vd($trainer);
-
-        die;
         if ($trainer(ROW_GET | ROW_ERROR)) {
             vd($trainer(ROW_GET | ROW_EDIT));
             vd($trainer(ROW_GET | ROW_ERROR));

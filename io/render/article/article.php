@@ -36,9 +36,6 @@
         <div class="masonry" id="articlesContainer">
             <!-- <div class="grid-container" id="articlesContainer"> -->
             <?php foreach ($articles_events as $i => $item): ?>
-                <?php
-                // vd($item); 
-                ?>
                 <article class="card <?= ($i === 0) ? 'card-wide featured' : '' ?>" data-type="<?= e($item, 'type') ?>" data-date="2025-01-15">
                     <?php if ($item['featured']): ?>
                         <div class="article-badge featured-badge">À la une</div>

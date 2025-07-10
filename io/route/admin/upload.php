@@ -8,7 +8,6 @@ return function ($args = null) {
     $base_file = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\') . "/asset/image/$upload_to";
     try {
         $result = upload_image($_FILES['avatar'], $base_file);
-        // vd($result, 'upload_image result');die;
         $result || http_out(400, json_encode(['success' => false, 'error' => 'Invalid file upload']), ['Content-Type' => 'application/json']);
 
         $result = str_replace($_SERVER['DOCUMENT_ROOT'], '', $result);
