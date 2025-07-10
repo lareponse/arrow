@@ -23,7 +23,7 @@ function upload_image(array $http_post_file, string $absolute_file_path_no_ext, 
 {
     $_file = payload_guard($http_post_file, $max_kb);
     $gd_image = gd_create($_file)                       ?? throw new BadMethodCallException('Unsupported image type or error creating image resource');
-    $gd_image = gd_max_size($gd_image, 1980, 108)       ?? throw new BadMethodCallException('Error resizing image');
+    $gd_image = gd_max_size($gd_image, 1980, 1080)       ?? throw new BadMethodCallException('Error resizing image');
     return save_gd_image($gd_image, $absolute_file_path_no_ext, $quality);
 }
 
