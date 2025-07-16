@@ -5,7 +5,7 @@ return function ($args) {
     $faq = null;
 
     if ($id) {
-        $faq = dbq(db(), "SELECT * FROM faq WHERE id = ?", [$id])->fetch();
+        $faq = qp(db(), "SELECT * FROM faq WHERE id = ?", [$id])->fetch();
         if (!$faq) {
             header('HTTP/1.0 404 Not Found');
             exit('FAQ non trouvée');
@@ -43,29 +43,25 @@ return function ($args) {
         }
 
         // Check slug uniqueness
-        $existing = dbq(
-            db(),
-            "SELECT id FROM faq WHERE slug = ? AND id != ?",
-            [$slug, $id ?: 0]
-        )->fetch();
+        $existing = qp(db(),"SELECT id FROM faq WHERE slug = ? AND id != ?",[$slug, $id ?: 0])->fetch();
         if ($existing) {
             $slug .= '-' . time();
         }
 
         if ($_POST['action'] ?? '' === 'delete' && $id) {
-            dbq(db(), "DELETE FROM faq WHERE id = ?", [$id]);
+            qp(db(), "DELETE FROM faq WHERE id = ?", [$id]);
             header('Location: /admin/faq');
             exit;
         }
 
         if ($id) {
-            dbq(db(), "
+            qp(db(), "
                 UPDATE faq 
                 SET label = ?, slug = ?, content = ?, updated_at = NOW() 
                 WHERE id = ?
             ", [$label, $slug, $content, $id]);
         } else {
-            dbq(db(), "
+            qp(db(), "
                 INSERT INTO faq (label, slug, content, created_at, updated_at) 
                 VALUES (?, ?, ?, NOW(), NOW())
             ", [$label, $slug, $content]);

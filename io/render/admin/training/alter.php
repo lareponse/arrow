@@ -194,7 +194,7 @@ $is_edit = !empty($training['id']);
 
                 <?php
                 // Get program sessions for this training
-                $program_sessions = dbq(db(), "
+                $program_sessions = qp(db(), "
                 SELECT day_number, COUNT(*) as sessions_count,
                        MIN(time_start) as first_session,
                        MAX(time_end) as last_session,
@@ -204,7 +204,7 @@ $is_edit = !empty($training['id']);
                 GROUP BY day_number
                 ORDER BY day_number", [$training['id']])->fetchAll();
 
-                $total_sessions = dbq(db(), "SELECT COUNT(*) FROM training_program WHERE training_id = ?", [$training['id']])->fetchColumn();
+                $total_sessions = qp(db(), "SELECT COUNT(*) FROM training_program WHERE training_id = ?", [$training['id']])->fetchColumn();
                 ?>
 
                 <?php if (empty($program_sessions)): ?>
@@ -248,7 +248,7 @@ $is_edit = !empty($training['id']);
                     <?php endif; ?>
 
                     <?php
-                    $bookings_count = dbq(db(), "SELECT COUNT(*) FROM booking WHERE training_id = ? AND revoked_at IS NULL", [$training['id']])->fetchColumn();
+                    $bookings_count = qp(db(), "SELECT COUNT(*) FROM booking WHERE training_id = ? AND revoked_at IS NULL", [$training['id']])->fetchColumn();
                     ?>
                     <a href="/admin/booking?training_id=<?= $training['id'] ?>" class="action-link">
                         <strong>Inscriptions (<?= $bookings_count ?>)</strong>
@@ -286,7 +286,7 @@ $is_edit = !empty($training['id']);
                     </dd>
 
                     <?php
-                    $bookings = dbq(db(), "
+                    $bookings = qp(db(), "
                         SELECT COUNT(*) as count 
                         FROM booking 
                         WHERE training_id = ? AND revoked_at IS NULL

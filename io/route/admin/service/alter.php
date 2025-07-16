@@ -6,7 +6,6 @@ return function ($args) {
     $service = row(db(), 'service');
     if ($id) {
         $service(ROW_LOAD, ['id' => $id]);
-        // $service = dbq(db(), "SELECT * FROM service WHERE id = ?", [$id])->fetch();
         if (!$service) {
             header('HTTP/1.0 404 Not Found');
             exit('Service non trouvé');
@@ -25,7 +24,7 @@ return function ($args) {
         $clean['sort_order'] = (int)($_POST['sort_order'] ?? 0);
 
         if ($_POST['action'] ?? '' === 'delete' && $id) {
-            dbq(db(), "DELETE FROM service WHERE id = ?", [$id]);
+            qp(db(), "DELETE FROM service WHERE id = ?", [$id]);
             header('Location: /admin/service');
             exit;
         }

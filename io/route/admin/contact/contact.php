@@ -14,7 +14,7 @@ return function ($args) {
 
     return [
         'title' => 'Demandes de contact',
-        'contact_requests' => dbq(db(), $sql)->fetchAll(),
+        'contact_requests' => db()->query($sql)->fetchAll(),
         'statuses' => $statuses,
         'current_status' => $status
     ];

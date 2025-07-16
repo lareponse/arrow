@@ -21,7 +21,7 @@ return function ($args = null) {
     
     $training_id = $training['id'];
     // Get all sessions grouped by day
-    $sessions = dbq(db(), "
+    $sessions = qp(db(), "
         SELECT * FROM training_program 
         WHERE training_id = ? 
         ORDER BY day_number, time_start

@@ -59,7 +59,7 @@ return function (array $training, callable $session) {
         $conflict_params[] = (int)$_POST['id'];
     }
 
-    $conflict = dbq(db(), $conflict_query, $conflict_params)->fetch();
+    $conflict = qp(db(), $conflict_query, $conflict_params)->fetch();
     if ($conflict) {
         http_out(400, 'Time conflict with existing session');
     }

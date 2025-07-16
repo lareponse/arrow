@@ -25,7 +25,7 @@ return function ($args) {
 
     return [
         'title' => 'Événements',
-        'events' => dbq(db(), 'SELECT * FROM event_plus ORDER BY event_date DESC')->fetchAll(),
+        'events' => db()->query('SELECT * FROM event_plus ORDER BY event_date DESC')->fetchAll(),
 
         // 'search' => $search,
         'current_status' => $status

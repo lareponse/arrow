@@ -9,7 +9,7 @@ return function ($args = []) {
     }
 
     // Get all sessions grouped by day
-    $sessions = dbq(db(), "
+    $sessions = qp(db(), "
         SELECT * FROM training_program 
         WHERE training_id = ? 
         ORDER BY day_number, time_start
@@ -30,7 +30,7 @@ return function ($args = []) {
     // Get session for editing if specified
     $edit_session = null;
     if (!empty($_GET['edit'])) {
-        $edit_session = dbq(db(), "
+        $edit_session = qp(db(), "
             SELECT * FROM training_program 
             WHERE id = ? AND training_id = ?
         ", [(int)$_GET['edit'], $training_id])->fetch();

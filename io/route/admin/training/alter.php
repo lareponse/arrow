@@ -21,7 +21,7 @@ return function ($slug = null) {
 
         // Handle trainer relationship
         if (!empty($_POST['trainer_id'])) {
-            $trainer_exists = dbq(db(), "SELECT id FROM trainer WHERE id = ? AND revoked_at IS NULL", [$_POST['trainer_id']])->fetch();
+            $trainer_exists = qp(db(), "SELECT id FROM trainer WHERE id = ? AND revoked_at IS NULL", [$_POST['trainer_id']])->fetch();
             $clean['trainer_id'] = $trainer_exists ? (int)$_POST['trainer_id'] : null;
         } else {
             $clean['trainer_id'] = null;
@@ -55,12 +55,7 @@ return function ($slug = null) {
     }
 
     // Get trainers for dropdown
-    $trainers = dbq(db(), "
-        SELECT id, label, email 
-        FROM trainer 
-        WHERE revoked_at IS NULL 
-        ORDER BY label
-    ")->fetchAll();
+    $trainers = db()->query("SELECT id, label, email FROM trainer WHERE revoked_at IS NULL ORDER BY label")->fetchAll();
 
     return [
         'title' => $slug ? "Modifier la formation" : 'Nouvelle formation',

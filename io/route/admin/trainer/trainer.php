@@ -27,7 +27,7 @@ return function ($args) {
 
     // Add training counts for each trainer
     foreach ($trainers as &$trainer) {
-        $training_count = dbq(db(), "
+        $training_count = qp(db(), "
             SELECT COUNT(*) as count
             FROM training 
             WHERE trainer_id = ? AND revoked_at IS NULL

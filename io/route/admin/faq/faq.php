@@ -16,7 +16,7 @@ return function ($args) {
 
     $where_clause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-    $faqs = dbq(db(), "
+    $faqs = qp(db(), "
         SELECT id, slug, label, LEFT(content, 100) as preview, created_at
         FROM faq 
         $where_clause
@@ -24,7 +24,7 @@ return function ($args) {
         LIMIT $limit OFFSET $offset
     ", $params)->fetchAll();
 
-    $total = dbq(db(), "
+    $total = qp(db(), "
         SELECT COUNT(*) 
         FROM faq 
         $where_clause

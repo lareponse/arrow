@@ -14,7 +14,7 @@ function map_list(string $table, array $conditions = [], array $options = []): a
     if ($options['order']) $sql .= " ORDER BY {$options['order']}";
     if ($options['limit']) $sql .= " LIMIT {$options['limit']} OFFSET {$options['offset']}";
 
-    return dbq(db(), ($sql), $where_binds)->fetchAll();
+    return qp(db(), ($sql), $where_binds)->fetchAll();
 }
 
 // qb_where(['status' => 'published', 'user_id' => 5, 'tag_id' => [3, 4]])

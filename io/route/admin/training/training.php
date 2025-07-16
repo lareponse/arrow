@@ -17,6 +17,6 @@ return function ($args) {
     return [
         'title' => 'Formations',
         'current_filter' => $current_filter,
-        'trainings' => dbq(db(), $sql)->fetchAll(),
+        'trainings' => db()->query($sql)->fetchAll(),
     ];
 };
