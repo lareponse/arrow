@@ -128,25 +128,3 @@
 
     </section>
 <?php endif; ?>
-
-<div id="picker" class="panel emoji-picker"></div>
-<div class="output">
-    Selected: <span id="selected">None</span><br>
-    Unicode: <span id="unicode">-</span><br>
-    Hex: <span id="hex">-</span>
-</div>
-
-
-<script type="module">
-    import('/asset/js/emojis-unicode.js').then(({
-        default: createPicker
-    }) => {
-        createPicker('#picker');
-    });
-
-    // import createPicker from '/asset/js/emojis-unicode.js';
-    // // only show “education” & “achievements” for instance:
-    // createPicker('#picker');
-    // // optional global callback:
-    // window.onEmojiSelect = info => console.log('picked:', info);
-</script>

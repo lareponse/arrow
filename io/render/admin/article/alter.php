@@ -31,6 +31,7 @@ $is_edit = !empty($article['id']);
                 value="<?= htmlspecialchars($article['label'] ?? '') ?>"
                 required
                 maxlength="200"
+                data-emoji
                 aria-describedby="label-help">
         </fieldset>
 

@@ -1,6 +1,4 @@
-// emojiPicker.js
-
-// ---- Emoji group definitions ----
+// emojis-unicode.js
 export const emojiGroups = {
   education: [0x1f393, 0x1f3eb],
   training_actions: [0x1f3c3, 0x1f3cb],
@@ -22,81 +20,198 @@ export const emojiGroups = {
   events: [0x1f3a4, 0x1f3a7],
 };
 
-export function generateEmojis(groupNames = []) {
-  const names = groupNames.length
-    ? groupNames.filter((name) => name in emojiGroups)
-    : Object.keys(emojiGroups);
-
+function generateEmojis(groups) {
   const emojis = [];
-  for (const name of names) {
+  for (const name of groups) {
+    if (!emojiGroups[name]) continue;
     const [start, end] = emojiGroups[name];
     for (let code = start; code <= end; code++) {
-      const ch = String.fromCodePoint(code);
-      if (/\p{Emoji}/u.test(ch)) {
-        emojis.push({ emoji: ch, code });
+      const emoji = String.fromCodePoint(code);
+      if (/\p{Emoji}/u.test(emoji)) {
+        emojis.push({ emoji, code });
       }
     }
   }
   return emojis;
 }
 
-// Track focused input and cursor position
-let activeInput = null;
-let cursorPos = 0;
+let modal = null;
+let currentTarget = null;
 
-export default function createPicker(unique_selector, groupNames = []) {
-  const container = document.querySelector(unique_selector);
-  const emojis = generateEmojis(groupNames);
+function createModal() {
+  if (modal) return modal;
 
-  container.innerHTML = emojis
+  modal = document.createElement('div');
+  modal.className = 'emoji-modal';
+  modal.innerHTML = `
+    <div class="emoji-backdrop" role="dialog" aria-modal="true" aria-label="Select emoji">
+      <div class="emoji-content">
+        <header class="emoji-header">
+          <button type="button" class="emoji-close" aria-label="Close">&times;</button>
+        </header>
+        <div class="emoji-grid" role="grid"></div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  return modal;
+}
+
+function showModal(target) {
+  currentTarget = target;
+  const groups = target.dataset.emoji
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const emojis = generateEmojis(
+    groups.length ? groups : Object.keys(emojiGroups)
+  );
+
+  const modal = createModal();
+  const grid = modal.querySelector('.emoji-grid');
+
+  grid.innerHTML = emojis
     .map(
       ({ emoji, code }) =>
-        `<span class="emoji" data-code="${code}">${emoji}</span>`
+        `<button type="button" class="emoji-btn" data-code="${code}" role="gridcell">${emoji}</button>`
     )
     .join('');
 
-  // Track focus and cursor position on all inputs/textareas
-  document.addEventListener('focusin', (e) => {
-    if (e.target.matches('input[type="text"], textarea')) {
-      activeInput = e.target;
-    }
+  modal.style.display = 'block';
+  grid.firstElementChild?.focus();
+
+  // Trap focus
+  document.addEventListener('keydown', handleModalKeys);
+}
+
+function hideModal() {
+  if (!modal) return;
+  modal.style.display = 'none';
+  currentTarget?.focus();
+  currentTarget = null;
+  document.removeEventListener('keydown', handleModalKeys);
+}
+
+function insertEmoji(emoji) {
+  if (!currentTarget) return;
+
+  const {
+    selectionStart: start = 0,
+    selectionEnd: end = 0,
+    value = '',
+  } = currentTarget;
+  currentTarget.value = value.slice(0, start) + emoji + value.slice(end);
+
+  const newPos = start + emoji.length;
+  currentTarget.setSelectionRange(newPos, newPos);
+
+  hideModal();
+}
+
+function handleModalKeys(e) {
+  if (!modal || modal.style.display === 'none') return;
+
+  const grid = modal.querySelector('.emoji-grid');
+  const buttons = [...grid.querySelectorAll('.emoji-btn')];
+  const focused = document.activeElement;
+  const current = buttons.indexOf(focused);
+
+  switch (e.key) {
+    case 'Escape':
+      e.preventDefault();
+      hideModal();
+      break;
+
+    case 'Tab':
+      e.preventDefault();
+      const next = e.shiftKey
+        ? current <= 0
+          ? buttons.length - 1
+          : current - 1
+        : current >= buttons.length - 1
+        ? 0
+        : current + 1;
+      buttons[next]?.focus();
+      break;
+
+    case 'ArrowRight':
+      e.preventDefault();
+      buttons[Math.min(current + 1, buttons.length - 1)]?.focus();
+      break;
+
+    case 'ArrowLeft':
+      e.preventDefault();
+      buttons[Math.max(current - 1, 0)]?.focus();
+      break;
+
+    case 'ArrowDown':
+      e.preventDefault();
+      const cols = Math.floor(
+        grid.offsetWidth / (buttons[0]?.offsetWidth || 32)
+      );
+      buttons[Math.min(current + cols, buttons.length - 1)]?.focus();
+      break;
+
+    case 'ArrowUp':
+      e.preventDefault();
+      const colsUp = Math.floor(
+        grid.offsetWidth / (buttons[0]?.offsetWidth || 32)
+      );
+      buttons[Math.max(current - colsUp, 0)]?.focus();
+      break;
+
+    case 'Enter':
+    case ' ':
+      e.preventDefault();
+      if (focused.classList.contains('emoji-btn')) {
+        insertEmoji(focused.textContent);
+      }
+      break;
+  }
+}
+
+// Auto-enhance elements
+function enhance() {
+  document
+    .querySelectorAll('[data-emoji]:not([data-emoji-enhanced])')
+    .forEach((element) => {
+      const trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'emoji-trigger';
+      trigger.innerHTML = '😀';
+      trigger.setAttribute('aria-label', 'Add emoji');
+
+      element.parentNode.insertBefore(trigger, element.nextSibling);
+      element.dataset.emojiEnhanced = 'true';
+
+      trigger.addEventListener('click', () => showModal(element));
+    });
+}
+
+// Event delegation for modal
+document.addEventListener('click', (e) => {
+  if (!modal) return;
+
+  if (
+    e.target.classList.contains('emoji-close') ||
+    e.target.classList.contains('emoji-backdrop')
+  ) {
+    hideModal();
+  } else if (e.target.classList.contains('emoji-btn')) {
+    insertEmoji(e.target.textContent);
+  }
+});
+
+// Auto-init + observer for dynamic content
+export default function init() {
+  enhance();
+
+  // Watch for new elements
+  new MutationObserver(() => enhance()).observe(document.body, {
+    childList: true,
+    subtree: true,
   });
 
-  document.addEventListener('click', (e) => {
-    if (e.target.matches('input[type="text"], textarea')) {
-      activeInput = e.target;
-      cursorPos = e.target.selectionStart || 0;
-    }
-  });
-
-  document.addEventListener('keyup', (e) => {
-    if (e.target.matches('input[type="text"], textarea')) {
-      cursorPos = e.target.selectionStart || 0;
-    }
-  });
-
-  container.addEventListener('click', (e) => {
-    if (!e.target.classList.contains('emoji')) return;
-
-    const emoji = e.target.textContent;
-
-    if (activeInput) {
-      const start = activeInput.selectionStart || cursorPos;
-      const end = activeInput.selectionEnd || cursorPos;
-      const val = activeInput.value;
-
-      activeInput.value = val.slice(0, start) + emoji + val.slice(end);
-
-      // Restore cursor position after emoji
-      const newPos = start + emoji.length;
-      activeInput.setSelectionRange(newPos, newPos);
-      activeInput.focus();
-    }
-
-    // Visual feedback
-    container
-      .querySelectorAll('.emoji.selected')
-      .forEach((el) => el.classList.remove('selected'));
-    e.target.classList.add('selected');
-  });
+  return { enhance, hideModal };
 }

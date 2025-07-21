@@ -14,6 +14,7 @@ $user = auth();
     <link rel="stylesheet" href="/asset/css/admin/utilities.css">
     <link rel="stylesheet" href="/asset/css/admin/layout.css">
     <link rel="stylesheet" href="/asset/css/admin/components.css">
+    <link rel="stylesheet" href="/asset/css/admin/emojis-unicode.css">
 
     <meta name="robots" content="noindex,nofollow">
     <?php if (isset($css)) : ?>
@@ -60,6 +61,7 @@ $user = auth();
     <script type="module">
         import slugify from '/asset/js/slug.js';
         import dropzones from '/asset/js/dropzone.js';
+        import init from '/asset/js/emojis-unicode.js';
 
         document.addEventListener('DOMContentLoaded', () => {
             const labelInput = document.querySelector('main form input[name="label"]');
@@ -71,6 +73,7 @@ $user = auth();
             }
 
             dropzones('.drop-zone');
+            init();
         });
     </script>
 </body>
