@@ -315,4 +315,10 @@ INSERT INTO training_program (
 ('reglementation-energetique-travaux-day1-session4','Études de cas',NULL,@t_reg,1,'15:05:00','16:35:00',NULL),
 ('reglementation-energetique-travaux-day1-free','Espace libre (Q&R)',NULL,@t_reg,1,'16:35:00','17:05:00',NULL);
 
+
+TRUNCATE TABLE hero_slide;
+INSERT INTO hero_slide (image_path, alt_text, title, subtitle, description, cta_text, cta_url, order_index) VALUES
+('/static/assets/collegues-de-taille-moyenne-apprenant.webp', 'Formation en gestion de copropriété', 'Bienvenue chez Copro Academy', 'Votre partenaire en gestion de copropriétés', 'Formations professionnelles, actualités juridiques et accompagnement spécialisé pour les experts de l''immobilier', 'Découvrir nos formations', '/formation', 1),
+('/static/assets/agent-immobilier-masculin-faisant-des-affaires-et-montrant-la-maison-a-un-couple-d-acheteurs-potentiels.webp', 'Agent immobilier', 'Assemblées générales efficaces', NULL, NULL, 'Actualités & Événements', '/articles', 2),
+('/static/assets/tenir-la-cle-a-la-main-a-l-exterieur.webp', 'Clés de propriété', 'Maintenance préventive', NULL, NULL, NULL, NULL, 3);
 SET FOREIGN_KEY_CHECKS = 1;
