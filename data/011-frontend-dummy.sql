@@ -315,4 +315,17 @@ INSERT INTO training_program (
 ('reglementation-energetique-travaux-day1-session4','Études de cas',NULL,@t_reg,1,'15:05:00','16:35:00',NULL),
 ('reglementation-energetique-travaux-day1-free','Espace libre (Q&R)',NULL,@t_reg,1,'16:35:00','17:05:00',NULL);
 
+
+TRUNCATE TABLE hero_slide;
+INSERT INTO hero_slide (image_path, alt_text, title, subtitle, description, cta_text, cta_url, sort_order) VALUES
+('/static/assets/collegues-de-taille-moyenne-apprenant.webp', 'Formation en gestion de copropriété', 'Bienvenue chez Copro Academy', 'Votre partenaire en gestion de copropriétés', 'Formations professionnelles, actualités juridiques et accompagnement spécialisé pour les experts de l''immobilier', 'Découvrir nos formations', '/formation', 1),
+('/static/assets/agent-immobilier-masculin-faisant-des-affaires-et-montrant-la-maison-a-un-couple-d-acheteurs-potentiels.webp', 'Agent immobilier', 'Assemblées générales efficaces', NULL, NULL, 'Actualités & Événements', '/articles', 2),
+('/static/assets/tenir-la-cle-a-la-main-a-l-exterieur.webp', 'Clés de propriété', 'Maintenance préventive', NULL, NULL, NULL, NULL, 3);
+
+INSERT INTO benefit (icon, title, description, sort_order) VALUES
+('🎓', 'Formations certifiées', 'Nos formations sont reconnues et donnent droit à des certificats de formation continue.', 1),
+('⚖️', 'Expertise juridique', 'Nos formateurs sont des experts reconnus en droit immobilier et gestion de copropriétés.', 2),
+('🔄', 'Mise à jour constante', 'Nos contenus sont régulièrement actualisés selon les évolutions législatives.', 3),
+('🤝', 'Accompagnement personnalisé', 'Support continu et conseils adaptés à vos besoins spécifiques.', 4);
+
 SET FOREIGN_KEY_CHECKS = 1;
