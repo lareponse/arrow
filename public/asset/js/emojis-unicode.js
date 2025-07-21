@@ -22,10 +22,6 @@ export const emojiGroups = {
   events: [0x1f3a4, 0x1f3a7],
 };
 
-/**
- * Build an array of { emoji, code } objects for the requested groups.
- * @param {string[]} groupNames - Keys from emojiGroups; defaults to all groups.
- */
 export function generateEmojis(groupNames = []) {
   const names = groupNames.length
     ? groupNames.filter((name) => name in emojiGroups)
@@ -44,15 +40,14 @@ export function generateEmojis(groupNames = []) {
   return emojis;
 }
 
-// ---- Picker injection & selection handler ----
-/**
- * Renders an emoji picker into `container` and wires up selection.
- * @param {HTMLElement} container  – where to render <span class="emoji">…
- * @param {string[]} groupNames   – which emojiGroups to include (default: all)
- */
+// Track focused input and cursor position
+let activeInput = null;
+let cursorPos = 0;
+
 export default function createPicker(unique_selector, groupNames = []) {
   const container = document.querySelector(unique_selector);
   const emojis = generateEmojis(groupNames);
+
   container.innerHTML = emojis
     .map(
       ({ emoji, code }) =>
@@ -60,35 +55,48 @@ export default function createPicker(unique_selector, groupNames = []) {
     )
     .join('');
 
+  // Track focus and cursor position on all inputs/textareas
+  document.addEventListener('focusin', (e) => {
+    if (e.target.matches('input[type="text"], textarea')) {
+      activeInput = e.target;
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (e.target.matches('input[type="text"], textarea')) {
+      activeInput = e.target;
+      cursorPos = e.target.selectionStart || 0;
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (e.target.matches('input[type="text"], textarea')) {
+      cursorPos = e.target.selectionStart || 0;
+    }
+  });
+
   container.addEventListener('click', (e) => {
     if (!e.target.classList.contains('emoji')) return;
 
-    // clear old selection
+    const emoji = e.target.textContent;
+
+    if (activeInput) {
+      const start = activeInput.selectionStart || cursorPos;
+      const end = activeInput.selectionEnd || cursorPos;
+      const val = activeInput.value;
+
+      activeInput.value = val.slice(0, start) + emoji + val.slice(end);
+
+      // Restore cursor position after emoji
+      const newPos = start + emoji.length;
+      activeInput.setSelectionRange(newPos, newPos);
+      activeInput.focus();
+    }
+
+    // Visual feedback
     container
       .querySelectorAll('.emoji.selected')
       .forEach((el) => el.classList.remove('selected'));
-
-    // mark new
     e.target.classList.add('selected');
-    const code = +e.target.dataset.code;
-    const hex = `0x${code.toString(16).toUpperCase()}`;
-
-    // update any display targets
-    const setText = (id, text) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = text;
-    };
-    setText('selected', e.target.textContent);
-    setText('unicode', code);
-    setText('hex', hex);
-
-    // optional callback
-    if (typeof window.onEmojiSelect === 'function') {
-      window.onEmojiSelect({
-        emoji: e.target.textContent,
-        unicode: code,
-        hex,
-      });
-    }
   });
 }

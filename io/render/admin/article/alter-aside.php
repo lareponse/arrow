@@ -99,7 +99,7 @@
     $dropzone_relative_path = 'article/avatar/' . $article['slug'];
     include('app/io/render/admin/dropzone.php')
     ?>
-    
+
     <section class="panel stats-box">
         <header>
             <h2>Statistiques</h2>
@@ -138,9 +138,15 @@
 
 
 <script type="module">
-    import createPicker from '/asset/js/emojis-unicode.js';
-    // only show “education” & “achievements” for instance:
-    createPicker('#picker');
-    // optional global callback:
-    window.onEmojiSelect = info => console.log('picked:', info);
+    import('/asset/js/emojis-unicode.js').then(({
+        default: createPicker
+    }) => {
+        createPicker('#picker');
+    });
+
+    // import createPicker from '/asset/js/emojis-unicode.js';
+    // // only show “education” & “achievements” for instance:
+    // createPicker('#picker');
+    // // optional global callback:
+    // window.onEmojiSelect = info => console.log('picked:', info);
 </script>
