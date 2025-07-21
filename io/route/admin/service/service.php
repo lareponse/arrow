@@ -1,7 +1,7 @@
 <?php
-// io/route/admin/service/list.php
+// io/route/admin/service/service.php
 return function ($args) {
-    $services = dbq(db(), "
+    $services = db()->query("
         SELECT id, label, LEFT(content, 100) as preview, 
                image_src, link, link_text, sort_order, created_at
         FROM service 
