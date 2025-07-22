@@ -25,33 +25,31 @@
     <link rel="stylesheet" href="/static/css/04-components.css">
     <link rel="stylesheet" href="/static/css/05-utilities.css">
     <link rel="stylesheet" href="/static/css/06-pages.css">
-    
+
     <?= $append_css ?? '' ?>
 </head>
 
 <body>
     <div class="skip-links">
-        <a href="#main-content" class="skip-link">Aller au contenu principal</a>
-        <a href="#main-nav" class="skip-link">Aller à la navigation</a>
+        <a href="#main-content" class="skip-link"><?= l('a11y.skip_to_content') ?></a>
+        <a href="#main-nav" class="skip-link"><?= l('a11y.skip_to_navigation') ?></a>
     </div>
 
     <!-- Navigation Header -->
     <header class="navbar" role="banner">
         <div class="navbar__container">
-            <a href="/" class="navbar__logo-link" aria-label="Retour à l'accueil">
-
-                <img src="<?= viewport('coproacademy', 'logo') ?>" alt="<?= viewport('coproacademy', 'label') ?> Logo"
-                    class="navbar__logo">
+            <a href="/" class="navbar__logo-link" aria-label="<?= l('nav.back_to_home') ?>">
+                <img src="<?= viewport('coproacademy', 'logo') ?>" alt="<?= viewport('coproacademy', 'label') ?> Logo" class="navbar__logo">
             </a>
 
-            <button class="navbar__burger" aria-label="Menu de navigation" aria-expanded="false">
+            <button class="navbar__burger" aria-label="<?= l('nav.menu') ?>" aria-expanded="false">
                 &#9776;
             </button>
             <nav class="navbar__nav" role="navigation" aria-label="Navigation principale" id="main-nav">
-                <a href="/" class="navbar__link <?= empty($navbar__link__active) ? 'navbar__link--active' : '' ?>">Accueil</a>
-                <a href="/article" class="navbar__link <?= $navbar__link__active === 'article' ? 'navbar__link--active' : '' ?>">Articles & Événements</a>
-                <a href="/formation" class="navbar__link <?= $navbar__link__active === 'formation' ? 'navbar__link--active' : '' ?>">Formation</a>
-                <a href="/contact" class="navbar__link <?= $navbar__link__active === 'contact' ? 'navbar__link--active' : '' ?>">Contact</a>
+                <a href="/" class="navbar__link <?= empty($navbar__link__active) ? 'navbar__link--active' : '' ?>"><?= l('nav.home') ?></a>
+                <a href="/article" class="navbar__link <?= $navbar__link__active === 'article' ? 'navbar__link--active' : '' ?>"><?= l('nav.articles') ?></a>
+                <a href="/formation" class="navbar__link <?= $navbar__link__active === 'formation' ? 'navbar__link--active' : '' ?>"><?= l('nav.formation') ?></a>
+                <a href="/contact" class="navbar__link <?= $navbar__link__active === 'contact' ? 'navbar__link--active' : '' ?>"><?= l('nav.contact') ?></a>
             </nav>
         </div>
     </header>
@@ -69,26 +67,26 @@
     <footer class="footer" role="contentinfo">
         <div class="footer__content">
             <div class="footer__section">
-                <h3>Navigation</h3>
+                <h3><?= l('footer.navigation') ?></h3>
                 <ul class="footer__links">
-                    <li><a href="/">Accueil</a></li>
-                    <li><a href="/article">Articles & Événements</a></li>
-                    <li><a href="/formation">Formation</a></li>
-                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/"><?= l('nav.home') ?></a></li>
+                    <li><a href="/article"><?= l('nav.articles') ?></a></li>
+                    <li><a href="/formation"><?= l('nav.formation') ?></a></li>
+                    <li><a href="/contact"><?= l('nav.contact') ?></a></li>
                 </ul>
             </div>
 
             <div class="footer__section">
-                <h3>Informations légales</h3>
+                <h3><?= l('footer.legal_info') ?></h3>
                 <ul class="footer__links">
-                    <li><a href="/legal/conditions-generales">Conditions générales</a></li>
-                    <li><a href="/legal/politique-confidentialite">Politique de confidentialité</a></li>
-                    <li><a href="/legal/mentions-legales">Mentions légales</a></li>
+                    <li><a href="/legal/conditions-generales"><?= l('footer.general_conditions') ?></a></li>
+                    <li><a href="/legal/politique-confidentialite"><?= l('footer.privacy_policy') ?></a></li>
+                    <li><a href="/legal/mentions-legales"><?= l('footer.legal_mentions') ?></a></li>
                 </ul>
             </div>
 
             <div class="footer__section">
-                <h3>Suivez-nous</h3>
+                <h3><?= l('footer.follow_us') ?></h3>
                 <div class="footer__social">
                     <a href="#" aria-label="Facebook">
                         <img src="/static/assets/logo_réseaux_sociaux/facebook-svgrepo-com-3.svg" alt="Facebook">
@@ -103,8 +101,7 @@
             </div>
 
             <div class="footer__section text-center">
-                <img src="/static/assets/color1/full/white_logo_color1_background.png" alt="Logo Copro Academy"
-                    style="max-height: 80px; width: auto;">
+                <img src="/static/assets/color1/full/white_logo_color1_background.png" alt="<?= l('img.logo_alt') ?>" style="max-height: 80px; width: auto;">
             </div>
         </div>
 
@@ -112,12 +109,12 @@
 
         <div class="footer__copyright">
             <div class="flex justify-center gap-lg flex-wrap mt-sm">
-                <span>Email : <a href="mailto:CoproAcademy@contact.be"><?= viewport('coproacademy', 'email') ?></a></span>
-                <span>Téléphone : <a href="tel:<?= viewport('coproacademy', 'telephone') ?>"><?= viewport('coproacademy', 'telephone') ?></a></span>
-                <span>Adresse : <?= nl2br(viewport('coproacademy', 'adresse')) ?></span>
+                <span><?= l('contact.email') ?> : <a href="mailto:CoproAcademy@contact.be"><?= viewport('coproacademy', 'email') ?></a></span>
+                <span><?= l('contact.phone') ?> : <a href="tel:<?= viewport('coproacademy', 'telephone') ?>"><?= viewport('coproacademy', 'telephone') ?></a></span>
+                <span><?= l('contact.address') ?> : <?= nl2br(viewport('coproacademy', 'adresse')) ?></span>
 
             </div>
-            <p>&copy; <?= date('Y') ?> <?= viewport('coproacademy', 'label') ?> - Tous droits réservés</p>
+            <p>&copy; <?= date('Y') ?> <?= viewport('coproacademy', 'label') ?> - <?= l('all_rights_reserved') ?></p>
         </div>
     </footer>
 

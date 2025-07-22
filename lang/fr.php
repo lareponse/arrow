@@ -156,9 +156,9 @@ return [
     'nav.articles' => 'Articles & Événements',
     'nav.formation' => 'Formation',
     'nav.contact' => 'Contact',
-    'nav.main_navigation' => 'Navigation principale',
     'nav.back_to_home' => 'Retour à l\'accueil',
     'nav.menu' => 'Menu de navigation',
+    'nav.main_navigation' => 'Navigation principale',
 
     // Accessibility
     'a11y.skip_to_content' => 'Aller au contenu principal',
