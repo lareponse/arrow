@@ -107,6 +107,7 @@ body>main>section.login {
   opacity: 0;
   transition: opacity 1.5s ease-in-out;
   filter: brightness(0.7);
+  border-radius: 0;
 }
 
 .hero__image--active {
