@@ -8,27 +8,23 @@ $level_to_class = function ($slug) {
     ][$slug] ?? 'primary';
 }
 ?>
-<h1 class="text-center mt-xl mb-lg text-4xl font-bold">Nos Formations</h1>
+<h1 class="text-center mt-xl mb-lg text-4xl font-bold"><?= l('formation.title'); ?></h1>
 
 <!-- Section Introduction -->
 <section class="container mb-xl" aria-labelledby="intro-title">
     <div class="card p-xl text-center">
-        <h2 id="intro-title" class="mb-md">Formation professionnelle en gestion de copropriétés</h2>
-        <p class="mb-0">
-            Copro Academy propose des formations certifiées et reconnues pour les professionnels de
-            l'immobilier.
-            Nos programmes sont conçus pour répondre aux exigences du secteur et aux évolutions législatives.
-        </p>
+        <h2 id="intro-title" class="mb-md"><?= l('formation.subtitle'); ?></h2>
+        <p class="mb-0"><?= l('formation.description'); ?></p>
     </div>
 </section>
 
 <!-- Liste des formations -->
 <section class="container mb-xl" aria-labelledby="formations-title">
-    <h2 id="formations-title" class="text-center mb-2xl">Catalogue de formations</h2>
+    <h2 id="formations-title" class="text-center mb-2xl"><?= l('formation.catalogue'); ?></h2>
 
     <!-- Filtres de formations -->
     <div class="filters mb-xl" role="group" aria-label="Filtres des formations">
-        <button class="filter-btn active" data-type="all">Toutes les formations</button>
+        <button class="filter-btn active" data-type="all"><?= l('formation.catalogue.all'); ?></button>
         <?php foreach ($formation_niveau as $slug => $label): ?>
             <button class="filter-btn" data-type="<?= htmlspecialchars($slug) ?>"><?= htmlspecialchars($label) ?></button>
         <?php endforeach; ?>

@@ -11,9 +11,10 @@ require 'add/auth.php';
 require 'app/morph/html.php';
 
 
-// vd(dbq(db(),"INSERT INTO operator (label, username, password_hash, status) VALUES (?, ?, ?, 1)",['jp', 'jp', password_hash('jp', PASSWORD_DEFAULT)]));die;
+// vd(qp(db(),"INSERT INTO operator (label, username, password_hash, status) VALUES (?, ?, ?, 1)",['jp', 'jp', password_hash('jp', PASSWORD_DEFAULT)]));die;
 try {
     auth(AUTH_SETUP, 'operator.username', "SELECT `password_hash` FROM `operator` WHERE `username` = ?");
+    l(null, require 'app/lang/fr.php'); // Load French translations
 
     $io         = realpath(__DIR__ . '/../io');
     $re_quest   = http_in(4096, 9);
@@ -24,7 +25,6 @@ try {
     // coding: find the route and invoke it
     $in_route   = io_route("$io/route", $re_quest, 'index');
     $in_quest   = io_quest($in_route, [], IO_INVOKE);
-
     // render: find the render file and absorb it
     $out_route  = io_route("$io/render/", $re_quest, 'index');
     $out_quest  = io_quest($out_route, $in_quest[IO_INVOKE], IO_ABSORB);
@@ -71,3 +71,4 @@ function handle_badhat_exception(Throwable $t): void
         exit;
     }
 }
+

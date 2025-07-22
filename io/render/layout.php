@@ -1,9 +1,3 @@
-<?php
-l(null, require 'app/lang/fr.php'); // Load French translations
-
-$coproacademy = viewport('coproacademy');
-
-?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -46,7 +40,7 @@ $coproacademy = viewport('coproacademy');
         <div class="navbar__container">
             <a href="/" class="navbar__logo-link" aria-label="Retour à l'accueil">
 
-                <img src="<?= e($coproacademy, 'logo') ?>" alt="<?= e($coproacademy, 'label') ?> Logo"
+                <img src="<?= viewport('coproacademy', 'logo') ?>" alt="<?= viewport('coproacademy', 'label') ?> Logo"
                     class="navbar__logo">
             </a>
 
@@ -118,12 +112,12 @@ $coproacademy = viewport('coproacademy');
 
         <div class="footer__copyright">
             <div class="flex justify-center gap-lg flex-wrap mt-sm">
-                <span>Email : <a href="mailto:CoproAcademy@contact.be"><?= e($coproacademy, 'email') ?></a></span>
-                <span>Téléphone : <a href="tel:<?= e($coproacademy, 'telephone') ?>"><?= e($coproacademy, 'telephone') ?></a></span>
-                <span>Adresse : <?= nl2br(e($coproacademy, 'adresse')) ?></span>
+                <span>Email : <a href="mailto:CoproAcademy@contact.be"><?= viewport('coproacademy', 'email') ?></a></span>
+                <span>Téléphone : <a href="tel:<?= viewport('coproacademy', 'telephone') ?>"><?= viewport('coproacademy', 'telephone') ?></a></span>
+                <span>Adresse : <?= nl2br(viewport('coproacademy', 'adresse')) ?></span>
 
             </div>
-            <p>&copy; <?= date('Y') ?> <?= e($coproacademy, 'label') ?> - Tous droits réservés</p>
+            <p>&copy; <?= date('Y') ?> <?= viewport('coproacademy', 'label') ?> - Tous droits réservés</p>
         </div>
     </footer>
 

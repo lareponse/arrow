@@ -2,31 +2,67 @@
 
 return [
     // Global strings
-    '_.company' => 'Copro Academy',
-    '_.welcome' => 'Bienvenue sur Copro Academy',
     '_.loading' => 'Chargement...',
     '_.error' => 'Erreur',
     '_.success' => 'Succès',
     '_.all_rights_reserved' => 'Tous droits réservés',
 
+    // Formation
+
+    'formation.title' => 'Nos Formations',
+    'formation.subtitle' => 'Formation professionnelle en gestion de copropriétés',
+    'formation.description' => "Copro Academy propose des formations certifiées et reconnues pour les professionnels de l'immobilier. Nos programmes sont conçus pour répondre aux exigences du secteur et aux évolutions législatives.",
+    'formation.catalogue' => 'Catalogue de formations',
+    'formation.catalogue.all' => 'Toutes les formations',
+    
+
     // Contact form (existing)
+    'contact.title' => 'Contactez-nous',
     'contact.subtitle' => "Besoin d'accompagnement ?",
     'contact.description' => "Notre équipe d'experts est à votre disposition pour répondre à toutes vos questions concernant nos formations, nos services ou pour un accompagnement personnalisé.",
-    'contact.button' => 'Contactez-nous',
-    'contact.name' => 'Nom',
+    'contact.section.info' => 'Nos coordonnées',
     'contact.email' => 'Email',
-    'contact.message' => 'Message',
-    'contact.submit' => 'Envoyer',
-    'contact.submit_sending' => 'Envoi en cours...',
+    'contact.email.response_time' => 'Réponse sous %d h ouvrées',
+    'contact.phone' => 'Téléphone',
+    'contact.address' => 'Adresse',
+    'contact.address.note' => 'Sur rendez-vous uniquement',
+    
+    'contact.section.form' => 'Envoyez-nous un message',
+    'contact.form.personal_info' => 'Informations personnelles',
+    'contact.form.name' => 'Nom complet',
+    'contact.form.name.help' => 'Votre nom et prénom',
+    'contact.form.email' => 'Adresse email',
+    'contact.form.email.help' => 'Format : exemple@domaine.com',
+    'contact.form.phone' => 'Téléphone',
+    'contact.form.phone.help' => 'Optionnel - pour un contact plus rapide',
+    'contact.form.entreprise' => 'Entreprise/Organisation',
+
+    'contact.form.request.legend' => 'Votre demande',
+    'contact.form.request.subject' => 'Type de demande',
+    'contact.form.request.subject.default' => 'Sélectionnez un type de demande',
+
+    'contact.form.message' => 'Message',
+    'contact.form.message.help' => 'Minimum 20 caractères',
+    'contact.form.message.placeholder' => 'Décrivez votre demande en détail...',
+
+    'contact.consent.legend' => 'Consentement',
+    'contact.consent.valid' => 'J\'accepte que mes données soient utilisées pour traiter ma demande',
+    'contact.consent.help' => 'Vos données sont traitées conformément à notre <a href="%s">politique de confidentialité</a>',
+
+    'contact.form.submit' => '📧 Envoyer le message',
+    'contact.submit_sending' => '⏳ Envoi en cours...',
+    'contact.form.submit.help' => "Tous les champs marqués d'un * sont obligatoires",
+
+
     'contact.success' => 'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.',
     'contact.error' => "Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer plus tard.",
-    'contact.consent' => "J'accepte la politique de confidentialité",
-    'contact.required_fields' => 'Tous les champs marqués d\'un * sont obligatoires',
-    'contact.faq_title' => 'Questions fréquentes',
-    'contact.ready_to_start' => 'Prêt à commencer ?',
-    'contact.ready_description' => 'Contactez-nous dès maintenant pour discuter de vos besoins',
-    'contact.call_now' => 'Appeler maintenant',
-    'contact.send_email' => 'Envoyer un email',
+    
+    'contact.cta.ready_to_start' => 'Prêt à commencer ?',
+    'contact.cta.ready_description' => 'Contactez-nous dès maintenant pour discuter de vos besoins',
+    'contact.cta.call_now' => 'Appeler maintenant',
+    'contact.cta.send_email' => 'Envoyer un email',
+
+    'faq.title' => 'Questions fréquentes',
 
     // Navigation
     'nav.home' => 'Accueil',
@@ -63,16 +99,7 @@ return [
     'article.related_articles' => 'Articles connexes',
     'article.read_more' => 'Lire →',
 
-    // Formation
-    'formation.discover' => 'Découvrir',
-    'formation.level' => 'Niveau',
-    'formation.duration' => 'Durée',
-    'formation.price' => 'Prix',
-    'formation.trainer' => 'Formateur',
-    'formation.schedule' => 'Programme',
-    'formation.objectives' => 'Objectifs',
-    'formation.register' => 'S\'inscrire',
-    'formation.ht' => 'H.T.',
+
 
     // Footer
     'footer.navigation' => 'Navigation',

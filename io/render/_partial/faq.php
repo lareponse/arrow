@@ -1,6 +1,6 @@
 <section class="bg-gray-50 py-3xl wide" aria-labelledby="faq-title">
     <div class="container">
-        <h2 id="faq-title" class="text-center mb-2xl">Questions fréquentes</h2>
+        <h2 id="faq-title" class="text-center mb-2xl"><?= l('faq.title'); ?></h2>
 
         <div style="max-width: 800px; margin: 0 auto;">
             <?php foreach ($faq as $item) : ?>

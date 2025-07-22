@@ -48,9 +48,8 @@ function viewport($section = null, $key=null): mixed
     static $cache = [];
 
     if (empty($cache)) {
-        $stmt = db()->query("SELECT slug, label FROM `coproacademy`;");
         $cache = [
-            'coproacademy' => $stmt->fetchAll(PDO::FETCH_KEY_PAIR),
+            'coproacademy' => db()->query("SELECT slug, label FROM `coproacademy`;")->fetchAll(PDO::FETCH_KEY_PAIR),
         ];
     }
 
