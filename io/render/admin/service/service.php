@@ -5,9 +5,6 @@
     <h1>Services - Page d'accueil</h1>
     <nav class="page-actions">
         <a href="/admin/service/alter" class="btn">Nouveau service</a>
-        <?php if (count($services) > 1): ?>
-            <button data-widget="reorder-toggle" class="btn secondary" data-text-on="Terminer" data-text-off="Réorganiser"><span class="reorder-text">Réorganiser</span></button>
-        <?php endif; ?>
     </nav>
 </header>
 
@@ -105,69 +102,11 @@
         </table>
     </div>
 
-    <div id="reorder-status" class="panel info" style="display:none;">
-        <p>✋ <strong>Mode réorganisation activé</strong> - Glissez les lignes pour changer l'ordre, puis cliquez sur "Terminer"</p>
-    </div>
 <?php endif; ?>
 
 <div class="panel">
     <p><strong>Astuce :</strong> Les services sont affichés sur la page d'accueil par ordre croissant du champ "Ordre".</p>
 </div>
-
-<style>
-    .drag-handle {
-        cursor: grab;
-        width: 40px;
-        text-align: center;
-        background: #f9fafb;
-        user-select: none;
-    }
-
-    .drag-handle:active {
-        cursor: grabbing;
-    }
-
-    .drag-icon {
-        color: #9ca3af;
-        font-weight: bold;
-        line-height: 1;
-    }
-
-    .sortable-mode tbody tr {
-        transition: background-color 0.2s;
-    }
-
-    .sortable-mode tbody tr:hover {
-        background-color: #f9fafb;
-    }
-
-    .sortable-mode tbody tr.dragging {
-        opacity: 0.5;
-        background-color: #e5e7eb;
-    }
-
-    .sortable-mode .actions {
-        pointer-events: none;
-        opacity: 0.5;
-    }
-
-    .drop-zone {
-        border-top: 2px solid #3b82f6;
-        background-color: #dbeafe;
-    }
-
-    .reorder-saving {
-        opacity: 0.7;
-        pointer-events: none;
-    }
-</style>
-
-<script type="module" src="/asset/js/reorder.js" nonce="<?= csp_nonce() ?>"></script>
-<script type="module">
-    import ReorderTable from '/asset/js/reorder.js';
-    // when *you* decide the DOM is ready (e.g. in your own loader):
-    ReorderTable.init();
-</script>
 
 
 <?php

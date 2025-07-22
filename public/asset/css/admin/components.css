@@ -978,32 +978,37 @@ tr.past{
 
 
 
-          .emoji-picker {
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
-              border: 1px solid #ccc;
-              max-height: 300px;
-              overflow-y: auto;
-          }
-    
-          .emoji {
-              cursor: pointer;
-              text-align: center;
-              font-size: 3rem;
-              border-radius: 2px;
-          }
-    
-          .emoji:hover {
-              background: #f0f0f0;
-          }
-    
-          .emoji.selected {
-              background: #007bff;
-              color: white;
-          }
-    
-          .output {
-              margin-top: 10px;
-              padding: 10px;
-              border: 1px solid #ddd;
-          }
+.emoji-picker {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+    border: 1px solid #ccc;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.emoji {
+    cursor: pointer;
+    text-align: center;
+    font-size: 3rem;
+    border-radius: 2px;
+}
+
+.emoji:hover {
+    background: #f0f0f0;
+}
+
+.emoji.selected {
+    background: #007bff;
+    color: white;
+}
+
+.output {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+
+.admin-homepage{
+    margin-bottom:4rem;
+}
