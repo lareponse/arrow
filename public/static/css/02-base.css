@@ -58,8 +58,6 @@ p {
 
 /* Links */
 a {
-  color: var(--color-white);
-
   transition: color var(--transition-fast);
 }
 
