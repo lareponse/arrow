@@ -1,13 +1,10 @@
 <?php
 //io/route/admin/home.php
 return function ($args) {
-    $slides = db()->query("
-        SELECT id, image_path, alt_text, title, LEFT(description, 100) as preview, 
-               cta_text, cta_url, sort_order, created_at
-        FROM hero_slide 
-        WHERE revoked_at IS NULL
-        ORDER BY sort_order ASC, created_at DESC
-    ")->fetchAll();
+    $slides = glob($_SERVER['DOCUMENT_ROOT'] . '/asset/image/hero_slide/*.webp');
+    $slides = array_map(function ($slide) {
+        return str_replace($_SERVER['DOCUMENT_ROOT'], '', $slide);
+    }, $slides);
 
     $benefits = db()->query("
         SELECT id, icon, title, LEFT(description, 100) as preview, 

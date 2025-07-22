@@ -11,7 +11,6 @@ return function ($args = null) {
         'service'          => "SELECT * FROM service ORDER BY sort_order",
         'recent_articles'   => "SELECT * FROM article_plus WHERE enabled_at<=NOW() ORDER BY featured DESC, enabled_at DESC LIMIT 3",
 
-        'hero_slide'       => "SELECT * FROM hero_slide WHERE revoked_at IS NULL ORDER BY sort_order",
         'featured_articles' => "SELECT * FROM article WHERE featured=1 AND enabled_at<=NOW() ORDER BY enabled_at DESC LIMIT 3",
         'upcoming_events'   => "SELECT * FROM event WHERE event_date>=CURDATE() ORDER BY event_date LIMIT 3",
         'benefits'          => "SELECT * FROM benefit ORDER BY sort_order",
@@ -24,6 +23,11 @@ return function ($args = null) {
 
     $sql = "SELECT slug, label FROM `coproacademy`;";
     ($_ = $db->query($sql)) && ($_ = $_->fetchAll(PDO::FETCH_KEY_PAIR))   && $data['coproacademy'] = $_;
+
+    $hero_slides = glob($_SERVER['DOCUMENT_ROOT'] . '/asset/image/hero_slide/*.webp');
+    $data['hero_slides'] = array_map(function ($slide) {
+        return str_replace($_SERVER['DOCUMENT_ROOT'], '', $slide);
+    }, $hero_slides);
 
     return $data;
 };

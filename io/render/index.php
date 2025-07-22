@@ -1,11 +1,8 @@
 <!-- Hero Section avec Carousel -->
 <section class="hero wide" aria-label="Présentation principale">
-    <img src="/static/assets/collegues-de-taille-moyenne-apprenant.webp" class="hero__image hero__image--active"
-        alt="Formation en gestion de copropriété" loading="eager">
-    <img src="/static/assets/agent-immobilier-masculin-faisant-des-affaires-et-montrant-la-maison-a-un-couple-d-acheteurs-potentiels.webp"
-        class="hero__image" alt="Agent immobilier" loading="lazy">
-    <img src="/static/assets/tenir-la-cle-a-la-main-a-l-exterieur.webp" class="hero__image" alt="Clés de propriété"
-        loading="lazy">
+    <?php foreach($hero_slides as $index => $slide): ?>
+    <img src="<?= $slide?>" class="hero__image <?= $index === 0 ? 'hero__image--active' : ''?>" alt="Formation en gestion de copropriété" loading="eager">
+    <?php endforeach; ?>
 
     <div class="hero__overlay" aria-hidden="true"></div>
 
