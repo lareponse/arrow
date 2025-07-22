@@ -63,9 +63,19 @@ function initDropZones(selector = '.drop-zone') {
 
 async function _uploadFile(file, zone, labelSpan, input, uploadUrl) {
   const formData = new FormData();
-  formData.append(input.name, file);
 
+  if (input.dataset.withFilename) {
+    let cleaname = file.name
+      .replace(/[^\w\-\. ]+/g, '') // Remove anything not alphanumeric, dash, dot, space
+      .replace(/\s+/g, '-') // Replace spaces with dashes
+      .replace(/-+/g, '-') // Collapse multiple dashes
+      .replace(/^\-+|\-+$/g, ''); // Trim leading/trailing dashes
+    uploadUrl += `${encodeURIComponent(cleaname)}`;
+  }
+
+  formData.append(input.name, file);
   labelSpan.textContent = 'Uploading…';
+  console.log('Upload URL:', uploadUrl);
 
   try {
     const resp = await fetch(uploadUrl, {
@@ -74,7 +84,7 @@ async function _uploadFile(file, zone, labelSpan, input, uploadUrl) {
     });
     const data = await resp.json();
     if (data.success) {
-        zone.querySelector('img.drop-preview').setAttribute('src', data.url);
+      zone.querySelector('img.drop-preview').setAttribute('src', data.url);
     } else {
       labelSpan.textContent = 'Upload failed';
       console.error('Upload error response:', data);

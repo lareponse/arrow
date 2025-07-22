@@ -11,11 +11,14 @@
             </div>
         </div>
     <?php endforeach; ?>
+
+    <?php
+    $dropzone_relative_path = 'hero_slide/';
+    $dropzone_new = true;
+    include('app/io/render/admin/dropzone.php');
+    ?>
 </div>
 
-<div class="panel">
-    <p><strong>Astuce :</strong> Les slides sont affichés sur la page d'accueil par ordre croissant du champ "Ordre".</p>
-</div>
 
 
 <?php
