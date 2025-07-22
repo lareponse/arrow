@@ -25,7 +25,7 @@ return function ($args = null) {
     ($_ = $db->query($sql)) && ($_ = $_->fetchAll(PDO::FETCH_ASSOC))      && $data['faq'] = $_;
 
     $data['subjects'] = tag_by_parent('contact_demande-sujet');
-    if($_GET['sujet']) {
+    if(isset($_GET['sujet'])) {
         $data['subject'] = $_GET['sujet'];
     }
     return $data;
