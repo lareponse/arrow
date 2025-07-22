@@ -1,16 +1,15 @@
 <section class="newsletter wide">
     <div class="container">
-        <h2 class="newsletter__title">Restez informé</h2>
-        <p class="newsletter__description">Recevez nos dernières actualités et annonces d'événements directement
-            dans votre boîte mail</p>
+        <h2 class="newsletter__title"><?= l('newsletter.title') ?></h2>
+        <p class="newsletter__description"><?= l('newsletter.description') ?></p>
 
         <form class="newsletter__form" id="newsletterForm">
             <div class="newsletter__input-group">
-                <input type="email" placeholder="Votre adresse email" required class="newsletter__input"
-                    aria-label="Adresse email pour newsletter">
-                <button type="submit" class="btn btn--primary">S'abonner</button>
+                <input type="email" placeholder="<?= l('newsletter.email.placeholder') ?>" required class="newsletter__input"
+                    aria-label="<?= l('newsletter.email.aria') ?>">
+                <button type="submit" class="btn btn--primary"><?= l('newsletter.subscribe') ?></button>
             </div>
-            <small class="newsletter__help">Nous respectons votre vie privée. Pas de spam, désinscription à tout moment.</small>
+            <small class="newsletter__help"><?= l('newsletter.privacy_notice') ?></small>
         </form>
     </div>
 </section>

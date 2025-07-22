@@ -5,7 +5,13 @@ return [
     '_.loading' => 'Chargement...',
     '_.error' => 'Erreur',
     '_.success' => 'Succès',
-    '_.all_rights_reserved' => 'Tous droits réservés',
+    'all_rights_reserved' => 'Tous droits réservés',
+
+
+    // Breadcrumb
+    'breadcrumb.aria_label' => 'Fil d\'Ariane',
+    'breadcrumb.formations' => 'Formations',
+
 
     // Formation
 
@@ -14,7 +20,87 @@ return [
     'formation.description' => "Copro Academy propose des formations certifiées et reconnues pour les professionnels de l'immobilier. Nos programmes sont conçus pour répondre aux exigences du secteur et aux évolutions législatives.",
     'formation.catalogue' => 'Catalogue de formations',
     'formation.catalogue.all' => 'Toutes les formations',
-    
+    'formation.filters_aria' => 'Filtres des formations',
+    'formation.card_image_alt' => 'Formation en gestion de copropriété',
+    'formation.no_title_fallback' => 'Pas de titre',
+    'formation.duration_label' => 'Durée',
+    'formation.days' => 'jours',
+    'formation.date_label' => 'Date',
+    'formation.price_label' => 'Prix',
+    'formation.ht_label' => 'HT',
+    'formation.objectives_label' => 'Objectifs',
+    'formation.view_details' => 'Voir les détails',
+    'formation.cta_title' => 'Prêt à vous former ?',
+    'formation.cta_description' => 'Rejoignez nos formations et développez votre expertise en gestion de copropriétés',
+    'formation.request_info' => 'Demander des informations',
+
+    // formatio details
+    // Formation detail page
+    'formation.default_title' => 'Titre de formation',
+    'formation.date_label' => 'Date',
+    'formation.duration_label' => 'Durée',
+    'formation.days' => 'jours',
+    'formation.price_label' => 'Prix',
+    'formation.ht_label' => 'HT',
+    'formation.places_label' => 'Places',
+    'formation.max_participants' => 'participants max',
+
+    // Content sections
+    'formation.description_title' => 'Description de la formation',
+    'formation.objectives_title' => 'Objectifs pédagogiques',
+    'formation.program_title' => 'Programme détaillé',
+    'formation.day' => 'Jour',
+
+    // Program sections
+    'formation.program.legal_foundations' => 'Fondamentaux juridiques et organisationnels',
+    'formation.program.practical_management' => 'Gestion pratique et assemblées',
+
+
+
+    // Content details
+    'formation.content.legal_evolution' => 'Évolution de la législation belge',
+    'formation.content.civil_code' => 'Code civil et dispositions spécifiques',
+    'formation.content.recent_jurisprudence' => 'Jurisprudence récente',
+    'formation.content.budget_forecast' => 'Budget prévisionnel',
+    'formation.content.charges_distribution' => 'Répartition des charges',
+    'formation.content.reserve_fund' => 'Fonds de réserve',
+    'formation.content.preparation_convocation' => 'Préparation et convocation',
+    'formation.content.animation_decisions' => 'Animation et prise de décisions',
+    'formation.content.minutes_follow_up' => 'Procès-verbal et suivi',
+    'formation.content.maintenance' => 'Entretien et maintenance',
+    'formation.content.public_contracts' => 'Marchés publics et devis',
+    'formation.content.intervention_follow_up' => 'Suivi des interventions',
+    'formation.content.questions_answers' => 'Questions-réponses',
+    'formation.content.certificates_delivery' => 'Remise des attestations',
+    'formation.content.additional_resources' => 'Ressources complémentaires',
+
+    // Registration section
+    'formation.registration' => 'Inscription',
+    'formation.vat_detail' => 'HT (TVA 21%)',
+    'formation.total_ttc' => 'Total TTC : 544,50€',
+    'formation.register_now' => 'S\'inscrire maintenant',
+    'formation.practical_info' => 'Informations pratiques',
+    'formation.location_label' => 'Lieu :',
+    'formation.location_brussels' => 'Bruxelles (Centre)',
+    'formation.schedule_label' => 'Horaires :',
+    'formation.schedule_hours' => '9h00 - 17h00',
+    'formation.breaks_label' => 'Pauses :',
+    'formation.parking_label' => 'Parking :',
+
+    // Trainer section
+    'formation.your_trainer' => 'Votre formateur',
+    'formation.trainer_expert_alt' => 'Formateur expert',
+    'formation.years_experience' => '%d %s d\'expérience',
+
+    // Certification section
+    'formation.certification' => 'Certification',
+    'formation.official_certificate' => 'Attestation officielle',
+    'formation.certified_desc' => 'Formation certifiée et reconnue dans le cadre de la formation professionnelle continue',
+
+    // Contact section
+    'formation.questions' => 'Questions ?',
+    'formation.team_available' => 'Notre équipe est disponible pour répondre à toutes vos questions',
+
 
     // Contact form (existing)
     'contact.title' => 'Contactez-nous',
@@ -63,6 +149,7 @@ return [
     'contact.cta.send_email' => 'Envoyer un email',
 
     'faq.title' => 'Questions fréquentes',
+    'benefit.title' => 'Pourquoi choisir Copro Academy ?',
 
     // Navigation
     'nav.home' => 'Accueil',
@@ -100,6 +187,62 @@ return [
     'article.read_more' => 'Lire →',
 
 
+    // Articles & Events page
+    'articles.title' => 'Articles & Événements',
+    'articles.stay_informed' => 'Restez informé des actualités',
+    'articles.description' => 'Suivez les dernières évolutions législatives, participez à nos événements et enrichissez vos connaissances grâce à notre veille juridique spécialisée.',
+
+    // Filters
+    'articles.filters_aria' => 'Filtres de contenu',
+    'articles.filter.all' => 'Tout',
+    'articles.filter.articles' => 'Articles',
+    'articles.filter.events' => 'Événements',
+
+    // View controls
+    'articles.view.grid_title' => 'Vue grille',
+    'articles.view.grid_aria' => 'Affichage en grille',
+    'articles.view.list_title' => 'Vue liste',
+    'articles.view.list_aria' => 'Affichage en liste',
+
+    // Content section
+    'articles.content_list' => 'Liste des articles et événements',
+
+    // Badges
+    'articles.badge.featured' => 'À la une',
+    'articles.badge.event' => 'Événement',
+    'articles.badge.webinar' => 'Webinaire',
+
+    // Event details
+    'articles.event.date_label' => 'Date :',
+    'articles.event.duration_label' => 'Durée :',
+    'articles.event.minutes' => 'minutes',
+    'articles.event.places_label' => 'Places :',
+    'articles.event.price_label' => 'Prix :',
+
+    // Action links
+    'articles.view_event' => 'Voir l\'événement complet',
+    'articles.read_full' => 'Lire l\'article complet',
+
+    // Tags (if these should be translatable)
+    'articles.tag.charges' => 'Charges',
+    'articles.tag.legislation' => 'Législation',
+
+    // Load more
+    'articles.load_more' => 'Charger plus d\'articles',
+    'articles.load_more_aria' => 'Charger plus d\'articles',
+    'articles.loading' => 'Chargement...',
+
+
+    // Article detail page
+    'article.reading_time_suffix' => 'min de lecture',
+    'article.share' => 'Partager',
+    'article.share_aria' => 'Partager l\'article',
+    'article.print' => 'Imprimer',
+    'article.print_aria' => 'Imprimer l\'article',
+    'article.bookmark' => 'Sauvegarder',
+    'article.bookmark_aria' => 'Ajouter aux favoris',
+    'article.toc_aria' => 'Sommaire de l\'article',
+
 
     // Footer
     'footer.navigation' => 'Navigation',
@@ -126,10 +269,14 @@ return [
     'search.load_more' => 'Charger plus',
 
     // Newsletter
+
+    // Newsletter section (update existing entries)
     'newsletter.title' => 'Restez informé',
-    'newsletter.description' => 'Recevez nos dernières actualités et formations',
+    'newsletter.description' => 'Recevez nos dernières actualités et annonces d\'événements directement dans votre boîte mail',
     'newsletter.subscribe' => 'S\'abonner',
-    'newsletter.email_placeholder' => 'Votre adresse email',
+    'newsletter.email.placeholder' => 'Votre adresse email',
+    'newsletter.email.aria' => 'Adresse email pour newsletter',
+    'newsletter.privacy_notice' => 'Nous respectons votre vie privée. Pas de spam, désinscription à tout moment.',
 
     // Breadcrumb
     'breadcrumb.home' => 'Accueil',

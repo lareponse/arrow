@@ -15,10 +15,10 @@ for ($i = 1; $i <= 5; $i++) {
 ?>
 <div class="page-detail">
     <!-- Breadcrumb -->
-    <nav class="breadcrumb" aria-label="Fil d'Ariane">
+    <nav class="breadcrumb" aria-label="<?= l('breadcrumb.aria_label') ?>">
         <ol>
-            <li><a href="/">Accueil</a></li>
-            <li><a href="/article">Articles</a></li>
+            <li><a href="/"><?= l('breadcrumb.home') ?></a></li>
+            <li><a href="/article"><?= l('nav.articles') ?></a></li>
             <li><span aria-current="page"><?= e($article, 'label') ?></span></li>
         </ol>
     </nav>
@@ -30,7 +30,7 @@ for ($i = 1; $i <= 5; $i++) {
             <time datetime="<?= e($article, 'enabled_at') ?>">
                 <?= date('d F Y', strtotime($article['enabled_at'])) ?>
             </time>
-            <span class="reading-time">📖 <?= e($article, 'reading_time') ?> min de lecture</span>
+            <span class="reading-time">📖 <?= e($article, 'reading_time') ?> <?= l('article.reading_time_suffix') ?></span>
         </div>
 
         <h1><?= e($article, 'label') ?></h1>
@@ -48,9 +48,9 @@ for ($i = 1; $i <= 5; $i++) {
         </div>
 
         <div class="article-actions">
-            <button class="share-btn" onclick="shareArticle()" aria-label="Partager l'article">🔗 Partager</button>
-            <button class="print-btn" onclick="window.print()" aria-label="Imprimer l'article">🖨️ Imprimer</button>
-            <button class="bookmark-btn" onclick="bookmarkArticle()" aria-label="Ajouter aux favoris">🔖 Sauvegarder</button>
+            <button class="share-btn" onclick="shareArticle()" aria-label="<?= l('article.share_aria') ?>">🔗 <?= l('article.share') ?></button>
+            <button class="print-btn" onclick="window.print()" aria-label="<?= l('article.print_aria') ?>">🖨️ <?= l('article.print') ?></button>
+            <button class="bookmark-btn" onclick="bookmarkArticle()" aria-label="<?= l('article.bookmark_aria') ?>">🔖 <?= l('article.bookmark') ?></button>
         </div>
     </header>
 
@@ -70,8 +70,8 @@ for ($i = 1; $i <= 5; $i++) {
             <?php if (count($sections) > 0): ?>
                 <!-- Sommaire -->
                 <aside class="table-of-contents">
-                    <h2>Sommaire</h2>
-                    <nav aria-label="Sommaire de l'article">
+                    <h2><?= l('article.table_of_contents') ?></h2>
+                    <nav aria-label="<?= l('article.toc_aria') ?>">
                         <ol>
                             <?php foreach ($sections as $sec): ?>
                                 <li><a href="#<?= e($sec, 'id') ?>"><?= e($sec, 'label') ?></a></li>
@@ -99,7 +99,7 @@ for ($i = 1; $i <= 5; $i++) {
     <!-- Articles similaires -->
     <?php if (!empty($related_articles)): ?>
         <section class="related-articles" aria-labelledby="related-title">
-            <h2 id="related-title">Articles similaires</h2>
+            <h2 id="related-title"><?= l('article.related_articles') ?></h2>
             <div class="related-grid">
                 <?php foreach ($related_articles as $related): ?>
                     <article class="related-card">
@@ -110,7 +110,7 @@ for ($i = 1; $i <= 5; $i++) {
                         <div class="related-content">
                             <h3><?= e($related, 'label') ?></h3>
                             <p><?= e($related, 'summary') ?></p>
-                            <a href="/article/detail/<?= e($related, 'slug') ?>">Lire →</a>
+                            <a href="/article/detail/<?= e($related, 'slug') ?>"><?= l('article.read_more'); ?></a>
                         </div>
                     </article>
                 <?php endforeach; ?>
@@ -118,7 +118,6 @@ for ($i = 1; $i <= 5; $i++) {
         </section>
     <?php endif; ?>
 </div>
-
 
 <?php
 return function ($this_html, $args = []) {

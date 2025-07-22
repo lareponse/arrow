@@ -1,46 +1,46 @@
 <div class="page-detail">
     <!-- Breadcrumb -->
-    <nav class="breadcrumb" aria-label="Fil d'Ariane">
+    <nav class="breadcrumb" aria-label="<?= l('breadcrumb.aria_label') ?>">
         <ol>
-            <li><a href="/">Accueil</a></li>
-            <li><a href="/article">Formations</a></li>
+            <li><a href="/"><?= l('breadcrumb.home') ?></a></li>
+            <li><a href="/article"><?= l('breadcrumb.formations') ?></a></li>
             <li><span aria-current="page"><?= $training['label'] ?? '' ?></span></li>
         </ol>
     </nav>
 
     <!-- En-tête de formation -->
     <header class="formation-header">
-        <div class="formation-badge"><?= $training['level_label'] ?? 'Titre de formation'; ?></div>
-        <h1><?= $training['label'] ?? 'Titre de formation'; ?></h1>
-        <p class="formation-subtitle"><?= $training['subtitle'] ?? 'Titre de formation'; ?></p>
+        <div class="formation-badge"><?= $training['level_label'] ?? l('formation.default_title'); ?></div>
+        <h1><?= $training['label'] ?? l('formation.default_title'); ?></h1>
+        <p class="formation-subtitle"><?= $training['subtitle'] ?? l('formation.default_title'); ?></p>
 
         <div class="formation-key-info">
             <div class="info-item">
                 <span class="icon">📅</span>
                 <div>
-                    <strong>Date</strong>
+                    <strong><?= l('formation.date_label') ?></strong>
                     <p><?= $training['start_date'] ?></p>
                 </div>
             </div>
             <div class="info-item">
                 <span class="icon">⏱️</span>
                 <div>
-                    <strong>Durée</strong>
-                    <p><?= $training['duration_days'] ?> jours (<?= $training['duration_hours'] ?>h)</p>
+                    <strong><?= l('formation.duration_label') ?></strong>
+                    <p><?= $training['duration_days'] ?> <?= l('formation.days') ?> (<?= $training['duration_hours'] ?>h)</p>
                 </div>
             </div>
             <div class="info-item">
                 <span class="icon">💰</span>
                 <div>
-                    <strong>Prix</strong>
-                    <p><?= $training['price_ht'] ?>€ HT</p>
+                    <strong><?= l('formation.price_label') ?></strong>
+                    <p><?= $training['price_ht'] ?>€ <?= l('formation.ht_label') ?></p>
                 </div>
             </div>
             <div class="info-item">
                 <span class="icon">👥</span>
                 <div>
-                    <strong>Places</strong>
-                    <p><?= $training['places_max'] ?> participants max</p>
+                    <strong><?= l('formation.places_label') ?></strong>
+                    <p><?= $training['places_max'] ?> <?= l('formation.max_participants') ?></p>
                 </div>
             </div>
         </div>
@@ -48,8 +48,8 @@
 
     <!-- Image principale -->
     <figure class="formation-hero-image">
-        <img src="/static/assets/hero.webp" alt="Formation en gestion de copropriété" width="1200" height="400">
-        <figcaption><?= $training['label'] ?? 'Titre de formation'; ?></figcaption>
+        <img src="/static/assets/hero.webp" alt="<?= l('img.formation_alt') ?>" width="1200" height="400">
+        <figcaption><?= $training['label'] ?? l('formation.default_title'); ?></figcaption>
     </figure>
 
     <!-- Contenu de la formation -->
@@ -57,7 +57,7 @@
         <div class="content-main">
             <!-- Description -->
             <section class="formation-description">
-                <h2>Description de la formation</h2>
+                <h2><?= l('formation.description_title') ?></h2>
                 <?php
                 $content = explode(PHP_EOL, $training['content'] ?? '');
                 foreach ($content as $paragraph) {
@@ -70,38 +70,37 @@
 
             <!-- Objectifs -->
             <section class="formation-objectives">
-                <h2>Objectifs pédagogiques</h2>
+                <h2><?= l('formation.objectives_title') ?></h2>
                 <div class="objectives-grid">
                     <div class="objective-item">
                         <span class="objective-icon">🎯</span>
-                        <h3>Maîtriser le cadre légal</h3>
-                        <p>Comprendre la législation belge en matière de copropriété et ses évolutions récentes</p>
+                        <h3><?= l('formation.objective.legal_framework') ?></h3>
+                        <p><?= l('formation.objective.legal_desc') ?></p>
                     </div>
                     <div class="objective-item">
                         <span class="objective-icon">⚖️</span>
-                        <h3>Identifier les responsabilités</h3>
-                        <p>Connaître les rôles et obligations de chaque acteur (syndic, conseil de copropriété,
-                            copropriétaires)</p>
+                        <h3><?= l('formation.objective.responsibilities') ?></h3>
+                        <p><?= l('formation.objective.responsibilities_desc') ?></p>
                     </div>
                     <div class="objective-item">
                         <span class="objective-icon">📋</span>
-                        <h3>Organiser les assemblées</h3>
-                        <p>Maîtriser la préparation, l'animation et le suivi des assemblées générales</p>
+                        <h3><?= l('formation.objective.assemblies') ?></h3>
+                        <p><?= l('formation.objective.assemblies_desc') ?></p>
                     </div>
                     <div class="objective-item">
                         <span class="objective-icon">💼</span>
-                        <h3>Gérer au quotidien</h3>
-                        <p>Acquérir les outils pratiques pour une gestion efficace des parties communes</p>
+                        <h3><?= l('formation.objective.daily_management') ?></h3>
+                        <p><?= l('formation.objective.daily_desc') ?></p>
                     </div>
                 </div>
             </section>
 
             <!-- Programme détaillé -->
             <section class="formation-program">
-                <h2>Programme détaillé</h2>
+                <h2><?= l('formation.program_title') ?></h2>
                 <?php foreach ($training_sessions_by_day as $dayNum => $items): ?>
                     <div class="program-day">
-                        <h3>Jour <?= (int)$dayNum ?> : Fondamentaux juridiques et organisationnels</h3>
+                        <h3><?= l('formation.day') ?> <?= (int)$dayNum ?> : <?= l('formation.program.legal_foundations') ?></h3>
                         <div class="program-timeline">
                             <?php foreach ($items as $it): ?>
                                 <div class="timeline-item">
@@ -109,164 +108,63 @@
                                     <div class="content">
                                         <h4><?= htmlspecialchars($it['label'] ?? '') ?></h4>
                                         <ul>
-                                            <li>Évolution de la législation belge</li>
-                                            <li>Code civil et dispositions spécifiques</li>
-                                            <li>Jurisprudence récente</li>
+                                            <li><?= l('formation.content.legal_evolution') ?></li>
+                                            <li><?= l('formation.content.civil_code') ?></li>
+                                            <li><?= l('formation.content.recent_jurisprudence') ?></li>
                                         </ul>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
-
                         </div>
                     </div>
 
-                    <div class="program-day">
-                        <h3>Jour 2 : Gestion pratique et assemblées</h3>
-                        <div class="program-timeline">
-                            <div class="timeline-item">
-                                <span class="time">9h00 - 10h30</span>
-                                <div class="content">
-                                    <h4>Gestion financière</h4>
-                                    <ul>
-                                        <li>Budget prévisionnel</li>
-                                        <li>Répartition des charges</li>
-                                        <li>Fonds de réserve</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <span class="time">11h00 - 12h30</span>
-                                <div class="content">
-                                    <h4>Assemblées générales</h4>
-                                    <ul>
-                                        <li>Préparation et convocation</li>
-                                        <li>Animation et prise de décisions</li>
-                                        <li>Procès-verbal et suivi</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <span class="time">14h00 - 15h30</span>
-                                <div class="content">
-                                    <h4>Gestion des travaux</h4>
-                                    <ul>
-                                        <li>Entretien et maintenance</li>
-                                        <li>Marchés publics et devis</li>
-                                        <li>Suivi des interventions</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <span class="time">16h00 - 17h00</span>
-                                <div class="content">
-                                    <h4>Synthèse et évaluation</h4>
-                                    <ul>
-                                        <li>Questions-réponses</li>
-                                        <li>Remise des attestations</li>
-                                        <li>Ressources complémentaires</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 <?php endforeach; ?>
             </section>
-
-            <!-- Public cible 
-        <section class="formation-audience">
-            <h2>Public cible</h2>
-            <div class="audience-grid">
-                <div class="audience-item">
-                    <span class="audience-icon">🏢</span>
-                    <h3>Syndics débutants</h3>
-                    <p>Nouveaux professionnels souhaitant maîtriser les fondamentaux</p>
-                </div>
-                <div class="audience-item">
-                    <span class="audience-icon">👔</span>
-                    <h3>Gestionnaires immobiliers</h3>
-                    <p>Professionnels élargissant leur champ de compétences</p>
-                </div>
-                <div class="audience-item">
-                    <span class="audience-icon">⚖️</span>
-                    <h3>Juristes</h3>
-                    <p>Avocats et notaires spécialisés en droit immobilier</p>
-                </div>
-                <div class="audience-item">
-                    <span class="audience-icon">🎓</span>
-                    <h3>Étudiants</h3>
-                    <p>Formation initiale ou continue dans l'immobilier</p>
-                </div>
-            </div>
-        </section>
--->
-            <!-- Prérequis 
-        <section class="formation-prerequisites">
-            <h2>Prérequis</h2>
-            <div class="prerequisites-content">
-                <div class="prerequisite-item">
-                    <span class="icon">✅</span>
-                    <p><strong>Aucun prérequis technique</strong> - Formation accessible à tous</p>
-                </div>
-                <div class="prerequisite-item">
-                    <span class="icon">📚</span>
-                    <p><strong>Connaissances de base</strong> en droit ou immobilier recommandées</p>
-                </div>
-                <div class="prerequisite-item">
-                    <span class="icon">💻</span>
-                    <p><strong>Matériel fourni</strong> - Support de cours et documentation</p>
-                </div>
-            </div>
-        </section>
-        -->
         </div>
 
         <!-- Sidebar -->
         <aside class="formation-sidebar">
             <!-- Inscription -->
             <div class="inscription-card">
-                <h3>Inscription</h3>
+                <h3><?= l('formation.registration') ?></h3>
                 <div class="price-info">
                     <span class="price"><?= $training['price_ht'] ?>€</span>
-                    <span class="price-detail">HT (TVA 21%)</span>
+                    <span class="price-detail"><?= l('formation.vat_detail') ?></span>
                 </div>
                 <div class="total-price">
-                    <strong>Total TTC : 544,50€</strong>
+                    <strong><?= l('formation.total_ttc') ?></strong>
                 </div>
-                <a href="/contact?sujet=sujet-formation" class="cta">S'inscrire maintenant</a>
+                <a href="/contact?sujet=sujet-formation" class="cta"><?= l('formation.register_now') ?></a>
 
                 <div class="inscription-info">
-                    <h4>Informations pratiques</h4>
+                    <h4><?= l('formation.practical_info') ?></h4>
                     <ul>
-                        <li>📍 <strong>Lieu :</strong> Bruxelles (Centre)</li>
-                        <li>🕘 <strong>Horaires :</strong> 9h00 - 17h00</li>
-                        <li>☕ <strong>Pauses :</strong> <?= $training['pause'] ?></li>
-                        <li>🅿️ <strong>Parking :</strong> <?= $training['parking'] ?></li>
+                        <li>📍 <strong><?= l('formation.location_label') ?></strong> <?= l('formation.location_brussels') ?></li>
+                        <li>🕘 <strong><?= l('formation.schedule_label') ?></strong> <?= l('formation.schedule_hours') ?></li>
+                        <li>☕ <strong><?= l('formation.breaks_label') ?></strong> <?= $training['pause'] ?></li>
+                        <li>🅿️ <strong><?= l('formation.parking_label') ?></strong> <?= $training['parking'] ?></li>
                     </ul>
                 </div>
             </div>
 
             <!-- Formateur -->
             <div class="trainer-card">
-                <h3>Votre formateur</h3>
+                <h3><?= l('formation.your_trainer') ?></h3>
                 <div class="trainer-info">
-                    <img src="/asset/image/trainer/avatar/<?= $trainer['slug']; ?>.webp" alt="Formateur expert" class="trainer-photo">
+                    <img src="/asset/image/trainer/avatar/<?= $trainer['slug']; ?>.webp" alt="<?= l('formation.trainer_expert_alt') ?>" class="trainer-photo">
                     <div class="trainer-details">
                         <h4><?= $trainer['label'] ?? ''; ?></h4>
                         <p class="trainer-title"><?= $trainer['title'] ?? ''; ?></p>
                         <?php if (!empty($trainer['hire_date'])):
-                            // Create DateTime objects for hire date and today
                             $hireDate = new DateTime($trainer['hire_date']);
                             $today    = new DateTime();
-
-                            // Compute the difference
                             $diff     = $today->diff($hireDate);
                             $years    = $diff->y;
-
-                            // Pluralize “an(s)” in French
-                            $unit     = ($years > 1) ? 'ans' : 'an';
+                            $unit     = ($years > 1) ? l('time.years') : l('time.year');
                         ?>
                             <p class="trainer-experience">
-                                <?= $years; ?> <?= $unit; ?> d'expérience
+                                <?= l('formation.years_experience', $years, $unit); ?>
                             </p>
                         <?php endif; ?>
                     </div>
@@ -277,13 +175,12 @@
             <?php if (!empty($training['certification'])): ?>
                 <!-- Certificat -->
                 <div class="certificate-card">
-                    <h3>Certification</h3>
+                    <h3><?= l('formation.certification') ?></h3>
                     <div class="certificate-info">
                         <span class="certificate-icon">🏆</span>
                         <div>
-                            <h4>Attestation officielle</h4>
-                            <p>Formation certifiée et reconnue dans le cadre de la formation professionnelle continue
-                            </p>
+                            <h4><?= l('formation.official_certificate') ?></h4>
+                            <p><?= l('formation.certified_desc') ?></p>
                         </div>
                     </div>
                 </div>
@@ -291,16 +188,16 @@
 
             <!-- Contact -->
             <div class="contact-card">
-                <h3>Questions ?</h3>
-                <p>Notre équipe est disponible pour répondre à toutes vos questions</p>
+                <h3><?= l('formation.questions') ?></h3>
+                <p><?= l('formation.team_available') ?></p>
                 <div class="contact-methods">
-                    <a href="tel:+32510080001" class="contact-method">
+                    <a href="tel:<?= viewport('coproacademy', 'telephone') ?>" class="contact-method">
                         <span class="icon">📞</span>
-                        +32 510 08 00 01
+                        <?= viewport('coproacademy', 'telephone') ?>
                     </a>
-                    <a href="mailto:CoproAcademy@contact.be" class="contact-method">
+                    <a href="mailto:<?= viewport('coproacademy', 'email') ?>" class="contact-method">
                         <span class="icon">✉️</span>
-                        CoproAcademy@contact.be
+                        <?= viewport('coproacademy', 'email') ?>
                     </a>
                 </div>
             </div>

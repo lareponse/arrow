@@ -1,6 +1,6 @@
 <section class="formation-benefits full-width-section" aria-labelledby="benefits-title">
     <div class="formation-benefits-content">
-        <h2 id="benefits-title" class="section-title">Pourquoi choisir Copro Academy&nbsp;?</h2>
+        <h2 id="benefits-title" class="section-title"><?= l('benefit.title'); ?></h2>
 
         <div class="benefits-grid">
             <?php foreach ($benefits as $benefit) : ?>
