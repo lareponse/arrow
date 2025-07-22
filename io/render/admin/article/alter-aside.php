@@ -2,7 +2,7 @@
     <header>
         <h2>Publication</h2>
     </header>
-
+    <button class="emoji-trigger">😀</button>
     <fieldset class="form-group">
         <legend class="sr-only">État de publication</legend>
         <label class="checkbox-label">
