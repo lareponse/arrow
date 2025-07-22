@@ -1,20 +1,19 @@
 <!-- Hero Section avec Carousel -->
 <section class="hero wide" aria-label="Présentation principale">
-    <?php foreach($hero_slides as $index => $slide): ?>
-    <img src="<?= $slide?>" class="hero__image <?= $index === 0 ? 'hero__image--active' : ''?>" alt="Formation en gestion de copropriété" loading="eager">
+    <?php foreach ($hero_slides as $index => $slide): ?>
+        <img src="<?= $slide ?>" class="hero__image <?= $index === 0 ? 'hero__image--active' : '' ?>" alt="Formation en gestion de copropriété" loading="eager">
     <?php endforeach; ?>
 
     <div class="hero__overlay" aria-hidden="true"></div>
 
     <div class="hero__content">
-        <h1 class="hero__title">Bienvenue chez Copro Academy</h1>
-        <h2 class="hero__subtitle">Votre partenaire en gestion de copropriétés</h2>
-        <p class="hero__description">Formations professionnelles, actualités juridiques et accompagnement
-            spécialisé pour les experts de l'immobilier</p>
+        <h1 class="hero__title"><?= e($coproacademy, 'hero_title'); ?></h1>
+        <h2 class="hero__subtitle"><?= e($coproacademy, 'slogan'); ?></h2>
+        <p class="hero__description"><?= e($coproacademy, 'hero_text'); ?></p>
 
         <div class="hero__actions">
             <a href="/formation" class="btn btn--primary btn--lg">Découvrir nos formations</a>
-            <a href="/articles" class="btn btn--secondary btn--lg">Actualités & Événements</a>
+            <a href="/article" class="btn btn--secondary btn--lg">Actualités & Événements</a>
         </div>
     </div>
 </section>
@@ -71,74 +70,10 @@
     </div>
 </section>
 
-<!-- FAQ rapide -->
-<section class="bg-gray-50 py-3xl" aria-labelledby="faq-title">
-    <div class="container">
-        <h2 id="faq-title" class="text-center mb-2xl">Questions fréquentes</h2>
+<?php require('app/io/render/_partial/faq.php'); ?>
+<?php require('app/io/render/_partial/benefit.php'); ?>
+<?php require('app/io/render/_partial/newsletter.php'); ?>
 
-        <div style="max-width: 800px; margin: 0 auto;">
-            <?php foreach ($faq as $item) : ?>
-                <details class="faq-item">
-                    <summary class="faq-summary"><?= $item['label'] ?? 'Question vide' ?></summary>
-                    <div class="faq-content">
-                        <p><?= $item['content'] ?? 'Reponse vide' ?></p>
-                    </div>
-                </details>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
-<section class="formation-benefits full-width-section" aria-labelledby="benefits-title">
-    <div class="formation-benefits-content">
-        <h2 id="benefits-title" class="section-title">Pourquoi choisir Copro Academy&nbsp;?</h2>
-
-        <div class="benefits-grid">
-            <div class="benefit-card">
-                <div class="benefit-icon">🎓</div>
-                <h3>Formations certifiées</h3>
-                <p>Nos formations sont reconnues et donnent droit à des certificats de formation continue.</p>
-            </div>
-
-            <div class="benefit-card">
-                <div class="benefit-icon">⚖️</div>
-                <h3>Expertise juridique</h3>
-                <p>Nos formateurs sont des experts reconnus en droit immobilier et gestion de copropriétés.</p>
-            </div>
-
-            <div class="benefit-card">
-                <div class="benefit-icon">🔄</div>
-                <h3>Mise à jour constante</h3>
-                <p>Nos contenus sont régulièrement actualisés selon les évolutions législatives.</p>
-            </div>
-
-            <div class="benefit-card">
-                <div class="benefit-icon">🤝</div>
-                <h3>Accompagnement personnalisé</h3>
-                <p>Support continu et conseils adaptés à vos besoins spécifiques.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Newsletter -->
-<section class="newsletter wide">
-    <div class="container">
-        <h2 class="newsletter__title">Restez informé</h2>
-        <p class="newsletter__description">Recevez nos dernières actualités et annonces d'événements directement
-            dans votre boîte mail</p>
-
-        <form class="newsletter__form" id="newsletterForm">
-            <div class="newsletter__input-group">
-                <input type="email" placeholder="Votre adresse email" required class="newsletter__input"
-                    aria-label="Adresse email pour newsletter">
-                <button type="submit" class="btn btn--primary">S'abonner</button>
-            </div>
-            <small class="newsletter__help">Nous respectons votre vie privée. Pas de spam, désinscription à tout
-                moment.</small>
-        </form>
-    </div>
-</section>
 <?php
 return function ($this_html, $args = []) {
     return ob_ret_get('app/io/render/layout.php', ($args ?? []) +  ['main' => $this_html])[1];

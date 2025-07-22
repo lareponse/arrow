@@ -79,48 +79,18 @@ $level_to_class = function ($slug) {
     </div>
 </section>
 
-<section class="formation-benefits wide" aria-labelledby="benefits-title">
-    <div class="formation-benefits-content">
-        <h2 id="benefits-title" class="section-title">Pourquoi choisir Copro Academy&nbsp;?</h2>
+<?php require('app/io/render/_partial/benefit.php'); ?>
 
-        <div class="benefits-grid">
-            <div class="benefit-card">
-                <div class="benefit-icon">🎓</div>
-                <h3>Formations certifiées</h3>
-                <p>Nos formations sont reconnues et donnent droit à des certificats de formation continue.</p>
-            </div>
-
-            <div class="benefit-card">
-                <div class="benefit-icon">⚖️</div>
-                <h3>Expertise juridique</h3>
-                <p>Nos formateurs sont des experts reconnus en droit immobilier et gestion de copropriétés.</p>
-            </div>
-
-            <div class="benefit-card">
-                <div class="benefit-icon">🔄</div>
-                <h3>Mise à jour constante</h3>
-                <p>Nos contenus sont régulièrement actualisés selon les évolutions législatives.</p>
-            </div>
-
-            <div class="benefit-card">
-                <div class="benefit-icon">🤝</div>
-                <h3>Accompagnement personnalisé</h3>
-                <p>Support continu et conseils adaptés à vos besoins spécifiques.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- Section CTA -->
+<!-- Section CTA Formation -->
 <section class="newsletter wide">
     <div class="container text-center">
         <h2 class="newsletter__title">Prêt à vous former ?</h2>
         <p class="newsletter__description">Rejoignez nos formations et développez votre expertise en gestion de
             copropriétés</p>
-        <a href="contact.html?sujet=formation" class="btn btn--primary btn--lg">Demander des informations</a>
+        <a href="/contact?sujet=sujet-formation" class="btn btn--primary btn--lg">Demander des informations</a>
     </div>
 </section>
+
 
 
 <?php

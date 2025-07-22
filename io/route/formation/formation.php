@@ -16,6 +16,8 @@ return function ($args = null) {
 
     $data['formation'] = $db->query("SELECT * FROM training_plus WHERE start_date >= CURDATE() ORDER BY start_date DESC LIMIT 10")->fetchAll();
     $data['formation_niveau'] = (tag_by_parent('formation-niveau'));
+    $data['benefits'] = $db->query("SELECT * FROM benefit ORDER BY sort_order")->fetchAll();
+
 
     return $data;
 };

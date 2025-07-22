@@ -21,9 +21,6 @@ return function ($args = null) {
         ($_ = $db->query($sql)) && ($_ = $_->fetchAll()) && $data[$key] = $_;
     }
 
-    $sql = "SELECT slug, label FROM `coproacademy`;";
-    ($_ = $db->query($sql)) && ($_ = $_->fetchAll(PDO::FETCH_KEY_PAIR))   && $data['coproacademy'] = $_;
-
     $hero_slides = glob($_SERVER['DOCUMENT_ROOT'] . '/asset/image/hero_slide/*.webp');
     $data['hero_slides'] = array_map(function ($slide) {
         return str_replace($_SERVER['DOCUMENT_ROOT'], '', $slide);

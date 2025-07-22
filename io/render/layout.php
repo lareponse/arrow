@@ -1,3 +1,9 @@
+<?php
+l(null, require 'app/lang/fr.php'); // Load French translations
+
+$coproacademy = viewport('coproacademy');
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -25,6 +31,7 @@
     <link rel="stylesheet" href="/static/css/04-components.css">
     <link rel="stylesheet" href="/static/css/05-utilities.css">
     <link rel="stylesheet" href="/static/css/06-pages.css">
+    
     <?= $append_css ?? '' ?>
 </head>
 
@@ -38,7 +45,8 @@
     <header class="navbar" role="banner">
         <div class="navbar__container">
             <a href="/" class="navbar__logo-link" aria-label="Retour à l'accueil">
-                <img src="/static/assets/base/full/base_logo_transparent_background.png" alt="Copro Academy Logo"
+
+                <img src="<?= e($coproacademy, 'logo') ?>" alt="<?= e($coproacademy, 'label') ?> Logo"
                     class="navbar__logo">
             </a>
 
@@ -79,9 +87,9 @@
             <div class="footer__section">
                 <h3>Informations légales</h3>
                 <ul class="footer__links">
-                    <li><a href="/page/conditions-generales">Conditions générales</a></li>
-                    <li><a href="/page/politique-confidentialite">Politique de confidentialité</a></li>
-                    <li><a href="/page/mentions-legales">Mentions légales</a></li>
+                    <li><a href="/legal/conditions-generales">Conditions générales</a></li>
+                    <li><a href="/legal/politique-confidentialite">Politique de confidentialité</a></li>
+                    <li><a href="/legal/mentions-legales">Mentions légales</a></li>
                 </ul>
             </div>
 
@@ -109,14 +117,13 @@
         <div class="footer__separator"></div>
 
         <div class="footer__copyright">
-
             <div class="flex justify-center gap-lg flex-wrap mt-sm">
-                <span>Email : <a href="mailto:CoproAcademy@contact.be">CoproAcademy@contact.be</a></span>
-                <span>Téléphone : <a href="tel:+32510080001">+32 510 08 00 01</a></span>
-                <span>Adresse : <?= $coproacademy['adresse'] ?? 'Cette information est indisponible' ?></span>
+                <span>Email : <a href="mailto:CoproAcademy@contact.be"><?= e($coproacademy, 'email') ?></a></span>
+                <span>Téléphone : <a href="tel:<?= e($coproacademy, 'telephone') ?>"><?= e($coproacademy, 'telephone') ?></a></span>
+                <span>Adresse : <?= nl2br(e($coproacademy, 'adresse')) ?></span>
 
             </div>
-            <p>&copy; 2025 Copro Academy - Tous droits réservés</p>
+            <p>&copy; <?= date('Y') ?> <?= e($coproacademy, 'label') ?> - Tous droits réservés</p>
         </div>
     </footer>
 

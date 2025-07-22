@@ -42,3 +42,26 @@ function l($key, ...$args): string
 
     return $text;
 }
+
+function viewport($section = null, $key=null): mixed
+{
+    static $cache = [];
+
+    if (empty($cache)) {
+        $stmt = db()->query("SELECT slug, label FROM `coproacademy`;");
+        $cache = [
+            'coproacademy' => $stmt->fetchAll(PDO::FETCH_KEY_PAIR),
+        ];
+    }
+
+    if($section === null)
+        return $cache;
+
+    if($key === null)
+        return $cache[$section] ?? null;
+
+    if(isset($cache[$section][$key]))
+        return e($cache[$section],$key);
+
+    return null;
+}

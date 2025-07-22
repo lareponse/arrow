@@ -21,9 +21,6 @@ return function ($args = null) {
 
     $data = ['title' => 'Contactez-nous', 'description' => 'Contactez-nous pour toute question sur nos formations, événements ou services. Notre équipe est là pour vous aider.'];
 
-    $sql = "SELECT slug, label FROM `coproacademy`;";
-    ($_ = $db->query($sql)) && ($_ = $_->fetchAll(PDO::FETCH_KEY_PAIR))   && $data['coproacademy'] = $_;
-
     $sql = "SELECT * FROM `faq` ORDER BY `sort_order`;";
     ($_ = $db->query($sql)) && ($_ = $_->fetchAll(PDO::FETCH_ASSOC))      && $data['faq'] = $_;
 
