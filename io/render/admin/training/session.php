@@ -60,7 +60,7 @@
 
             <fieldset class="form-group">
                 <label for="content">Description</label>
-                <textarea name="content" id="content" rows="4"><?= htmlspecialchars($edit_session['content'] ?? '') ?></textarea>
+                <textarea name="content" class="content-editor" id="content" rows="4"><?= htmlspecialchars($edit_session['content'] ?? '') ?></textarea>
             </fieldset>
 
             <fieldset class="form-group">
