@@ -67,32 +67,12 @@
                 }
                 ?>
             </section>
-
+            
             <!-- Objectifs -->
             <section class="formation-objectives">
+                <!-- Corps de l'article -->
                 <h2><?= l('formation.objectives_title') ?></h2>
-                <div class="objectives-grid">
-                    <div class="objective-item">
-                        <span class="objective-icon">🎯</span>
-                        <h3><?= l('formation.objective.legal_framework') ?></h3>
-                        <p><?= l('formation.objective.legal_desc') ?></p>
-                    </div>
-                    <div class="objective-item">
-                        <span class="objective-icon">⚖️</span>
-                        <h3><?= l('formation.objective.responsibilities') ?></h3>
-                        <p><?= l('formation.objective.responsibilities_desc') ?></p>
-                    </div>
-                    <div class="objective-item">
-                        <span class="objective-icon">📋</span>
-                        <h3><?= l('formation.objective.assemblies') ?></h3>
-                        <p><?= l('formation.objective.assemblies_desc') ?></p>
-                    </div>
-                    <div class="objective-item">
-                        <span class="objective-icon">💼</span>
-                        <h3><?= l('formation.objective.daily_management') ?></h3>
-                        <p><?= l('formation.objective.daily_desc') ?></p>
-                    </div>
-                </div>
+                <p><?= nl2br($training['objectives']) ?></p>
             </section>
 
             <!-- Programme détaillé -->
