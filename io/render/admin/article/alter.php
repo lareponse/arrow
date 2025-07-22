@@ -64,6 +64,7 @@ $is_edit = !empty($article['id']);
             <textarea
                 id="content"
                 name="content"
+                class="content-editor"
                 rows="10"
                 maxlength="500"
                 aria-describedby="content-help"><?= htmlspecialchars($article['content'] ?? '') ?></textarea>

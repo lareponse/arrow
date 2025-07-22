@@ -20,3 +20,9 @@ a {
     margin-block-end: var(--space-xs);
     text-decoration: none;
 }
+
+input, textarea, select, button {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}

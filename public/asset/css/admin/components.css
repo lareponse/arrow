@@ -576,7 +576,6 @@ ol h3 a {
 }
 
 .content-editor {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: var(--text-sm);
     line-height: 1.6;
 }

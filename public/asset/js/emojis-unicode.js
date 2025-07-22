@@ -58,12 +58,7 @@ function createModal() {
   return modal;
 }
 
-function showModal(target) {
-  currentTarget = target;
-  const groups = target.dataset.emoji
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean);
+function showModal(groups = []) {
   const emojis = generateEmojis(
     groups.length ? groups : Object.keys(emojiGroups)
   );
@@ -81,7 +76,6 @@ function showModal(target) {
   modal.style.display = 'block';
   grid.firstElementChild?.focus();
 
-  // Trap focus
   document.addEventListener('keydown', handleModalKeys);
 }
 
@@ -89,22 +83,21 @@ function hideModal() {
   if (!modal) return;
   modal.style.display = 'none';
   currentTarget?.focus();
-  currentTarget = null;
   document.removeEventListener('keydown', handleModalKeys);
 }
 
 function insertEmoji(emoji) {
   if (!currentTarget) return;
 
-  const {
-    selectionStart: start = 0,
-    selectionEnd: end = 0,
-    value = '',
-  } = currentTarget;
+  const start = currentTarget.selectionStart || 0;
+  const end = currentTarget.selectionEnd || 0;
+  const value = currentTarget.value || '';
+
   currentTarget.value = value.slice(0, start) + emoji + value.slice(end);
 
   const newPos = start + emoji.length;
   currentTarget.setSelectionRange(newPos, newPos);
+  currentTarget.focus();
 
   hideModal();
 }
@@ -171,27 +164,24 @@ function handleModalKeys(e) {
   }
 }
 
-// Auto-enhance elements
-function enhance() {
-  document
-    .querySelectorAll('[data-emoji]:not([data-emoji-enhanced])')
-    .forEach((element) => {
-      const trigger = document.createElement('button');
-      trigger.type = 'button';
-      trigger.className = 'emoji-trigger';
-      trigger.innerHTML = '😀';
-      trigger.setAttribute('aria-label', 'Add emoji');
+// Track focused input
+document.addEventListener('focusin', (e) => {
+  if (e.target.matches('input, textarea, [contenteditable]')) {
+    currentTarget = e.target;
+  }
+});
 
-      element.parentNode.insertBefore(trigger, element.nextSibling);
-      element.dataset.emojiEnhanced = 'true';
-
-      trigger.addEventListener('click', () => showModal(element));
-    });
-}
-
-// Event delegation for modal
+// Handle trigger buttons
 document.addEventListener('click', (e) => {
-  if (!modal) return;
+  if (e.target.classList.contains('emoji-trigger')) {
+    e.preventDefault();
+
+    const groups =
+      e.target.dataset.emoji?.split(',').map((s) => s.trim()) || [];
+
+    console.log('Emoji groups:', groups);
+    showModal(groups);
+  }
 
   if (
     e.target.classList.contains('emoji-close') ||
@@ -203,15 +193,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Auto-init + observer for dynamic content
 export default function init() {
-  enhance();
-
-  // Watch for new elements
-  new MutationObserver(() => enhance()).observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  return { enhance, hideModal };
+  return { hideModal };
 }
