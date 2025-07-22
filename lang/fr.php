@@ -142,7 +142,7 @@ return array (
   'articles.stay_informed' => 'Restez informé des actualités',
   'articles.description' => 'Suivez les dernières évolutions législatives, participez à nos événements et enrichissez vos connaissances grâce à notre veille juridique spécialisée.',
   'articles.filters_aria' => 'Filtres de contenu',
-  'articles.filter.all' => 'Toute',
+  'articles.filter.all' => 'Tout',
   'articles.filter.articles' => 'Articles',
   'articles.filter.events' => 'Événements',
   'articles.view.grid_title' => 'Vue grille',

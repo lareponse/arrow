@@ -1,34 +1,3 @@
-<?php
-$path = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\') . '/../lang';
-$languages = glob($path . '/*.php');
-$currentLang = $_GET['lang'] ?? 'fr';
-$currentFile = $path . '/' . $currentLang . '.php';
-
-// Handle POST - save translations
-if ($_POST) {
-    $content = $_POST['content'] ?? [];
-
-    // Backup existing file
-    if (file_exists($currentFile)) {
-        $backup = $currentFile . '.' . date('Y-m-d_H-i-s');
-        copy($currentFile, $backup) or trigger_error("Backup failed: $backup", E_USER_WARNING);
-    }
-
-    $export = "<?php\n\nreturn " . var_export($content, true) . ";\n";
-    file_put_contents($currentFile, $export) or trigger_error("Write failed: $currentFile", E_USER_ERROR);
-    http_out(302, '', ['Location' => "?lang=$currentLang"]);
-}
-
-$content = file_exists($currentFile) ? (include $currentFile) : [];
-
-// Group by section prefix
-$sections = [];
-foreach ($content as $key => $value) {
-    [$section] = explode('.', $key, 2) + ['misc'];
-    $sections[$section][] = ['key' => $key, 'value' => $value];
-}
-
-?>
 <div class="page-header">
     <h1>Language Editor</h1>
     <div class="page-actions">
@@ -42,10 +11,10 @@ foreach ($content as $key => $value) {
 </div>
 
 <form method="post" class="alter-form">
-<?= csrf_field(3600) ?>
+    <?= csrf_field(3600) ?>
     <div class="form-main">
         <?php foreach ($sections as $sectionName => $items): ?>
-            <div class="meta-box">
+            <div class="meta-box" id="section-<?= e($sectionName) ?>">
                 <header>
                     <h2><?= ucfirst($sectionName) ?></h2>
                 </header>
@@ -63,7 +32,7 @@ foreach ($content as $key => $value) {
     </div>
 
     <aside>
-        <div class="meta-box">
+        <div class="meta-box panel">
             <header>
                 <h2>Language Info</h2>
             </header>
@@ -75,6 +44,22 @@ foreach ($content as $key => $value) {
                 <dt>Sections</dt>
                 <dd><?= count($sections ?? []) ?></dd>
             </dl>
+        </div>
+
+        <div class="meta-box panel">
+            <header>
+                <h2>Table of Contents</h2>
+            </header>
+            <ul class="toc-list">
+                <?php foreach ($sections as $sectionName => $items): ?>
+                    <li>
+                        <a href="#section-<?= e($sectionName) ?>">
+                            <?= ucfirst($sectionName) ?>
+                            <span class="count">(<?= count($items) ?>)</span>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         </div>
     </aside>
 
