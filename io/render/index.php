@@ -7,9 +7,9 @@
     <div class="hero__overlay" aria-hidden="true"></div>
 
     <div class="hero__content">
-        <h1 class="hero__title"><?= e($coproacademy, 'hero_title'); ?></h1>
-        <h2 class="hero__subtitle"><?= e($coproacademy, 'slogan'); ?></h2>
-        <p class="hero__description"><?= e($coproacademy, 'hero_text'); ?></p>
+        <h1 class="hero__title"><?= l('home.hero_title'); ?></h1>
+        <h2 class="hero__subtitle"><?= l('home.hero_subtitle'); ?></h2>
+        <p class="hero__description"><?= l('home.hero_text'); ?></p>
 
         <div class="hero__actions">
             <a href="/formation" class="btn btn--primary btn--lg">Découvrir nos formations</a>

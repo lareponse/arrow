@@ -2,11 +2,8 @@
 
 return [
     // Global strings
-    '_.loading' => 'Chargement...',
-    '_.error' => 'Erreur',
-    '_.success' => 'Succès',
+    'description' => 'Copro Academy est votre référence en matière de formation et d\'accompagnement pour les copropriétés. Nous proposons des formations certifiées, des conseils juridiques et des outils pratiques pour optimiser la gestion de votre copropriété.',
     'all_rights_reserved' => 'Tous droits réservés',
-
 
     // Breadcrumb
     'breadcrumb.aria_label' => 'Fil d\'Ariane',
