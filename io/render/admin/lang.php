@@ -1,18 +1,48 @@
+<?php
+$path = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\') . '/../lang';
+$languages = glob($path . '/*.php');
+$currentLang = $_GET['lang'] ?? 'fr';
+$currentFile = $path . '/' . $currentLang . '.php';
+
+// Handle POST - save translations
+if ($_POST) {
+    $content = $_POST['content'] ?? [];
+
+    // Backup existing file
+    if (file_exists($currentFile)) {
+        $backup = $currentFile . '.' . date('Y-m-d_H-i-s');
+        copy($currentFile, $backup) or trigger_error("Backup failed: $backup", E_USER_WARNING);
+    }
+
+    $export = "<?php\n\nreturn " . var_export($content, true) . ";\n";
+    file_put_contents($currentFile, $export) or trigger_error("Write failed: $currentFile", E_USER_ERROR);
+    http_out(302, '', ['Location' => "?lang=$currentLang"]);
+}
+
+$content = file_exists($currentFile) ? (include $currentFile) : [];
+
+// Group by section prefix
+$sections = [];
+foreach ($content as $key => $value) {
+    [$section] = explode('.', $key, 2) + ['misc'];
+    $sections[$section][] = ['key' => $key, 'value' => $value];
+}
+
+?>
 <div class="page-header">
     <h1>Language Editor</h1>
     <div class="page-actions">
-        <?php foreach ($languages as $file): ?>
-            <?php $lang = basename($file, '.php'); ?>
+        <?php foreach ($languages as $file): $lang = basename($file, '.php'); ?>
             <a href="?lang=<?= $lang ?>"
                 class="btn <?= $lang === $currentLang ? 'btn-primary' : 'btn-secondary' ?>">
                 <?= strtoupper($lang) ?>
             </a>
         <?php endforeach; ?>
-        <a href="?action=new" class="btn btn-outline">+ Add Language</a>
     </div>
 </div>
 
 <form method="post" class="alter-form">
+<?= csrf_field(3600) ?>
     <div class="form-main">
         <?php foreach ($sections as $sectionName => $items): ?>
             <div class="meta-box">
@@ -23,13 +53,11 @@
                     <div class="form-group">
                         <label><?= $item['key'] ?></label>
                         <input type="text"
-                            name="content[<?= htmlspecialchars($item['key']) ?>]"
-                            value="<?= htmlspecialchars($item['value']) ?>"
+                            name="content[<?= e($item['key']) ?>]"
+                            value="<?= e($item['value']) ?>"
                             class="form-control">
                     </div>
                 <?php endforeach; ?>
-                <button type="button" class="btn btn-outline btn-sm add-key"
-                    data-section="<?= $sectionName ?>">+ Add Key</button>
             </div>
         <?php endforeach; ?>
     </div>
@@ -43,20 +71,18 @@
                 <dt>File</dt>
                 <dd><code><?= $currentLang ?>.php</code></dd>
                 <dt>Keys</dt>
-                <dd><?= count($content) ?></dd>
+                <dd><?= count($content ?? []) ?></dd>
                 <dt>Sections</dt>
-                <dd><?= count($sections) ?></dd>
+                <dd><?= count($sections ?? []) ?></dd>
             </dl>
         </div>
     </aside>
 
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">Save Changes</button>
-        <button type="button" class="btn btn-outline">Add Section</button>
     </div>
 </form>
 
 <?php
-return function ($this_html, $args = []) {
-    return ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $this_html])[1];
-};
+return fn($html, $args = []) =>
+ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $html])[1];
