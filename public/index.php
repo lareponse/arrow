@@ -7,7 +7,6 @@ require 'add/error.php';
 require 'add/io.php';
 require 'add/db.php';
 require 'add/auth.php';
-
 require 'app/morph/html.php';
 
 
@@ -18,7 +17,7 @@ try {
 
     $re_quest   = http_in(4096, 9);
     $io = realpath(__DIR__ . '/../io');
-    
+
     $request_admin = strpos($re_quest, '/admin') === 0;
     $request_admin && auth(AUTH_GUARD);
 
@@ -27,26 +26,20 @@ try {
     $in_route   = io_route($in_path, $re_quest, IO_DEEP | IO_FLEX) ?: io_route($in_path, 'index');
     $in_quest   = io_fetch($in_route, [], IO_INVOKE);
 
-    // render: find the render file and absorb it
+    // render: match route file and absorb it when possible
     $out_path   = $io . '/render';
-    
-    $out_route  = io_route($out_path, $re_quest, IO_DEEP | IO_FLEX) ?: io_route($out_path, 'index');
+    $out_route = [IO_PATH => (str_replace($in_path, $out_path, $in_route[IO_PATH]) ?? '')] + $in_route;
     $out_quest  = io_fetch($out_route, $in_quest[IO_INVOKE], IO_ABSORB);
+
+    // absorption is optional, http_body() settles the output
     if (is_string($out_quest[IO_OB_GET]) || is_string($out_quest[IO_ABSORB])) {
-        if(isset($out_quest[IO_ABSORB])){
-            $body = $out_quest[IO_ABSORB];
-        }
-        else{
-            $template = $request_admin ? 'app/io/render/admin/layout.php' : 'app/io/render/layout.php';
-            $body = ob_ret_get($template, ($args ?? []) + ['main' => $out_quest[IO_OB_GET]])[1];
-        }
-        // vd(-1, $body);
-        http_out(200, $body, ['Content-Type' => 'text/html; charset=utf-8']);
+        http_out(200, http_body($out_quest, $request_admin), ['Content-Type' => 'text/html; charset=utf-8']);
         exit;
     }
 
     error_log('404 Not Found for ' . $re_quest);
     http_out(404, 'Not Found at all');
+
 } catch (LogicException | RuntimeException $t) {
     handle_badhat_exception($t);
     if (function_exists('is_dev')) {
@@ -59,6 +52,15 @@ try {
     vd(0, $t);
     // out quest that fetch an error page within the layout, firsttests if error page has 200 
     die;
+}
+
+function http_body(array $out_quest, bool $request_admin): string
+{
+    if (isset($out_quest[IO_ABSORB]))
+        return $out_quest[IO_ABSORB];
+
+    $template = $request_admin ? 'app/io/render/admin/layout.php' : 'app/io/render/layout.php';
+    return ob_ret_get($template, ['main' => $out_quest[IO_OB_GET]])[1];
 }
 
 function handle_badhat_exception(Throwable $t): void
