@@ -12,5 +12,6 @@ return function ($this_html, $args = []) {
         'navbar__link__active' => 'legal',
         'append_css' => '<link rel="stylesheet" href="/static/css/07-legales.css">'
     ];
-    return ob_ret_get('app/io/render/layout.php', $data)[1];
+
+    return ob_ret_get('app/io/render/layout.php', ($args ?? []) + $data)[1];
 };
