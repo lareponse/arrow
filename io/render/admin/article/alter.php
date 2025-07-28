@@ -176,7 +176,3 @@ $is_edit = !empty($article['id']);
         });
     });
 </script>
-<?php
-return function ($this_html, $args = []) {
-    return ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $this_html])[1];
-};

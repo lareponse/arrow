@@ -97,8 +97,3 @@
         white-space: pre-wrap;
     }
 </style>
-
-<?php
-return function ($this_html, $args = []) {
-    return ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $this_html])[1];
-};

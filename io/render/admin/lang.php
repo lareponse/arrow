@@ -67,7 +67,3 @@
         <button type="submit" class="btn btn-primary">Save Changes</button>
     </div>
 </form>
-
-<?php
-return fn($html, $args = []) =>
-ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $html])[1];

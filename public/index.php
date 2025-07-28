@@ -16,25 +16,36 @@ try {
     auth(AUTH_SETUP, 'operator.username', "SELECT `password_hash` FROM `operator` WHERE `username` = ?");
     l(null, require 'app/lang/fr.php'); // Load French translations
 
-    $io         = realpath(__DIR__ . '/../io');
     $re_quest   = http_in(4096, 9);
+    $io = realpath(__DIR__ . '/../io');
+    
+    $request_admin = strpos($re_quest, '/admin') === 0;
+    $request_admin && auth(AUTH_GUARD);
 
-    if(strpos($re_quest, '/admin') === 0)
-        auth(AUTH_GUARD);
+    // business: find the route and invoke it
+    $in_path    = $io . '/route';
+    $in_route   = io_route($in_path, $re_quest, IO_DEEP | IO_FLEX) ?: io_route($in_path, 'index');
+    $in_quest   = io_fetch($in_route, [], IO_INVOKE);
 
-    // coding: find the route and invoke it
-    $in_route   = io_route("$io/route", $re_quest, 'index');
-    $in_quest   = io_quest($in_route, [], IO_INVOKE);
     // render: find the render file and absorb it
-    $out_route  = io_route("$io/render/", $re_quest, 'index');
-    $out_quest  = io_quest($out_route, $in_quest[IO_INVOKE], IO_ABSORB);
-
-    if (is_string($out_quest[IO_ABSORB])) {
-        http_out(200, $out_quest[IO_ABSORB], ['Content-Type' => 'text/html; charset=utf-8']);
+    $out_path   = $io . '/render';
+    
+    $out_route  = io_route($out_path, $re_quest, IO_DEEP | IO_FLEX) ?: io_route($out_path, 'index');
+    $out_quest  = io_fetch($out_route, $in_quest[IO_INVOKE], IO_ABSORB);
+    if (is_string($out_quest[IO_OB_GET]) || is_string($out_quest[IO_ABSORB])) {
+        if(isset($out_quest[IO_ABSORB])){
+            $body = $out_quest[IO_ABSORB];
+        }
+        else{
+            $template = $request_admin ? 'app/io/render/admin/layout.php' : 'app/io/render/layout.php';
+            $body = ob_ret_get($template, ($args ?? []) + ['main' => $out_quest[IO_OB_GET]])[1];
+        }
+        // vd(-1, $body);
+        http_out(200, $body, ['Content-Type' => 'text/html; charset=utf-8']);
         exit;
     }
 
-    error_log('404 Not Found for ' . $re_quest . ' in ' . $io);
+    error_log('404 Not Found for ' . $re_quest);
     http_out(404, 'Not Found at all');
 } catch (LogicException | RuntimeException $t) {
     handle_badhat_exception($t);
@@ -71,4 +82,3 @@ function handle_badhat_exception(Throwable $t): void
         exit;
     }
 }
-

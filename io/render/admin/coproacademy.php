@@ -59,8 +59,3 @@ $settings = db()->query("SELECT id, slug, label FROM coproacademy ORDER BY id")-
 
     <button type="submit">Update Settings</button>
 </form>
-
-<?php
-return function ($this_html, $args = []) {
-    return ob_ret_get('app/io/render/admin/layout.php', ($args ?? []) + ['main' => $this_html])[1];
-};
