@@ -3,33 +3,37 @@
 declare(strict_types=1);
 
 const ROW_TABLE  = -2;
-const ROW_AIPK   = -1;
+const ROW_UNIQUE = -1;
 
 const ROW_LOAD   = 1;
 const ROW_SCHEMA = 2;
 const ROW_EDIT   = 4;
 const ROW_MORE   = 8;
+
 const ROW_SAVE   = 16;
 const ROW_SET    = 32;
 const ROW_GET    = 64;
 const ROW_ERROR  = 128;
+
 const ROW_RESET  = 256;
 
 const ROW_CREATE = ROW_SCHEMA | ROW_SET | ROW_SAVE;
 const ROW_UPDATE = ROW_LOAD | ROW_SET | ROW_SAVE; // update row context, save to DB, return row
 
-function row(PDO $pdo, string $table, string $aipk = 'id'): callable
+function row(PDO $pdo, string $table, string $unique = 'id'): callable
 {
-    $row = [ROW_TABLE => $table, ROW_AIPK => $aipk]; // each row() call creates a new row context to use in the closure
+    empty($table)                       && throw new InvalidArgumentException(__FUNCTION__ . ':no_table');
+
+    $row = [ROW_TABLE => $table, ROW_UNIQUE => $unique]; // each row() call creates a new row context to use in the closure
     return function (int $behave, array $boat = []) use ($pdo, &$row) {
         try {
             // RESET -- first thing to do if requested
             $behave & ROW_RESET
-                && ($row = [ROW_TABLE => $row[ROW_TABLE], ROW_AIPK => $row[ROW_AIPK]]) // reset row context
+                && ($row = [ROW_TABLE => $row[ROW_TABLE], ROW_UNIQUE => $row[ROW_UNIQUE]]) // reset row context
                 && ($behave &= ~ROW_RESET);
 
             $behave & (ROW_UPDATE | ROW_CREATE) && ($setter = $boat);
-            $behave & ROW_UPDATE && ($boat = [$row[ROW_AIPK] => $boat[$row[ROW_AIPK]]]);
+            $behave & ROW_UPDATE && ($boat = [$row[ROW_UNIQUE] => $boat[$row[ROW_UNIQUE]]]);
             $behave & ROW_CREATE && ($boat = null);
 
             // LOAD -- needs boat of PK/UK
@@ -72,12 +76,11 @@ function row(PDO $pdo, string $table, string $aipk = 'id'): callable
 
 function row_save(PDO $pdo, array $row): PDOStatement
 {
-    empty($row[ROW_TABLE])              && throw new InvalidArgumentException(__FUNCTION__ . ':no_table');
     empty($row[ROW_EDIT])               && throw new InvalidArgumentException(__FUNCTION__ . ':no_alterations', 100);
 
-    $aipk_value = $row[ROW_LOAD][$row[ROW_AIPK]] ?? null;
-    [$sql, $bindings] = $aipk_value 
-        ? qb_update($row[ROW_TABLE], $row[ROW_EDIT], $row[ROW_AIPK], (string)$aipk_value)
+    $unique_value = $row[ROW_LOAD][$row[ROW_UNIQUE]] ?? null;
+    [$sql, $bindings] = $unique_value 
+        ? qb_update($row[ROW_TABLE], $row[ROW_EDIT], $row[ROW_UNIQUE], (string)$unique_value)
         : qb_insert($row[ROW_TABLE], $row[ROW_EDIT]);
         
     return row_run($pdo, $sql, $bindings);
@@ -85,7 +88,6 @@ function row_save(PDO $pdo, array $row): PDOStatement
 
 function row_load(PDO $pdo, string $table, array $data): array
 {
-    empty($table)                       && throw new InvalidArgumentException(__FUNCTION__ . ':no_table');
     empty($data)                        && throw new InvalidArgumentException(__FUNCTION__ . ':no_filters');
 
     $prepared = row_run($pdo, ...qb_select($table, $data));
@@ -98,7 +100,7 @@ function row_set(array &$row, array $data, int $behave = 0): bool
 {
     $add_to_edit = null;
     foreach ($data as $col => $value) {
-        if ($col === $row[ROW_AIPK] || ($row[ROW_LOAD] && array_key_exists($col, $row[ROW_LOAD]) && $row[ROW_LOAD][$col] === $value))
+        if ($col === $row[ROW_UNIQUE] || ($row[ROW_LOAD] && array_key_exists($col, $row[ROW_LOAD]) && $row[ROW_LOAD][$col] === $value))
             continue;
 
         $add_to_edit = $behave & ROW_EDIT || !empty($row[ROW_SCHEMA]) && isset($row[ROW_SCHEMA][$col]);
