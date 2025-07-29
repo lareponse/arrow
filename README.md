@@ -176,10 +176,12 @@ $article(ROW_RESET);                               // Clear all internal state e
 row(db(), 'article')(ROW_CREATE, $post_data);
 ```
 
-### Reusable Closures
+### Pool closures for bulk operations
 ```php
 $article = row(db(), 'article');
-// Reuse $article for multiple operations
+foreach ($bulk_data as $data) {
+    $article(ROW_CREATE | ROW_RESET, $data);
+}
 ```
 
 ---
