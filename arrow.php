@@ -25,7 +25,7 @@ function row(PDO $pdo, string $table, string $aipk = 'id'): callable
         try {
             // RESET -- first thing to do if requested
             $behave & ROW_RESET
-                && ($row = array_intersect_key($row, [ROW_TABLE => 0, ROW_AIPK => 0])) // reset row context
+                && ($row = [ROW_TABLE => $row[ROW_TABLE], ROW_AIPK => $row[ROW_AIPK]]) // reset row context
                 && ($behave &= ~ROW_RESET);
 
             $behave & (ROW_UPDATE | ROW_CREATE) && ($setter = $boat);
@@ -110,11 +110,11 @@ function row_set(array &$row, array $data, int $behave = 0): bool
 function row_get(array $row, ?array $data = [], int $behave = 0): ?array
 {
     if ($behave & (ROW_LOAD | ROW_EDIT | ROW_MORE)) {
-        $parts = [];
-        $behave & ROW_LOAD && isset($row[ROW_LOAD]) && ($parts[] = $row[ROW_LOAD]);
-        $behave & ROW_EDIT && isset($row[ROW_EDIT]) && ($parts[] = $row[ROW_EDIT]);
-        $behave & ROW_MORE && isset($row[ROW_MORE]) && ($parts[] = $row[ROW_MORE]);
-        return $parts ? array_merge(...$parts) : $parts;
+        $result = [];
+        ($behave & ROW_MORE) && isset($row[ROW_MORE]) && ($result += $row[ROW_MORE]);
+        ($behave & ROW_EDIT) && isset($row[ROW_EDIT]) && ($result += $row[ROW_EDIT]);
+        ($behave & ROW_LOAD) && isset($row[ROW_LOAD]) && ($result += $row[ROW_LOAD]);
+        return $result;
     }
 
     $fieldters = $data ?: array_keys($row[ROW_SCHEMA] ?? []);
