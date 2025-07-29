@@ -1,8 +1,16 @@
-# ARROW: Bitwise Row Operations
+# ARROW
 
-**Single-row database operations using bitwise behavior flags**
+**Single-row database operations using bitmask driven closures**
 
----
+## Key Advantages
+
+1. **Zero object overhead** - No model instantiation, hydration, or magic methods
+2. **Predictable SQL** - You know exactly what queries run and when
+3. **Minimal memory** - Closure state vs. full object graphs
+4. **Explicit control** - Bitwise flags make behavior completely transparent
+5. **Change detection** - Automatic, but only for what actually changed
+
+**Arrow is perfect when you need both speed and precise control over database interactions**
 
 ## Core Concept
 
@@ -14,29 +22,6 @@ $article(ROW_LOAD, ['slug' => 'how-to-php']);
 $article(ROW_SET, ['title' => 'Updated Title']);
 $article(ROW_SAVE);
 ```
-
----
-
-## Bitwise Flags
-
-### State Management
-* **`ROW_LOAD (1)`** - Load row from database, set schema
-* **`ROW_SCHEMA (2)`** - Manage column definitions
-* **`ROW_EDIT (4)`** - Valid alterations (in schema)
-* **`ROW_MORE (8)`** - Auxiliary data (outside schema)
-
-### Operations
-* **`ROW_SAVE (16)`** - Persist changes to database
-* **`ROW_SET (32)`** - Apply data to internal state
-* **`ROW_GET (64)`** - Retrieve data from internal state
-* **`ROW_ERROR (128)`** - Access error state
-* **`ROW_RESET (256)`** - Clear internal state
-
-### Compound Operations
-* **`ROW_CREATE`** - `ROW_SCHEMA | ROW_SET | ROW_SAVE`
-* **`ROW_UPDATE`** - `ROW_LOAD | ROW_SET | ROW_SAVE`
-
----
 
 ## Basic Usage
 
@@ -53,24 +38,36 @@ $article(ROW_SET, ['title' => 'New Title', 'published_at' => date('Y-m-d H:i:s')
 $article(ROW_SAVE);
 ```
 
-### Compound Update
-```php
-// Equivalent to: LOAD by id, SET title, SAVE
-$article(ROW_UPDATE, ['id' => 42, 'title' => 'New Title']);
-
-// Elegant one liner, after input cleanup
-$article(ROW_UPDATE, $clean_data_with_aipk);
-```
-
 ### Compound Create
 ```php
-$article(ROW_CREATE, ['title' => 'New Article', 'content' => 'Content']);
+$post_data = ['title' => 'New Article', 'content' => 'Content','slug' => 'new-title'];
+
+// closure then creation
+$article = row(db(), 'article');
+$article(ROW_CREATE, $post_data);
 
 // Or, as a one-liner 
-row(db(), 'article')(ROW_CREATE, ['title' => 'New Article', 'content' => 'Content']);
+row(db(), 'article')(ROW_CREATE, $post_data);
 ```
 
----
+### Compound Update
+```php
+// Equivalent to: LOAD by id, SET title, content (skip slug), SAVE (use default unique field 'id')
+$clean_data = ['id' => 42, 'content' => 'Content with extra', 'slug' => 'new-title'];
+
+$article = row(db(), 'article');
+$article(ROW_UPDATE, $clean_data);
+
+// Use custom unique field 'slug'
+$clean_data = ['slug' => 'new-title', 'title' => 'New Title'];
+
+$article = row(db(), 'article', 'slug');
+$article(ROW_UPDATE, $clean_data);
+
+// Or as one-liner
+row(db(), 'article', 'slug')(ROW_UPDATE, $clean_data);
+```
+
 
 ## Data Separation
 
@@ -98,8 +95,6 @@ $subset = $article(ROW_GET, ['slug', 'title']);    // Returns  array
 $title = $article(ROW_GET, ['title']);             // Returns string, not array
 ```
 
----
-
 ## Schema Management
 
 ### Automatic Schema
@@ -121,7 +116,6 @@ $article(ROW_SCHEMA | ROW_SET);                    // Uses select_schema() funct
 // mostly for inserts
 ```
 
----
 
 ## Force Data Placement
 
@@ -134,7 +128,6 @@ $article(ROW_SET | ROW_MORE, ['subscription_consent' => date('Y-m-d H:i:s')]);  
 
 **Note**: `ROW_MORE` data is never saved to database.
 
----
 
 ## SQL Generation
 
@@ -147,7 +140,6 @@ $article(ROW_SAVE);
 // SQL: UPDATE `article` SET `published_at` = '2023-10-01 12:00:00' WHERE `slug` = 'how-to-php';
 ```
 
----
 
 ## Error Handling
 Arrow captures all exceptions in internal state
@@ -158,7 +150,6 @@ if($error = $article(ROW_GET | ROW_ERROR)){     // Returns Throwable or null
 }
 ```
 
----
 
 ## State Reset
 
@@ -166,7 +157,6 @@ if($error = $article(ROW_GET | ROW_ERROR)){     // Returns Throwable or null
 $article(ROW_RESET);                               // Clear all internal state except table/pk
 ```
 
----
 
 ## Performance Patterns
 
@@ -184,7 +174,6 @@ foreach ($bulk_data as $data) {
 }
 ```
 
----
 
 ## Return Values
 
@@ -194,7 +183,6 @@ foreach ($bulk_data as $data) {
 * **`ROW_GET | ROW_ERROR`**: Return error or null
 * **Single field access**: Return field value directly
 
----
 
 ## Best Practices
 
@@ -205,3 +193,31 @@ foreach ($bulk_data as $data) {
 5. **Reuse closures**: Create once, operate multiple times
 
 Arrow provides precise control over single-row operations while maintaining the BADHAT philosophy of explicit, bitwise-controlled behavior.
+
+
+
+## Bitwise Flags
+
+| State        | Value | Purpose                           |
+| ------------ | ----- | --------------------------------- |
+| `ROW_LOAD`   | `1`   | Loaded row from database          |
+| `ROW_SCHEMA` | `2`   | Manage column definitions         |
+| `ROW_EDIT`   | `4`   | Valid alterations (within schema) |
+| `ROW_MORE`   | `8`   | Auxiliary data (outside schema)   |
+| `ROW_ERROR`  | `128` | Error state                       |
+
+
+| Operations  | Value | Purpose                               |
+| ----------- | ----- | ------------------------------------- |
+| `ROW_LOAD`  | `1`   | Load row from database and set schema |
+| `ROW_SAVE`  | `16`  | Persist changes to database           |
+| `ROW_SET`   | `32`  | Apply data to internal state          |
+| `ROW_GET`   | `64`  | Retrieve data from internal state     |
+| `ROW_RESET` | `256` | Clear internal state                  |
+
+| Constant     | Components    |Purpose    |
+| ------------ | ------------- | ----------|
+| `ROW_CREATE` | `ROW_SCHEMA \| ROW_SET \| ROW_SAVE` | Create new row, populate with schema and save |
+| `ROW_UPDATE` | `ROW_LOAD \| ROW_SET \| ROW_SAVE`   | Load existing row, apply changes, save    |
+
+
