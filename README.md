@@ -55,12 +55,18 @@ $article(ROW_SAVE);
 
 ### Compound Update
 ```php
-$article(ROW_UPDATE, ['id' => 42, 'title' => 'New Title']);
 // Equivalent to: LOAD by id, SET title, SAVE
+$article(ROW_UPDATE, ['id' => 42, 'title' => 'New Title']);
+
+// Elegant one liner, after input cleanup
+$article(ROW_UPDATE, $clean_data_with_aipk);
 ```
 
-### Create New
+### Compound Create
 ```php
+$article(ROW_CREATE, ['title' => 'New Article', 'content' => 'Content']);
+
+// Or, as a one-liner 
 row(db(), 'article')(ROW_CREATE, ['title' => 'New Article', 'content' => 'Content']);
 ```
 
@@ -79,14 +85,16 @@ $article(ROW_SET, [
 
 ### Retrieving Data
 ```php
-$all_data = $article(ROW_GET);                    // LOAD + EDIT merged
-$valid_only = $article(ROW_GET | ROW_EDIT);       // Only schema fields
-$extra_only = $article(ROW_GET | ROW_MORE);       // Only auxiliary data
+$valid_data = $article(ROW_GET);                 // LOAD + EDIT merged
+$edit_only = $article(ROW_GET | ROW_EDIT);       // Only schema fields
+$more_only = $article(ROW_GET | ROW_MORE);       // Only auxiliary data
 $everything = $article(ROW_GET | ROW_LOAD | ROW_EDIT | ROW_MORE);
 ```
 
-### Single Field Access
+### Field Access
 ```php
+$subset = $article(ROW_GET, ['slug', 'title']);    // Returns  array
+
 $title = $article(ROW_GET, ['title']);             // Returns string, not array
 ```
 
@@ -104,11 +112,13 @@ $schema = $article(ROW_GET | ROW_SCHEMA);          // Array of column names
 ### Manual Schema
 ```php
 $article(ROW_SCHEMA | ROW_SET, ['slug', 'title', 'content', 'published_at']);
+// should be view based, but you do you
 ```
 
 ### Schema Introspection
 ```php
 $article(ROW_SCHEMA | ROW_SET);                    // Uses select_schema() function
+// mostly for inserts
 ```
 
 ---
@@ -132,8 +142,7 @@ Arrow only generates SQL for changed values:
 
 ```php
 $article(ROW_LOAD, ['slug' => 'how-to-php']);     // Loads: title='How to PHP', published_at=NULL
-$article(ROW_SET, ['title' => 'How to PHP']);     // No change - same value
-$article(ROW_SET, ['published_at' => '2023-10-01 12:00:00']);
+$article(ROW_SET, ['title' => 'How to PHP', 'published_at' => '2023-10-01 12:00:00']); 
 $article(ROW_SAVE);
 // SQL: UPDATE `article` SET `published_at` = '2023-10-01 12:00:00' WHERE `slug` = 'how-to-php';
 ```
@@ -141,15 +150,12 @@ $article(ROW_SAVE);
 ---
 
 ## Error Handling
-
+Arrow captures all exceptions in internal state
 ```php
-try {
-    $article(ROW_SAVE);
-} catch (Throwable $e) {
-    // Error automatically captured in internal state
+$article(ROW_SAVE);                             // Error automatically captured in internal state
+if($error = $article(ROW_GET | ROW_ERROR)){     // Returns Throwable or null
+    // error handling
 }
-
-$error = $article(ROW_GET | ROW_ERROR);            // Returns Throwable or null
 ```
 
 ---
@@ -174,12 +180,6 @@ row(db(), 'article')(ROW_CREATE, $post_data);
 ```php
 $article = row(db(), 'article');
 // Reuse $article for multiple operations
-```
-
-### Compound Flags
-```php
-// Single call instead of three separate calls
-$article(ROW_LOAD | ROW_SET | ROW_SAVE, ['id' => 42, 'title' => 'New Title']);
 ```
 
 ---
