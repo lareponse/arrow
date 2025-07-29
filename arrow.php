@@ -1,33 +1,5 @@
 <?php
 
-/** ARROW --------------------------------->
- * 
- * ARrays
- * Four for state (load, schema, edit, more)
- *          ROW_LOAD   (1), 
- *          ROW_EDIT   (4), 
- *          ROW_MORE   (8)
- * 
- * Row
- * Load one, save one, capture errors
- *          ROW_LOAD     (1),
- *          ROW_SAVE    (16),
- *          ROW_ERROR  (128)
- * 
- * Restrict
- * Auto sorts data into edit or more
- *          ROW_SCHEMA (2), 
- *          ROW_SET    (32),
- 
- * Obtain data and structure
- *         ROW_GET    (64)
- * 
- * Write SQL
- *   - function qb_select(string $table, array $data): array
- *   - function qb_insert(string $table, array $data): array
- *   - function qb_update(string $table, array $data, int $id): array
- */
-
 declare(strict_types=1);
 
 const ROW_TABLE  = -2;
@@ -100,31 +72,26 @@ function row(PDO $pdo, string $table, string $aipk = 'id'): callable
 
 function row_save(PDO $pdo, array $row): PDOStatement
 {
-    empty($row[ROW_EDIT])               && throw new DomainException(__FUNCTION__ . ':no_alterations');
-    empty($row[ROW_TABLE])              && throw new DomainException(__FUNCTION__ . ':no_table');
+    empty($row[ROW_TABLE])              && throw new InvalidArgumentException(__FUNCTION__ . ':no_table');
+    empty($row[ROW_EDIT])               && throw new InvalidArgumentException(__FUNCTION__ . ':no_alterations', 100);
 
     $aipk_value = $row[ROW_LOAD][$row[ROW_AIPK]] ?? null;
-    [$sql, $bindings] = $aipk_value ? qb_update($row, (int)$aipk_value) : qb_insert($row);
-
-    $prepared = $pdo->prepare($sql);
-    $prepared                           || throw new RuntimeException($sql, PDO::PARAM_EVT_EXEC_PRE);
-    $prepared->execute($bindings)       || throw new RuntimeException(json_encode($prepared->errorInfo()), PDO::PARAM_EVT_EXEC_POST);
-
-    return $prepared;
+    [$sql, $bindings] = $aipk_value 
+        ? qb_update($row[ROW_TABLE], $row[ROW_EDIT], $row[ROW_AIPK], (string)$aipk_value)
+        : qb_insert($row[ROW_TABLE], $row[ROW_EDIT]);
+        
+    return row_run($pdo, $sql, $bindings);
 }
 
 function row_load(PDO $pdo, string $table, array $data): array
 {
-    empty($data)                        && throw new DomainException('no_assoc_data');
+    empty($table)                       && throw new InvalidArgumentException(__FUNCTION__ . ':no_table');
+    empty($data)                        && throw new InvalidArgumentException(__FUNCTION__ . ':no_filters');
 
-    [$sql, $bindings] = qb_select($table, $data);
+    $prepared = row_run($pdo, ...qb_select($table, $data));
+    $prepared->rowCount() === 1         || throw new LogicException('cardinality of ' . $prepared->rowCount() . ' for  ' . $table);
 
-    $prepared = $pdo->prepare($sql);
-    $prepared                           || throw new DomainException($sql, PDO::PARAM_EVT_EXEC_PRE);
-    $prepared->execute($bindings)       || throw new DomainException(json_encode($prepared->errorInfo()), PDO::PARAM_EVT_EXEC_POST);
-    $prepared->rowCount() === 1         || throw new DomainException('cardinality of ' . $prepared->rowCount() . ' for  ' . $sql);
-
-    return $prepared->fetch(PDO::FETCH_ASSOC) ?: throw new DomainException("Failed to fetch row for $sql");
+    return $prepared->fetch(PDO::FETCH_ASSOC) ?: throw new RuntimeException("Failed to fetch row for $table");
 }
 
 function row_set(array &$row, array $data, int $behave = 0): bool
@@ -144,10 +111,10 @@ function row_get(array $row, ?array $data = [], int $behave = 0): ?array
 {
     if ($behave & (ROW_LOAD | ROW_EDIT | ROW_MORE)) {
         $parts = [];
-        $behave & ROW_LOAD && ($parts[] = $row[ROW_LOAD] ?? []);
-        $behave & ROW_EDIT && ($parts[] = $row[ROW_EDIT] ?? []);
-        $behave & ROW_MORE && ($parts[] = $row[ROW_MORE] ?? []);
-        return $parts ? array_merge(...$parts) : [];
+        $behave & ROW_LOAD && isset($row[ROW_LOAD]) && ($parts[] = $row[ROW_LOAD]);
+        $behave & ROW_EDIT && isset($row[ROW_EDIT]) && ($parts[] = $row[ROW_EDIT]);
+        $behave & ROW_MORE && isset($row[ROW_MORE]) && ($parts[] = $row[ROW_MORE]);
+        return $parts ? array_merge(...$parts) : $parts;
     }
 
     $fieldters = $data ?: array_keys($row[ROW_SCHEMA] ?? []);
@@ -166,7 +133,7 @@ function select_schema(PDO $pdo, string $table): array
 {
     $fields = [];
     $query = $pdo->query("SELECT * FROM `$table` LIMIT 1");
-    $query || throw new DomainException("Failed to query schema for table `$table`");
+    $query || throw new RuntimeException("Failed to query schema for table `$table`");
     for ($i = $query->columnCount() - 1; $i >= 0; --$i) {
         $m = $query->getColumnMeta($i);
         $fields[$m['name']] = $m['pdo_type'] ?? true;
@@ -196,12 +163,9 @@ function qb_select(string $table, array $data): array
 }
 
 // qb_insert('article', ['title' => 'My Article', 'content' => 'This is the content.']);
-function qb_insert(array $row): array
+function qb_insert(string $table, array $data): array
 {
-    $table = $row[ROW_TABLE];
-    $data = $row[ROW_EDIT];
-
-    if (!$table || !$data) return ['', []];
+    (!$table || !$data) && throw new BadFunctionCallException(__FUNCTION__ . ':empty_params');
 
     $named_bindings = $placeholders = $fields = [];
     foreach ($data as $col => $val) {
@@ -217,12 +181,10 @@ function qb_insert(array $row): array
     return ["INSERT INTO {$table} ($fields) VALUES ($placeholders);", $named_bindings];
 }
 
-// qb_update('article', ['title' => 'Updated Title'], 42)
-function qb_update(array $row, int $id): array
+// qb_update('article', ['title' => 'Updated Title'], 'id', 42)
+function qb_update(string $table, array $data, string $unique_key, string $unique_value): array
 {
-    $table = $row[ROW_TABLE];
-    $data = $row[ROW_EDIT];
-    if (!$table || !$data || $id <= 0) return ['', []];
+    (!$table || !$data || !$unique_key || $unique_value === '') && throw new BadFunctionCallException(__FUNCTION__ . ':empty_params');
 
     $named_bindings = $placeholders = [];
 
@@ -234,5 +196,13 @@ function qb_update(array $row, int $id): array
 
     $placeholders   = implode(', ', $placeholders);
 
-    return ["UPDATE `$table` SET $placeholders WHERE `" . $row[ROW_AIPK] . "` = :qb_update_id;", $named_bindings + [':qb_update_id' => $id]];
+    return ["UPDATE `$table` SET $placeholders WHERE `$unique_key` = :qb_update_uk;", $named_bindings + [':qb_update_uk' => $unique_value]];
+}
+
+function row_run(PDO $pdo, string $sql, array $bindings): PDOStatement
+{
+    $prepared = $pdo->prepare($sql);
+    $prepared                           || throw new RuntimeException('PDO::prepare failed : ' . json_encode($pdo->errorInfo()));
+    $prepared->execute($bindings)       || throw new RuntimeException('PDO::execute failed : ' . json_encode($prepared->errorInfo()));
+    return $prepared;
 }
