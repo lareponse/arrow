@@ -1,5 +1,5 @@
 <?php
-require_once 'add/bad/arrow.php';
+require_once 'add/arrow/arrow.php';
 require_once 'app/mapper/taxonomy.php';
 
 return function ($slug = null) {

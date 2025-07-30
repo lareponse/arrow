@@ -1,5 +1,5 @@
 <?php
-require_once 'add/bad/arrow.php';
+require_once 'add/arrow/arrow.php';
 
 // io/route/admin/service/reorder.php
 return function ($args) {

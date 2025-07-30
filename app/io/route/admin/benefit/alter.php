@@ -1,5 +1,5 @@
 <?php
-require_once 'add/bad/arrow.php';
+require_once 'add/arrow/arrow.php';
 // io/route/admin/benefit/alter.php
 return function ($args) {
     $id = $args[0] ?? null;

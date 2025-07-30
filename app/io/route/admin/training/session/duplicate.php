@@ -1,6 +1,6 @@
 <?php
 require_once 'add/db.php';
-require_once 'add/bad/arrow.php';
+require_once 'add/arrow/arrow.php';
 
 return function ($args = null) {
     [$training_slug, $session_id] = $args;
