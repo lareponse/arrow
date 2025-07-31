@@ -42,11 +42,6 @@ try {
 
 } catch (LogicException | RuntimeException $t) {
     handle_badhat_exception($t);
-    if (function_exists('is_dev')) {
-        vd(0, $t);
-        exit;
-    }
-    error_log($t->getMessage() . ' in ' . $io . ' at ' . $re_quest);
     header('HTTP/1.1 500 Forbidden');
 } catch (Throwable $t) {
     vd(0, $t);
