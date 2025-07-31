@@ -1,4 +1,4 @@
-# CROW View Creation Guideline
+# ARROW View Creation Guideline
 
 Only write views that eliminate application logic. If it doesn't reduce code, it's not a CROW-compliant view.
 
