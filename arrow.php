@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 const ROW_LOAD   = 1;
 const ROW_SCHEMA = 2;
 const ROW_EDIT   = 4;
