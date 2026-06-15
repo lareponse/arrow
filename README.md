@@ -16,7 +16,22 @@ This closure-based row context turns each database record into its own mini stat
 
 ## Core Concept
 
-Arrow encapsulates a single database row's lifecycle in a closure, controlled by bitwise flags. Each flag represents a specific operation or data state.
+Arrow encapsulates a single database row's lifecycle in a closure, controlled by bitwise flags. Each flag represents a specific operation or data state. Examples assume these namespaced imports:
+
+```php
+use function lareponse\arrow\row;
+use const lareponse\arrow\ROW_CREATE;
+use const lareponse\arrow\ROW_EDIT;
+use const lareponse\arrow\ROW_ERROR;
+use const lareponse\arrow\ROW_GET;
+use const lareponse\arrow\ROW_LOAD;
+use const lareponse\arrow\ROW_MORE;
+use const lareponse\arrow\ROW_RESET;
+use const lareponse\arrow\ROW_SAVE;
+use const lareponse\arrow\ROW_SCHEMA;
+use const lareponse\arrow\ROW_SET;
+use const lareponse\arrow\ROW_UPDATE;
+```
 
 ```php
 $article = row(db(), 'article');
@@ -110,6 +125,12 @@ $schema = $article(ROW_GET | ROW_SCHEMA);          // Array of column names
 ```php
 $article(ROW_SCHEMA | ROW_SET, ['slug', 'title', 'content', 'published_at']);
 // should be view based, but you do you
+```
+
+Tip: `ROW_SCHEMA` expects field names as array keys. Use `array_flip()` before passing a simple list:
+
+```php
+$article(ROW_SCHEMA | ROW_SET, array_flip(['slug', 'title', 'content', 'published_at']));
 ```
 
 ### Schema Introspection
@@ -221,5 +242,3 @@ Arrow provides precise control over single-row operations while maintaining the 
 | ------------ | ------------- | ----------|
 | `ROW_CREATE` | `ROW_SCHEMA \| ROW_SET \| ROW_SAVE` | Create new row, populate with schema and save |
 | `ROW_UPDATE` | `ROW_LOAD \| ROW_SET \| ROW_SAVE`   | Load existing row, apply changes, save    |
-
-

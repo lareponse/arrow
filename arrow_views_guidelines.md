@@ -103,7 +103,7 @@ Replaces:
 * View schema = security boundary
 * No inferred permissions; no app-side filtering
 * Prefix all joined fields to avoid ambiguity
-* Use `ROW_SCHEMA`, `ROW_EDIT`, and `ROW_MORE` to verify design
+* Use namespaced `ROW_SCHEMA`, `ROW_EDIT`, and `ROW_MORE` to verify design
 
 ---
 
@@ -122,8 +122,8 @@ Replaces:
 
 | Condition                         | Method                                   |
 | --------------------------------- | ---------------------------------------- |
-| Editable fields correctly exposed | `row(view)(ROW_EDIT)`                    |
-| Extra fields correctly excluded   | `row(view)(ROW_MORE)`                    |
+| Editable fields correctly exposed | `row($pdo, $view)(ROW_GET \| ROW_EDIT)`  |
+| Extra fields correctly excluded   | `row($pdo, $view)(ROW_GET \| ROW_MORE)`  |
 | Access rules enforced by view     | Query as unauthorized user               |
 | Computed logic stable             | Assert SQL logic against expected values |
 

@@ -1,5 +1,16 @@
 <?php
 
+namespace lareponse\arrow;
+
+use PDO;
+use PDOStatement;
+
+use BadFunctionCallException;
+use InvalidArgumentException;
+use LogicException;
+use RuntimeException;
+use Throwable;
+
 const ROW_LOAD   = 1;
 const ROW_SCHEMA = 2;
 const ROW_EDIT   = 4;
