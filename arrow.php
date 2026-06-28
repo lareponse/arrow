@@ -101,9 +101,12 @@ function row_load(PDO $pdo, string $table, array $data): array
     empty($data)                        && throw new InvalidArgumentException(__FUNCTION__ . ':no_filters');
 
     $prepared = row_run($pdo, ...qb_select($table, $data));
-    $prepared->rowCount() === 1         || throw new LogicException('cardinality of ' . $prepared->rowCount() . ' for  ' . $table);
+    $row = $prepared->fetch(PDO::FETCH_ASSOC);
+    $extra = $prepared->fetch(PDO::FETCH_ASSOC);
 
-    return $prepared->fetch(PDO::FETCH_ASSOC) ?: throw new RuntimeException("Failed to fetch row for $table");
+    $row && !$extra                     || throw new LogicException('cardinality of ' . ($row ? 'more than 1' : '0') . ' for  ' . $table);
+
+    return $row;
 }
 
 function row_set(array &$row, array $data, string $unique_key, int $behave = 0): bool
