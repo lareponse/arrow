@@ -36,11 +36,13 @@ function row(PDO $pdo, string $table, string $unique = 'id'): callable
 
     $row = []; // each row() call creates a new row context to use in the closure
     return function (int $behave, array $boat = []) use ($pdo, $table, $unique, &$row) {
+        
         try {
             // RESET -- first thing to do if requested
-            $behave & ROW_RESET && ($row = []);
-
-            // Short hand update/create setter
+            $behave & ROW_RESET && ($row = []) && ($behave &= ~ROW_RESET);
+            
+            $setter = null;
+            $behave === ROW_UPDATE && (array_key_exists($unique, $boat) || throw new InvalidArgumentException(__FUNCTION__ . ':missing_unique_key'));
             $behave === ROW_UPDATE && ($setter = $boat) && ($boat = [$unique => $boat[$unique]]);
             $behave === ROW_CREATE && ($setter = $boat) && ($boat = null);
 
