@@ -28,11 +28,17 @@ const ROW_UPDATE = ROW_LOAD | ROW_SET | ROW_SAVE; // update row context, save to
 
 const SQL_IDENTIFIER = '/^[a-zA-Z_][a-zA-Z0-9_]*$/';
 
+function assert_sql_identifier(string $identifier, string $error): string
+{
+    preg_match(SQL_IDENTIFIER, $identifier) || throw new InvalidArgumentException($error);
+    return $identifier;
+}
+
 function row(PDO $pdo, string $table, string $unique = 'id'): callable
 {
     (!$table || !$unique) && throw new InvalidArgumentException(__FUNCTION__ . ':no_table_or_unique_key');
-    preg_match(SQL_IDENTIFIER, $table)                          || throw new InvalidArgumentException(__FUNCTION__ . ':invalid_table_name');
-    preg_match(SQL_IDENTIFIER, $unique)                         || throw new InvalidArgumentException(__FUNCTION__ . ':invalid_table_unique_key');
+    assert_sql_identifier($table, __FUNCTION__ . ':invalid_table_name');
+    assert_sql_identifier($unique, __FUNCTION__ . ':invalid_table_unique_key');
 
     $row = []; // each row() call creates a new row context to use in the closure
     return function (int $behave, array $boat = []) use ($pdo, $table, $unique, &$row) {
@@ -49,7 +55,8 @@ function row(PDO $pdo, string $table, string $unique = 'id'): callable
             // LOAD -- needs boat of PK/UK
             $behave & ROW_LOAD
                 && empty($row[ROW_LOAD]) && $boat                                       // can only load once
-                && ($db_io = row_load($pdo, $table, $boat)) && is_array($db_io)         // need PK or UK in assoc
+                && ($db_io = row_load($pdo, $table, $boat, $row[ROW_SCHEMA] ?? null))
+                && is_array($db_io)                                                     // need PK or UK in assoc
                 && ($row[ROW_LOAD] = $db_io)                                            // load row from DB
                 && !isset($row[ROW_SCHEMA]) && ($row[ROW_SCHEMA] = array_flip(array_keys($db_io)))
                 && ($boat = null);
@@ -89,6 +96,10 @@ function row(PDO $pdo, string $table, string $unique = 'id'): callable
 function row_save(PDO $pdo, string $table, string $unique_key, array $row): PDOStatement
 {
     empty($row[ROW_EDIT])               && throw new InvalidArgumentException(__FUNCTION__ . ':no_alterations', 100);
+    empty($row[ROW_SCHEMA])             && throw new LogicException(__FUNCTION__ . ':missing_schema');
+
+    foreach (array_keys($row[ROW_EDIT]) as $col)
+        isset($row[ROW_SCHEMA][$col])   || throw new InvalidArgumentException(__FUNCTION__ . ':field_not_in_schema:' . $col);
 
     $unique_value = $row[ROW_LOAD][$unique_key] ?? null;
     [$sql, $bindings] = $unique_value 
@@ -98,9 +109,14 @@ function row_save(PDO $pdo, string $table, string $unique_key, array $row): PDOS
     return row_run($pdo, $sql, $bindings);
 }
 
-function row_load(PDO $pdo, string $table, array $data): array
+function row_load(PDO $pdo, string $table, array $data, ?array $schema = null): array
 {
     empty($data)                        && throw new InvalidArgumentException(__FUNCTION__ . ':no_filters');
+
+    foreach (array_keys($data) as $col) {
+        assert_sql_identifier($col, __FUNCTION__ . ':invalid_column_name:' . $col);
+        null === $schema || isset($schema[$col]) || throw new InvalidArgumentException(__FUNCTION__ . ':field_not_in_schema:' . $col);
+    }
 
     $prepared = row_run($pdo, ...qb_select($table, $data));
     $row = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -116,7 +132,8 @@ function row_set(array &$row, array $data, string $unique_key, int $behave = 0):
     $add_to_edit = null;
     foreach ($data as $col => $value) {
         if($col !== $unique_key && (!isset($row[ROW_LOAD]) || !array_key_exists($col, $row[ROW_LOAD]) || $row[ROW_LOAD][$col] !== $value)){
-            $add_to_edit = $behave & ROW_EDIT || !empty($row[ROW_SCHEMA]) && isset($row[ROW_SCHEMA][$col]);
+            $add_to_edit = isset($row[ROW_SCHEMA]) && isset($row[ROW_SCHEMA][$col]);
+            $add_to_edit && assert_sql_identifier($col, __FUNCTION__ . ':invalid_column_name:' . $col);
             $row[$add_to_edit ? ROW_EDIT : ROW_MORE][$col] = $value;
         }
     }
@@ -148,8 +165,12 @@ function row_get(array $row, ?array $data = [], int $behave = 0): ?array
 function select_schema(PDO $pdo, string $table): array
 {
     $fields = [];
-    $query = $pdo->query("SELECT * FROM `$table` LIMIT 1");
-    $query || throw new RuntimeException("Failed to query schema for table `$table`");
+    try {
+        $query = $pdo->query("SELECT * FROM `$table` LIMIT 1");
+    } catch (Throwable $t) {
+        throw new RuntimeException(__FUNCTION__ . ':table_not_found_or_unreadable:' . $table, 0, $t);
+    }
+    $query || throw new RuntimeException(__FUNCTION__ . ':table_not_found_or_unreadable:' . $table);
     for ($i = $query->columnCount() - 1; $i >= 0; --$i) {
         $m = $query->getColumnMeta($i);
         $fields[$m['name']] = $m['pdo_type'] ?? true;
@@ -175,7 +196,7 @@ function qb_select(string $table, array $data): array
 
     $placeholders   = implode(' AND ', $placeholders);
 
-    return ["SELECT * FROM {$table} WHERE {$placeholders}", $named_bindings];
+    return ["SELECT * FROM `$table` WHERE {$placeholders}", $named_bindings];
 }
 
 // qb_insert('article', ['title' => 'My Article', 'content' => 'This is the content.']);
@@ -194,7 +215,7 @@ function qb_insert(string $table, array $data): array
     $fields         = implode(',', $fields);
     $placeholders   = implode(',', $placeholders);
 
-    return ["INSERT INTO {$table} ($fields) VALUES ($placeholders);", $named_bindings];
+    return ["INSERT INTO `$table` ($fields) VALUES ($placeholders);", $named_bindings];
 }
 
 // qb_update('article', ['title' => 'Updated Title'], 'id', 42)

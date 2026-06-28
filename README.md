@@ -123,15 +123,13 @@ $schema = $article(ROW_GET | ROW_SCHEMA);          // Array of column names
 
 ### Manual Schema
 ```php
-$article(ROW_SCHEMA | ROW_SET, ['slug', 'title', 'content', 'published_at']);
+$article(ROW_SCHEMA | ROW_SET, array_flip(['slug', 'title', 'content', 'published_at']));
 // should be view based, but you do you
 ```
 
-Tip: `ROW_SCHEMA` expects field names as array keys. Use `array_flip()` before passing a simple list:
+`ROW_SCHEMA` expects field names as array keys. Use `array_flip()` before passing a simple list.
 
-```php
-$article(ROW_SCHEMA | ROW_SET, array_flip(['slug', 'title', 'content', 'published_at']));
-```
+Schema is the save boundary: fields inside schema can become `ROW_EDIT`; unknown fields stay in `ROW_MORE`.
 
 ### Schema Introspection
 ```php
@@ -140,16 +138,19 @@ $article(ROW_SCHEMA | ROW_SET);                    // Uses select_schema() funct
 ```
 
 
-## Force Data Placement
+## Schema Boundary
 
-Override automatic schema sorting:
+`ROW_SET` does not override schema sorting. Schema fields become `ROW_EDIT`; unknown fields become `ROW_MORE`.
 
 ```php
-$article(ROW_SET | ROW_EDIT, ['published_at' => date('Y-m-d H:i:s')]);  // Force to EDIT
-$article(ROW_SET | ROW_MORE, ['subscription_consent' => date('Y-m-d H:i:s')]);  // Force to MORE
+$article(ROW_SET, [
+    'published_at' => date('Y-m-d H:i:s'),          // ROW_EDIT if in schema
+    'subscription_consent' => date('Y-m-d H:i:s')   // ROW_MORE if outside schema
+]);
 ```
 
 **Note**: `ROW_MORE` data is never saved to database.
+`ROW_LOAD` filters must exist in schema once schema is present. `ROW_SAVE` requires schema.
 
 
 ## SQL Generation
@@ -212,8 +213,10 @@ foreach ($bulk_data as $data) {
 1. **Load before update**: Always `ROW_LOAD` before `ROW_SET` for updates
 2. **Use compound operations**: `ROW_UPDATE` and `ROW_CREATE` for common patterns
 3. **Check errors**: Always handle `ROW_ERROR` after `ROW_SAVE`
-4. **Schema-first**: Let schema determine what gets saved vs. auxiliary data
-5. **Reuse closures**: Create once, operate multiple times
+4. **Schema-first saves**: Load, introspect, or set schema before `ROW_SAVE`
+5. **Identifier-shaped filters**: `ROW_LOAD` filter names must be SQL identifiers
+6. **Keep extras in `ROW_MORE`**: Let schema determine what gets saved vs. auxiliary data
+7. **Reuse closures**: Create once, operate multiple times
 
 Arrow provides precise control over single-row operations while maintaining the BADHAT philosophy of explicit, bitwise-controlled behavior.
 
