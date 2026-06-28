@@ -1,247 +1,200 @@
 # ARROW
 
-**Single-row database operations using bitmask driven closures**
+Arrow is a tiny PHP row helper. It lets one database row emerge as a small state machine: first there is only a table, then a loaded row, then schema, edits, extra data, and finally a save.
 
-This closure-based row context turns each database record into its own mini state machine, loading, mutating, validating, and persisting in a unified, predictable flow. 
+It is not an ORM. It is a compact persistence primitive for developer-controlled code where you want to see exactly when data is loaded, changed, separated, and written.
 
-## Key Advantages
+## A Row Emerges
 
-1. **Zero object overhead** - No model instantiation, hydration, or magic methods
-2. **Predictable SQL** - You know exactly what queries run and when
-3. **Minimal memory** - Closure state vs. full object graphs
-4. **Explicit control** - Bitwise flags make behavior completely transparent
-5. **Change detection** - Automatic, but only for what actually changed
-
-**Arrow is perfect when you need both speed and precise control over database interactions**
-
-## Core Concept
-
-Arrow encapsulates a single database row's lifecycle in a closure, controlled by bitwise flags. Each flag represents a specific operation or data state. Examples assume these namespaced imports:
+Start with a closure for one table:
 
 ```php
 use function lareponse\arrow\row;
-use const lareponse\arrow\ROW_CREATE;
-use const lareponse\arrow\ROW_EDIT;
-use const lareponse\arrow\ROW_ERROR;
-use const lareponse\arrow\ROW_GET;
 use const lareponse\arrow\ROW_LOAD;
-use const lareponse\arrow\ROW_MORE;
-use const lareponse\arrow\ROW_RESET;
-use const lareponse\arrow\ROW_SAVE;
+use const lareponse\arrow\ROW_GET;
 use const lareponse\arrow\ROW_SCHEMA;
 use const lareponse\arrow\ROW_SET;
-use const lareponse\arrow\ROW_UPDATE;
+use const lareponse\arrow\ROW_MORE;
+use const lareponse\arrow\ROW_SAVE;
+use const lareponse\arrow\ROW_ERROR;
+
+$article = row($pdo, 'article', 'slug', ['id']);
 ```
 
+At this point, nothing has been read from the database. The closure only knows the table, the unique key, and that `id` is immutable.
+
+Load one row:
+
 ```php
-$article = row(db(), 'article');
+$article(ROW_LOAD, ['slug' => 'how-to-php']);
+```
+
+or any other unique key:
+
+```php
+$article(ROW_LOAD, ['id' => 42]);
+```
+
+The loaded row creates the first schema:
+
+```php
+$schema = $article(ROW_GET | ROW_SCHEMA);
+```
+
+Set new data:
+
+```php
+$article(ROW_SET, [
+    'title' => 'How to PHP',
+    'published_at' => date('Y-m-d H:i:s'),
+    'tags' => ['php', 'web']
+]);
+```
+
+Schema decides what can be saved. Fields found in schema become `ROW_EDIT`; unknown fields stay in `ROW_MORE`.
+
+```php
+$extra = $article(ROW_GET | ROW_MORE);
+$article(ROW_SAVE);
+```
+
+That is the core Arrow model: row state emerges from the order of operations.
+
+## Basic Row Work
+
+### Read
+
+```php
+$article = row($pdo, 'article', 'slug');
+$data = $article(ROW_GET | ROW_LOAD, ['slug' => 'how-to-php']);
+```
+
+### Create
+
+```php
+use const lareponse\arrow\ROW_CREATE;
+
+$article = row($pdo, 'article');
+$article(ROW_CREATE, [
+    'slug' => 'new-title',
+    'title' => 'New Title',
+    'content' => 'Content'
+]);
+```
+
+`ROW_CREATE` discovers schema, sorts incoming data, and saves schema fields.
+
+### Update
+
+```php
+$article = row($pdo, 'article', 'slug');
 $article(ROW_LOAD, ['slug' => 'how-to-php']);
 $article(ROW_SET, ['title' => 'Updated Title']);
 $article(ROW_SAVE);
 ```
 
-## Basic Usage
-
-### Load and Display
-```php
-$article = row(db(), 'article');
-$form_data = $article(ROW_GET | ROW_LOAD, ['slug' => 'how-to-php']);
-```
-
-### Update Existing
-```php
-$article(ROW_LOAD, ['slug' => 'how-to-php']);
-$article(ROW_SET, ['title' => 'New Title', 'published_at' => date('Y-m-d H:i:s')]);
-$article(ROW_SAVE);
-```
-
-### Compound Create
-```php
-$post_data = ['title' => 'New Article', 'content' => 'Content','slug' => 'new-title'];
-
-// closure then creation
-$article = row(db(), 'article');
-$article(ROW_CREATE, $post_data);
-
-// Or, as a one-liner 
-row(db(), 'article')(ROW_CREATE, $post_data);
-```
-
-### Compound Update
-```php
-// Equivalent to: LOAD by id, SET title, content (skip slug), SAVE (use default unique field 'id')
-$clean_data = ['id' => 42, 'content' => 'Content with extra', 'slug' => 'new-title'];
-
-$article = row(db(), 'article');
-$article(ROW_UPDATE, $clean_data);
-
-// Use custom unique field 'slug'
-$clean_data = ['slug' => 'new-title', 'title' => 'New Title'];
-
-$article = row(db(), 'article', 'slug');
-$article(ROW_UPDATE, $clean_data);
-
-// Or as one-liner
-row(db(), 'article', 'slug')(ROW_UPDATE, $clean_data);
-```
-
-
-## Data Separation
-
-Arrow automatically sorts incoming data based on schema:
+Or use the compound update:
 
 ```php
-$article(ROW_SET, [
-    'title' => 'Valid field',           // → ROW_EDIT (in schema)
-    'article_tags' => ['php', 'web']    // → ROW_MORE (outside schema)
+use const lareponse\arrow\ROW_UPDATE;
+
+row($pdo, 'article', 'slug')(ROW_UPDATE, [
+    'slug' => 'how-to-php',
+    'title' => 'Updated Title'
 ]);
 ```
 
-### Retrieving Data
+Arrow does not model delete. It focuses on single-row create, read, update, state separation, and save.
+
+## Schema Is The Boundary
+
+Schema can appear in three ways:
+
+- successful first load: Arrow derives schema from the loaded row columns
+- introspection: `$article(ROW_SCHEMA | ROW_SET)`
+- manual schema: `$article(ROW_SCHEMA | ROW_SET, array_flip([...]))`
+
+Once schema exists, it becomes strict for SQL-facing row work:
+
+- `ROW_LOAD` filters must exist in schema
+- `ROW_SET` fields inside schema go to `ROW_EDIT`, unless they are immutable
+- `ROW_SET` fields outside schema go to `ROW_MORE`
+- `ROW_SAVE` requires schema and only persists `ROW_EDIT`
+
+Before schema exists, the first `ROW_LOAD` can only use identifier-shaped filter names. This keeps the first discovery step flexible without letting arbitrary text become SQL structure.
+
+## Use Cases
+
+### Auto-Increment Id
+
+When a table has an auto-increment id but the row is saved by another unique field, declare `id` immutable:
+
 ```php
-$valid_data = $article(ROW_GET);                 // LOAD + EDIT merged
-$edit_only = $article(ROW_GET | ROW_EDIT);       // Only schema fields
-$more_only = $article(ROW_GET | ROW_MORE);       // Only auxiliary data
-$everything = $article(ROW_GET | ROW_LOAD | ROW_EDIT | ROW_MORE);
+$article = row($pdo, 'article', 'slug', ['id']);
+$article(ROW_LOAD, ['id' => 42]);
+$article(ROW_SET, $_POST);
+$article(ROW_SAVE);
 ```
 
-### Field Access
-```php
-$subset = $article(ROW_GET, ['slug', 'title']);    // Returns  array
+The row can be loaded by `id`, but `id` will not be added to `ROW_EDIT`.
 
-$title = $article(ROW_GET, ['title']);             // Returns string, not array
+### Edit Form With Extra Fields
+
+HTML forms often contain fields that do not belong in the table: tokens, UI flags, tag lists, consent checkboxes, or relation data.
+
+```php
+$article = row($pdo, 'article', 'slug');
+$article(ROW_LOAD, ['slug' => $_POST['slug']]);
+$article(ROW_SET, $_POST);
+
+$article_data = $article(ROW_GET);
+$extra_data = $article(ROW_GET | ROW_MORE);
+
+$article(ROW_SAVE);
 ```
 
-## Schema Management
+Table fields are saved. Everything else remains available in `ROW_MORE` for custom handling.
 
-### Automatic Schema
-Schema is set automatically when loading a row:
+### Create From Request Data
+
 ```php
-$article(ROW_LOAD, ['slug' => 'how-to-php']);
-$schema = $article(ROW_GET | ROW_SCHEMA);          // Array of column names
+$article = row($pdo, 'article');
+$article(ROW_CREATE, $_POST);
+
+if ($error = $article(ROW_GET | ROW_ERROR)) {
+    // handle Throwable
+}
 ```
 
-### Manual Schema
-```php
-$article(ROW_SCHEMA | ROW_SET, array_flip(['slug', 'title', 'content', 'published_at']));
-// should be view based, but you do you
-```
+`ROW_CREATE` is useful when you want Arrow to introspect the table before sorting request data.
 
-`ROW_SCHEMA` expects field names as array keys. Use `array_flip()` before passing a simple list.
-
-Schema is the save boundary: fields inside schema can become `ROW_EDIT`; unknown fields stay in `ROW_MORE`.
-
-### Schema Introspection
-```php
-$article(ROW_SCHEMA | ROW_SET);                    // Uses select_schema() function
-// mostly for inserts
-```
-
-
-## Schema Boundary
-
-`ROW_SET` does not override schema sorting. Schema fields become `ROW_EDIT`; unknown fields become `ROW_MORE`.
+### Custom Unique Key
 
 ```php
-$article(ROW_SET, [
-    'published_at' => date('Y-m-d H:i:s'),          // ROW_EDIT if in schema
-    'subscription_consent' => date('Y-m-d H:i:s')   // ROW_MORE if outside schema
+$article = row($pdo, 'article', 'slug');
+$article(ROW_UPDATE, [
+    'slug' => 'how-to-php',
+    'title' => 'Updated Title'
 ]);
 ```
 
-**Note**: `ROW_MORE` data is never saved to database.
-`ROW_LOAD` filters must exist in schema once schema is present. `ROW_SAVE` requires schema.
+The third argument tells Arrow which field identifies the row for update flows.
 
-
-## SQL Generation
-
-Arrow only generates SQL for changed values:
+### Batch Imports
 
 ```php
-$article(ROW_LOAD, ['slug' => 'how-to-php']);     // Loads: title='How to PHP', published_at=NULL
-$article(ROW_SET, ['title' => 'How to PHP', 'published_at' => '2023-10-01 12:00:00']); 
-$article(ROW_SAVE);
-// SQL: UPDATE `article` SET `published_at` = '2023-10-01 12:00:00' WHERE `slug` = 'how-to-php';
-```
+use const lareponse\arrow\ROW_RESET;
 
+$article = row($pdo, 'article');
 
-## Error Handling
-Arrow captures all exceptions in internal state
-```php
-$article(ROW_SAVE);                             // Error automatically captured in internal state
-if($error = $article(ROW_GET | ROW_ERROR)){     // Returns Throwable or null
-    // error handling
+foreach ($rows as $data) {
+    $article(ROW_RESET);
+    $article(ROW_CREATE, $data);
 }
 ```
 
+`ROW_RESET` clears the closure state between rows while keeping the same table context.
 
-## State Reset
+## Reference
 
-```php
-$article(ROW_RESET);                               // Clear all internal state except table/pk
-```
-
-
-## Performance Patterns
-
-### One-shot Operations
-```php
-// No intermediate variables
-row(db(), 'article')(ROW_CREATE, $post_data);
-```
-
-### Pool closures for bulk operations
-```php
-$article = row(db(), 'article');
-foreach ($bulk_data as $data) {
-    $article(ROW_CREATE | ROW_RESET, $data);
-}
-```
-
-
-## Return Values
-
-* **Most operations**: Return internal state array
-* **`ROW_GET` operations**: Return requested data
-* **`ROW_GET | ROW_SCHEMA`**: Return schema array
-* **`ROW_GET | ROW_ERROR`**: Return error or null
-* **Single field access**: Return field value directly
-
-
-## Best Practices
-
-1. **Load before update**: Always `ROW_LOAD` before `ROW_SET` for updates
-2. **Use compound operations**: `ROW_UPDATE` and `ROW_CREATE` for common patterns
-3. **Check errors**: Always handle `ROW_ERROR` after `ROW_SAVE`
-4. **Schema-first saves**: Load, introspect, or set schema before `ROW_SAVE`
-5. **Identifier-shaped filters**: `ROW_LOAD` filter names must be SQL identifiers
-6. **Keep extras in `ROW_MORE`**: Let schema determine what gets saved vs. auxiliary data
-7. **Reuse closures**: Create once, operate multiple times
-
-Arrow provides precise control over single-row operations while maintaining the BADHAT philosophy of explicit, bitwise-controlled behavior.
-
-
-
-## Bitwise Flags
-
-| State        | Value | Purpose                           |
-| ------------ | ----- | --------------------------------- |
-| `ROW_LOAD`   | `1`   | Loaded row from database          |
-| `ROW_SCHEMA` | `2`   | Manage column definitions         |
-| `ROW_EDIT`   | `4`   | Valid alterations (within schema) |
-| `ROW_MORE`   | `8`   | Auxiliary data (outside schema)   |
-| `ROW_ERROR`  | `128` | Error state                       |
-
-
-| Operations  | Value | Purpose                               |
-| ----------- | ----- | ------------------------------------- |
-| `ROW_LOAD`  | `1`   | Load row from database and set schema |
-| `ROW_SAVE`  | `16`  | Persist changes to database           |
-| `ROW_SET`   | `32`  | Apply data to internal state          |
-| `ROW_GET`   | `64`  | Retrieve data from internal state     |
-| `ROW_RESET` | `256` | Clear internal state                  |
-
-| Constant     | Components    |Purpose    |
-| ------------ | ------------- | ----------|
-| `ROW_CREATE` | `ROW_SCHEMA \| ROW_SET \| ROW_SAVE` | Create new row, populate with schema and save |
-| `ROW_UPDATE` | `ROW_LOAD \| ROW_SET \| ROW_SAVE`   | Load existing row, apply changes, save    |
+Detailed flags, return values, SQL generation, identifier quoting, and helper behavior live in [API.md](API.md).

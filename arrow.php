@@ -41,14 +41,15 @@ function qb_id(string $identifier, string $quote = SQL_IDENTIFIER_QUOTE): string
     return $quote . str_replace($quote, $quote . $quote, $identifier) . $quote;
 }
 
-function row(PDO $pdo, string $table, string $unique = 'id'): callable
+function row(PDO $pdo, string $table, string $unique = 'id', array $immutable = []): callable
 {
     (!$table || !$unique) && throw new InvalidArgumentException(__FUNCTION__ . ':no_table_or_unique_key');
     assert_sql_identifier($table, __FUNCTION__ . ':invalid_table_name');
     assert_sql_identifier($unique, __FUNCTION__ . ':invalid_table_unique_key');
+    $immutable = array_flip($immutable);
 
     $row = []; // each row() call creates a new row context to use in the closure
-    return function (int $behave, array $boat = []) use ($pdo, $table, $unique, &$row) {
+    return function (int $behave, array $boat = []) use ($pdo, $table, $unique, $immutable, &$row) {
         
         try {
             // RESET -- first thing to do if requested
@@ -82,7 +83,7 @@ function row(PDO $pdo, string $table, string $unique = 'id'): callable
                 && $boat && ($boat = null);                                             // falsify boat if we had one
 
             // put the boat back
-            $behave & ROW_SET && ($boat || $setter) && row_set($row, $setter ?? $boat, $unique, $behave) 
+            $behave & ROW_SET && ($boat || $setter) && row_set($row, $setter ?? $boat, $unique, $behave, $immutable)
                 && ($boat = null);
 
             // SAVE --no boat
@@ -136,11 +137,11 @@ function row_load(PDO $pdo, string $table, array $data): array
     return $row;
 }
 
-function row_set(array &$row, array $data, string $unique_key, int $behave = 0): bool
+function row_set(array &$row, array $data, string $unique_key, int $behave = 0, array $immutable = []): bool
 {
     $add_to_edit = null;
     foreach ($data as $col => $value) {
-        if($col !== $unique_key && (!isset($row[ROW_LOAD]) || !array_key_exists($col, $row[ROW_LOAD]) || $row[ROW_LOAD][$col] !== $value)){
+        if($col !== $unique_key && !isset($immutable[$col]) && (!isset($row[ROW_LOAD]) || !array_key_exists($col, $row[ROW_LOAD]) || $row[ROW_LOAD][$col] !== $value)){
             $add_to_edit = isset($row[ROW_SCHEMA]) && isset($row[ROW_SCHEMA][$col]);
             $row[$add_to_edit ? ROW_EDIT : ROW_MORE][$col] = $value;
         }
