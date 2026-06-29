@@ -21,19 +21,42 @@ const SCHEMA_CACHE_RESET   = 0;
 
 function schema(PDO $pdo, array $blacklist = [], ?callable $cache = null): callable
 {
-    $state = schema_cache();
+    $info = null;
+    $memo = schema_memo();
 
-    if ($cache !== null) {
-        $stored = $cache(SCHEMA_CACHE_GET);
+    $information_schema = function () use ($pdo, $cache, &$info): array {
+        if ($info !== null) {
+            return $info;
+        }
+
+        $stored = $cache ? $cache(SCHEMA_CACHE_GET) : null;
 
         if (is_array($stored)) {
-            $state = schema_cache_merge($state, $stored);
+            return $info = $stored;
         }
-    }
 
-    return function (int $behave, array $boat = []) use ($pdo, $blacklist, $cache, &$state) {
+        $info = schema_load_information_schema($pdo);
+        $cache && $cache(SCHEMA_CACHE_SET, $info);
+
+        return $info;
+    };
+
+    $tables = function () use ($blacklist, $information_schema, &$memo): array {
+        return $memo['tables'] ??= schema_tables($information_schema(), $blacklist);
+    };
+
+    $columns = function (string $table) use ($information_schema, &$memo): array {
+        return $memo['columns'][$table] ??= schema_columns($information_schema(), $table);
+    };
+
+    $foreign_keys = function (string $table) use ($information_schema, &$memo): array {
+        return $memo['foreign_keys'][$table] ??= schema_foreign_keys($information_schema(), $table);
+    };
+
+    return function (int $behave, array $boat = []) use ($pdo, $blacklist, $cache, &$info, &$memo, $tables, $columns, $foreign_keys) {
         if ($behave & SCHEMA_RESET) {
-            $state = schema_cache();
+            $info = null;
+            $memo = schema_memo();
             $cache && $cache(SCHEMA_CACHE_RESET);
             $behave &= ~SCHEMA_RESET;
         }
@@ -43,65 +66,51 @@ function schema(PDO $pdo, array $blacklist = [], ?callable $cache = null): calla
         }
 
         if ($behave & SCHEMA_TABLES) {
-            $tables = schema_tables_cached($pdo, $blacklist, $state);
-            schema_cache_write($cache, $state);
-            return $tables;
+            return $tables();
         }
 
         $table = schema_boat_identifier($boat, 'table');
-        schema_assert_allowed_table($pdo, $blacklist, $state, $table);
+
+        in_array($table, $tables(), true) || throw new InvalidArgumentException(__FUNCTION__ . ':unknown_table:' . $table);
 
         if (($behave & SCHEMA_COLUMNS) && ($behave & SCHEMA_FOREIGN_KEYS)) {
-            $columns = schema_columns_with_foreign_keys_cached($pdo, $blacklist, $state, $table);
-            schema_cache_write($cache, $state);
-            return $columns;
+            return schema_columns_with_foreign_keys($pdo, $columns($table), $foreign_keys($table), $tables(), $columns, $memo);
         }
 
         if ($behave & SCHEMA_COLUMNS) {
-            $columns = schema_columns_cached($pdo, $state, $table);
-            schema_cache_write($cache, $state);
-            return $columns;
+            return $columns($table);
         }
 
         if ($behave & SCHEMA_FOREIGN_KEYS) {
-            $foreign_keys = schema_foreign_keys_cached($pdo, $state, $table);
-            schema_cache_write($cache, $state);
-            return $foreign_keys;
+            return $foreign_keys($table);
         }
 
         if ($behave & SCHEMA_LABEL_COLUMNS) {
             $column = schema_boat_identifier($boat, 'column');
-            schema_assert_column($pdo, $state, $table, $column);
-            $label_columns = schema_label_columns_cached($pdo, $state, $table, $column);
-            schema_cache_write($cache, $state);
-            return $label_columns;
+            schema_assert_column($columns($table), $table, $column);
+            return $memo['label_columns'][schema_cache_key($table, $column)] ??= schema_guess_label_columns($columns($table), $column);
         }
 
         if ($behave & SCHEMA_OPTIONS) {
             $column = schema_boat_identifier($boat, 'column');
-            schema_assert_column($pdo, $state, $table, $column);
-            $options = schema_options_cached($pdo, $state, $table, $column);
-            schema_cache_write($cache, $state);
-            return $options;
+            schema_assert_column($columns($table), $table, $column);
+            return schema_options($pdo, $table, $column, $memo, $columns($table));
         }
 
         if ($behave & SCHEMA_REF_LABELS) {
             $column = schema_boat_identifier($boat, 'column');
-            schema_assert_column($pdo, $state, $table, $column);
-            schema_load_missing_ref_labels($pdo, $table, $column, $boat['values'] ?? [], $state);
-            $labels = schema_ref_labels_cached($state, $table, $column, $boat['values'] ?? []);
-            schema_cache_write($cache, $state);
-            return $labels;
+            schema_assert_column($columns($table), $table, $column);
+            schema_load_missing_ref_labels($pdo, $table, $column, $boat['values'] ?? [], $memo, $columns($table));
+            return schema_ref_labels($memo, $table, $column, $boat['values'] ?? []);
         }
 
         return null;
     };
 }
 
-function schema_cache(): array
+function schema_memo(): array
 {
     return [
-        'information_schema' => null,
         'tables'        => null,
         'columns'       => [],
         'foreign_keys'  => [],
@@ -109,33 +118,6 @@ function schema_cache(): array
         'options'       => [],
         'ref_labels'    => [],
     ];
-}
-
-function schema_cache_merge(array $base, array $stored): array
-{
-    foreach (['information_schema', 'tables', 'columns', 'foreign_keys', 'label_columns'] as $key) {
-        if (array_key_exists($key, $stored) && is_array($stored[$key])) {
-            $base[$key] = $stored[$key];
-        }
-    }
-
-    return $base;
-}
-
-function schema_cache_export(array $cache): array
-{
-    return [
-        'information_schema' => $cache['information_schema'],
-        'tables'        => $cache['tables'],
-        'columns'       => $cache['columns'],
-        'foreign_keys'  => $cache['foreign_keys'],
-        'label_columns' => $cache['label_columns'],
-    ];
-}
-
-function schema_cache_write(?callable $cache, array $state): void
-{
-    $cache && $cache(SCHEMA_CACHE_SET, schema_cache_export($state));
 }
 
 function schema_boat_identifier(array $boat, string $key): string
@@ -150,110 +132,45 @@ function schema_cache_key(string $table, string $value_column): string
     return $table . "\0" . $value_column;
 }
 
-function schema_tables_cached(PDO $pdo, array $blacklist, array &$cache): array
+function schema_columns_with_foreign_keys(PDO $pdo, array $columns, array $foreign_keys, array $tables, callable $schema_columns, array &$memo): array
 {
-    if ($cache['tables'] === null) {
-        $cache['tables'] = schema_tables_from_information_schema(
-            schema_information_schema_cached($pdo, $cache),
-            $blacklist
-        );
-    }
-
-    return $cache['tables'];
-}
-
-function schema_columns_cached(PDO $pdo, array &$cache, string $table): array
-{
-    if (!isset($cache['columns'][$table])) {
-        $cache['columns'][$table] = schema_columns_from_information_schema(
-            schema_information_schema_cached($pdo, $cache),
-            $table
-        );
-    }
-
-    return $cache['columns'][$table];
-}
-
-function schema_foreign_keys_cached(PDO $pdo, array &$cache, string $table): array
-{
-    if (!isset($cache['foreign_keys'][$table])) {
-        $cache['foreign_keys'][$table] = schema_foreign_keys_from_information_schema(
-            schema_information_schema_cached($pdo, $cache),
-            $table
-        );
-    }
-
-    return $cache['foreign_keys'][$table];
-}
-
-function schema_label_columns_cached(PDO $pdo, array &$cache, string $table, string $value_column): array
-{
-    $key = schema_cache_key($table, $value_column);
-
-    if (!isset($cache['label_columns'][$key])) {
-        $cache['label_columns'][$key] = schema_guess_label_columns(
-            schema_columns_cached($pdo, $cache, $table),
-            $value_column
-        );
-    }
-
-    return $cache['label_columns'][$key];
-}
-
-function schema_options_cached(PDO $pdo, array &$cache, string $table, string $value_column): array
-{
-    $key = schema_cache_key($table, $value_column);
-
-    if (!isset($cache['options'][$key])) {
-        $cache['options'][$key] = schema_load_options($pdo, $table, $value_column, $cache);
-    }
-
-    return $cache['options'][$key];
-}
-
-function schema_columns_with_foreign_keys_cached(PDO $pdo, array $blacklist, array &$cache, string $table): array
-{
-    $columns = schema_columns_cached($pdo, $cache, $table);
-    $tables = schema_tables_cached($pdo, $blacklist, $cache);
-
-    foreach (schema_foreign_keys_cached($pdo, $cache, $table) as $name => $foreign_key) {
+    foreach ($foreign_keys as $name => $foreign_key) {
         if (!isset($columns[$name])) {
             continue;
         }
 
         $columns[$name]['Foreign'] = $foreign_key;
         $columns[$name]['ForeignOptions'] = in_array($foreign_key['table'], $tables, true)
-            ? schema_options_cached($pdo, $cache, $foreign_key['table'], $foreign_key['column'])
+            ? schema_options(
+                $pdo,
+                $foreign_key['table'],
+                $foreign_key['column'],
+                $memo,
+                $schema_columns($foreign_key['table'])
+            )
             : [];
     }
 
     return $columns;
 }
 
-function schema_ref_labels_cached(array $cache, string $table, string $value_column, array $values): array
+function schema_ref_labels(array $memo, string $table, string $value_column, array $values): array
 {
     $key = schema_cache_key($table, $value_column);
     $labels = [];
 
     foreach (schema_ref_values($values) as $value) {
-        if (array_key_exists($value, $cache['ref_labels'][$key] ?? []) && $cache['ref_labels'][$key][$value] !== null) {
-            $labels[$value] = $cache['ref_labels'][$key][$value];
+        if (array_key_exists($value, $memo['ref_labels'][$key] ?? []) && $memo['ref_labels'][$key][$value] !== null) {
+            $labels[$value] = $memo['ref_labels'][$key][$value];
         }
     }
 
     return $labels;
 }
 
-function schema_assert_allowed_table(PDO $pdo, array $blacklist, array &$cache, string $table): void
+function schema_assert_column(array $columns, string $table, string $column): void
 {
-    if (!in_array($table, schema_tables_cached($pdo, $blacklist, $cache), true)) {
-        throw new InvalidArgumentException(__FUNCTION__ . ':unknown_table:' . $table);
-    }
-}
-
-function schema_assert_column(PDO $pdo, array &$cache, string $table, string $column): void
-{
-    if (!isset(schema_columns_cached($pdo, $cache, $table)[$column])) {
+    if (!isset($columns[$column])) {
         throw new InvalidArgumentException(__FUNCTION__ . ':unknown_column:' . $table . '.' . $column);
     }
 }
@@ -280,15 +197,6 @@ function schema_quote_columns(array $columns): string
     }
 
     return implode(', ', array_map(__NAMESPACE__ . '\\qb_id', $columns));
-}
-
-function schema_information_schema_cached(PDO $pdo, array &$cache): array
-{
-    if ($cache['information_schema'] === null) {
-        $cache['information_schema'] = schema_load_information_schema($pdo);
-    }
-
-    return $cache['information_schema'];
 }
 
 function schema_load_information_schema(PDO $pdo): array
@@ -332,17 +240,12 @@ function schema_information_schema_query(): string
          ORDER BY t.TABLE_NAME, c.ORDINAL_POSITION";
 }
 
-function schema_load_tables(PDO $pdo, array $blacklist = []): array
-{
-    return schema_tables_from_information_schema(schema_load_information_schema($pdo), $blacklist);
-}
-
-function schema_tables_from_information_schema(array $rows, array $blacklist = []): array
+function schema_tables(array $info, array $blacklist = []): array
 {
     $tables = [];
     $seen = [];
 
-    foreach ($rows as $row) {
+    foreach ($info as $row) {
         $table = (string) ($row['TABLE_NAME'] ?? '');
 
         if ($table !== '' && !isset($seen[$table]) && !in_array($table, $blacklist, true)) {
@@ -354,18 +257,11 @@ function schema_tables_from_information_schema(array $rows, array $blacklist = [
     return $tables;
 }
 
-function schema_load_columns(PDO $pdo, string $table): array
-{
-    assert_sql_identifier($table, __FUNCTION__ . ':invalid_table');
-
-    return schema_columns_from_information_schema(schema_load_information_schema($pdo), $table);
-}
-
-function schema_columns_from_information_schema(array $rows, string $table): array
+function schema_columns(array $info, string $table): array
 {
     $columns = [];
 
-    foreach ($rows as $row) {
+    foreach ($info as $row) {
         if (($row['TABLE_NAME'] ?? null) !== $table) {
             continue;
         }
@@ -383,18 +279,11 @@ function schema_columns_from_information_schema(array $rows, string $table): arr
     return $columns;
 }
 
-function schema_load_foreign_keys(PDO $pdo, string $table): array
-{
-    assert_sql_identifier($table, __FUNCTION__ . ':invalid_table');
-
-    return schema_foreign_keys_from_information_schema(schema_load_information_schema($pdo), $table);
-}
-
-function schema_foreign_keys_from_information_schema(array $rows, string $table): array
+function schema_foreign_keys(array $info, string $table): array
 {
     $foreign_keys = [];
 
-    foreach ($rows as $row) {
+    foreach ($info as $row) {
         if (($row['TABLE_NAME'] ?? null) !== $table || ($row['CONSTRAINT_TYPE'] ?? null) !== 'FOREIGN KEY') {
             continue;
         }
@@ -435,17 +324,18 @@ function schema_guess_label_columns(array $columns, string $value_column): array
     return [];
 }
 
-function schema_load_options(PDO $pdo, string $table, string $value_column, array &$cache): array
+function schema_options(PDO $pdo, string $table, string $value_column, array &$memo, array $columns): array
 {
-    assert_sql_identifier($table, __FUNCTION__ . ':invalid_table');
-    assert_sql_identifier($value_column, __FUNCTION__ . ':invalid_column');
+    $key = schema_cache_key($table, $value_column);
 
-    return schema_select_options(
-        $pdo,
-        $table,
-        $value_column,
-        schema_label_columns_cached($pdo, $cache, $table, $value_column)
-    );
+    return $memo['options'][$key] ??= schema_select_options($pdo, $table, $value_column, schema_label_columns($memo, $table, $value_column, $columns));
+}
+
+function schema_label_columns(array &$memo, string $table, string $value_column, array $columns): array
+{
+    $key = schema_cache_key($table, $value_column);
+
+    return $memo['label_columns'][$key] ??= schema_guess_label_columns($columns, $value_column);
 }
 
 function schema_select_options(PDO $pdo, string $table, string $value_column, array $label_columns): array
@@ -480,17 +370,17 @@ function schema_select_options(PDO $pdo, string $table, string $value_column, ar
     }, $rows);
 }
 
-function schema_load_missing_ref_labels(PDO $pdo, string $table, string $value_column, array $values, array &$cache): void
+function schema_load_missing_ref_labels(PDO $pdo, string $table, string $value_column, array $values, array &$memo, array $columns): void
 {
     assert_sql_identifier($table, __FUNCTION__ . ':invalid_table');
     assert_sql_identifier($value_column, __FUNCTION__ . ':invalid_column');
 
     $key = schema_cache_key($table, $value_column);
-    $cache['ref_labels'][$key] ??= [];
+    $memo['ref_labels'][$key] ??= [];
     $missing = [];
 
     foreach (schema_ref_values($values) as $value) {
-        if (!array_key_exists($value, $cache['ref_labels'][$key])) {
+        if (!array_key_exists($value, $memo['ref_labels'][$key])) {
             $missing[] = $value;
         }
     }
@@ -504,11 +394,11 @@ function schema_load_missing_ref_labels(PDO $pdo, string $table, string $value_c
         $table,
         $value_column,
         $missing,
-        schema_label_columns_cached($pdo, $cache, $table, $value_column)
+        schema_label_columns($memo, $table, $value_column, $columns)
     );
 
     foreach ($missing as $value) {
-        $cache['ref_labels'][$key][$value] = $labels[$value] ?? null;
+        $memo['ref_labels'][$key][$value] = $labels[$value] ?? null;
     }
 }
 
