@@ -101,6 +101,7 @@ function schema(PDO $pdo, array $blacklist = [], ?callable $cache = null): calla
 function schema_cache(): array
 {
     return [
+        'information_schema' => null,
         'tables'        => null,
         'columns'       => [],
         'foreign_keys'  => [],
@@ -112,7 +113,7 @@ function schema_cache(): array
 
 function schema_cache_merge(array $base, array $stored): array
 {
-    foreach (['tables', 'columns', 'foreign_keys', 'label_columns'] as $key) {
+    foreach (['information_schema', 'tables', 'columns', 'foreign_keys', 'label_columns'] as $key) {
         if (array_key_exists($key, $stored) && is_array($stored[$key])) {
             $base[$key] = $stored[$key];
         }
@@ -124,6 +125,7 @@ function schema_cache_merge(array $base, array $stored): array
 function schema_cache_export(array $cache): array
 {
     return [
+        'information_schema' => $cache['information_schema'],
         'tables'        => $cache['tables'],
         'columns'       => $cache['columns'],
         'foreign_keys'  => $cache['foreign_keys'],
@@ -151,7 +153,10 @@ function schema_cache_key(string $table, string $value_column): string
 function schema_tables_cached(PDO $pdo, array $blacklist, array &$cache): array
 {
     if ($cache['tables'] === null) {
-        $cache['tables'] = schema_load_tables($pdo, $blacklist);
+        $cache['tables'] = schema_tables_from_information_schema(
+            schema_information_schema_cached($pdo, $cache),
+            $blacklist
+        );
     }
 
     return $cache['tables'];
@@ -160,7 +165,10 @@ function schema_tables_cached(PDO $pdo, array $blacklist, array &$cache): array
 function schema_columns_cached(PDO $pdo, array &$cache, string $table): array
 {
     if (!isset($cache['columns'][$table])) {
-        $cache['columns'][$table] = schema_load_columns($pdo, $table);
+        $cache['columns'][$table] = schema_columns_from_information_schema(
+            schema_information_schema_cached($pdo, $cache),
+            $table
+        );
     }
 
     return $cache['columns'][$table];
@@ -169,7 +177,10 @@ function schema_columns_cached(PDO $pdo, array &$cache, string $table): array
 function schema_foreign_keys_cached(PDO $pdo, array &$cache, string $table): array
 {
     if (!isset($cache['foreign_keys'][$table])) {
-        $cache['foreign_keys'][$table] = schema_load_foreign_keys($pdo, $table);
+        $cache['foreign_keys'][$table] = schema_foreign_keys_from_information_schema(
+            schema_information_schema_cached($pdo, $cache),
+            $table
+        );
     }
 
     return $cache['foreign_keys'][$table];
@@ -271,24 +282,72 @@ function schema_quote_columns(array $columns): string
     return implode(', ', array_map(__NAMESPACE__ . '\\qb_id', $columns));
 }
 
+function schema_information_schema_cached(PDO $pdo, array &$cache): array
+{
+    if ($cache['information_schema'] === null) {
+        $cache['information_schema'] = schema_load_information_schema($pdo);
+    }
+
+    return $cache['information_schema'];
+}
+
+function schema_load_information_schema(PDO $pdo): array
+{
+    return row_run($pdo, schema_information_schema_query(), [])->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function schema_information_schema_query(): string
+{
+    return "SELECT
+            t.TABLE_NAME,
+            t.TABLE_TYPE,
+            c.COLUMN_NAME,
+            c.COLUMN_TYPE,
+            c.IS_NULLABLE,
+            c.COLUMN_KEY,
+            c.COLUMN_DEFAULT,
+            c.EXTRA,
+            c.ORDINAL_POSITION,
+            tc.CONSTRAINT_TYPE,
+            kcu.REFERENCED_TABLE_NAME,
+            kcu.REFERENCED_COLUMN_NAME
+         FROM INFORMATION_SCHEMA.TABLES t
+         INNER JOIN INFORMATION_SCHEMA.COLUMNS c
+            ON c.TABLE_SCHEMA = t.TABLE_SCHEMA
+           AND c.TABLE_NAME = t.TABLE_NAME
+         LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+            ON kcu.TABLE_SCHEMA = c.TABLE_SCHEMA
+           AND kcu.TABLE_NAME = c.TABLE_NAME
+           AND kcu.COLUMN_NAME = c.COLUMN_NAME
+           AND kcu.REFERENCED_TABLE_NAME IS NOT NULL
+           AND kcu.REFERENCED_COLUMN_NAME IS NOT NULL
+         LEFT JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
+            ON tc.CONSTRAINT_SCHEMA = kcu.CONSTRAINT_SCHEMA
+           AND tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME
+           AND tc.TABLE_SCHEMA = kcu.TABLE_SCHEMA
+           AND tc.TABLE_NAME = kcu.TABLE_NAME
+           AND tc.CONSTRAINT_TYPE = 'FOREIGN KEY'
+         WHERE t.TABLE_SCHEMA = DATABASE()
+           AND t.TABLE_TYPE = 'BASE TABLE'
+         ORDER BY t.TABLE_NAME, c.ORDINAL_POSITION";
+}
+
 function schema_load_tables(PDO $pdo, array $blacklist = []): array
 {
-    $rows = row_run(
-        $pdo,
-        "SELECT TABLE_NAME
-         FROM INFORMATION_SCHEMA.TABLES
-         WHERE TABLE_SCHEMA = DATABASE()
-           AND TABLE_TYPE = 'BASE TABLE'
-         ORDER BY TABLE_NAME",
-        []
-    )->fetchAll(PDO::FETCH_COLUMN);
+    return schema_tables_from_information_schema(schema_load_information_schema($pdo), $blacklist);
+}
+
+function schema_tables_from_information_schema(array $rows, array $blacklist = []): array
+{
     $tables = [];
+    $seen = [];
 
-    foreach ($rows as $table) {
-        $table = (string) $table;
+    foreach ($rows as $row) {
+        $table = (string) ($row['TABLE_NAME'] ?? '');
 
-        if (!in_array($table, $blacklist, true)) {
+        if ($table !== '' && !isset($seen[$table]) && !in_array($table, $blacklist, true)) {
             $tables[] = $table;
+            $seen[$table] = true;
         }
     }
 
@@ -298,25 +357,27 @@ function schema_load_tables(PDO $pdo, array $blacklist = []): array
 function schema_load_columns(PDO $pdo, string $table): array
 {
     assert_sql_identifier($table, __FUNCTION__ . ':invalid_table');
-    $rows = row_run(
-        $pdo,
-        "SELECT
-            COLUMN_NAME AS Field,
-            COLUMN_TYPE AS Type,
-            IS_NULLABLE AS `Null`,
-            COLUMN_KEY AS `Key`,
-            COLUMN_DEFAULT AS `Default`,
-            EXTRA AS Extra
-         FROM INFORMATION_SCHEMA.COLUMNS
-         WHERE TABLE_SCHEMA = DATABASE()
-           AND TABLE_NAME = ?
-         ORDER BY ORDINAL_POSITION",
-        [$table]
-    )->fetchAll(PDO::FETCH_ASSOC);
+
+    return schema_columns_from_information_schema(schema_load_information_schema($pdo), $table);
+}
+
+function schema_columns_from_information_schema(array $rows, string $table): array
+{
     $columns = [];
 
     foreach ($rows as $row) {
-        $columns[(string) $row['Field']] = $row;
+        if (($row['TABLE_NAME'] ?? null) !== $table) {
+            continue;
+        }
+
+        $columns[(string) $row['COLUMN_NAME']] = [
+            'Field'   => $row['COLUMN_NAME'],
+            'Type'    => $row['COLUMN_TYPE'],
+            'Null'    => $row['IS_NULLABLE'],
+            'Key'     => $row['COLUMN_KEY'],
+            'Default' => $row['COLUMN_DEFAULT'],
+            'Extra'   => $row['EXTRA'],
+        ];
     }
 
     return $columns;
@@ -325,31 +386,22 @@ function schema_load_columns(PDO $pdo, string $table): array
 function schema_load_foreign_keys(PDO $pdo, string $table): array
 {
     assert_sql_identifier($table, __FUNCTION__ . ':invalid_table');
-    $rows = row_run(
-        $pdo,
-        "SELECT
-            kcu.COLUMN_NAME AS column_name,
-            kcu.REFERENCED_TABLE_NAME AS referenced_table,
-            kcu.REFERENCED_COLUMN_NAME AS referenced_column
-         FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
-         INNER JOIN INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
-            ON tc.CONSTRAINT_SCHEMA = kcu.CONSTRAINT_SCHEMA
-           AND tc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME
-           AND tc.TABLE_SCHEMA = kcu.TABLE_SCHEMA
-           AND tc.TABLE_NAME = kcu.TABLE_NAME
-         WHERE kcu.TABLE_SCHEMA = DATABASE()
-           AND kcu.TABLE_NAME = ?
-           AND tc.CONSTRAINT_TYPE = 'FOREIGN KEY'
-           AND kcu.REFERENCED_TABLE_NAME IS NOT NULL
-           AND kcu.REFERENCED_COLUMN_NAME IS NOT NULL",
-        [$table]
-    )->fetchAll(PDO::FETCH_ASSOC);
+
+    return schema_foreign_keys_from_information_schema(schema_load_information_schema($pdo), $table);
+}
+
+function schema_foreign_keys_from_information_schema(array $rows, string $table): array
+{
     $foreign_keys = [];
 
     foreach ($rows as $row) {
-        $foreign_keys[(string) $row['column_name']] = [
-            'table' => (string) $row['referenced_table'],
-            'column' => (string) $row['referenced_column'],
+        if (($row['TABLE_NAME'] ?? null) !== $table || ($row['CONSTRAINT_TYPE'] ?? null) !== 'FOREIGN KEY') {
+            continue;
+        }
+
+        $foreign_keys[(string) $row['COLUMN_NAME']] = [
+            'table' => (string) $row['REFERENCED_TABLE_NAME'],
+            'column' => (string) $row['REFERENCED_COLUMN_NAME'],
         ];
     }
 
