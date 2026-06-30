@@ -255,3 +255,35 @@ function row_run(PDO $pdo, string $sql, array $bindings): PDOStatement
     $prepared->execute($bindings)       || throw new RuntimeException('PDO::execute failed : ' . json_encode($prepared->errorInfo()));
     return $prepared;
 }
+
+function qb_in(string $col, array $vals, array &$bind, int &$i): string
+{
+    if ($vals === [])
+        return '0 = 1';
+
+    $col = qb_id($col);
+    $parts = [];
+    $phs = [];
+    $null = false;
+
+    foreach ($vals as $val) {
+        if ($val === null) {
+            $null = true;
+            continue;
+        }
+
+        $ph = ":row_qb_$i";
+        $i++;
+
+        $phs[] = $ph;
+        $bind[$ph] = $val;
+    }
+
+    if ($phs)
+        $parts[] = "$col IN (" . implode(', ', $phs) . ")";
+
+    if ($null)
+        $parts[] = "$col IS NULL";
+
+    return '(' . implode(' OR ', $parts) . ')';
+}
